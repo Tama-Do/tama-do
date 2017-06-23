@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as firebase from "firebase";
+import TodoList from './components/TodoList'
 
 // Initialize Firebase
 var config = {
@@ -23,12 +24,24 @@ function writeUserData(userId, name, email) {
 
 writeUserData(1, "Stella", "stella@stella.stella")
 
-firebase.database().ref('/users/1').once('value').then(data => {
-  console.log(data.val())
-})
+
 
 
 export default class App extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {todos: []}
+  }
+
+  componentDidMount() {
+    firebase.database().ref('/tasks').on('value', data => {
+      console.log(data.val())
+      this.setState({ todos: (data.val()) })
+    })
+
+  }
 
   render() {
     return (
@@ -36,6 +49,7 @@ export default class App extends React.Component {
         <Text>This simulator totally works</Text>
         <Text>I AM A WORKING APP.</Text>
         <Text>Shake your phone to open the developer menu.</Text>
+        <TodoList todos={this.state.todos}/>
       </View>
     );
   }
