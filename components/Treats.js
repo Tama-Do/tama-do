@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { StackNavigator } from 'react-navigation';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-class Main extends Component {
+class Treats extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -14,14 +13,11 @@ class Main extends Component {
   render() {
     return (
       <View style={styles.container} >
-        <Text>Tama</Text>
+        <Text>Treats</Text>
       </View>
     );
   }
 }
-
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -33,8 +29,8 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({pets}) => ({pets})
+const mapState = ({pets}) => ({pets});
 
 const mapDispatch = { }
 
-export default connect(mapState, mapDispatch)(Main)
+export default connect(mapState, mapDispatch)(Treats)
