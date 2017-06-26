@@ -7,9 +7,11 @@ import Pets from './components/Pets';
 import PetMap from './components/PetMap';
 import Treats from './components/Treats';
 
+import { TaskNavigator } from './components/ToDo'
+
 export const Tabs = TabNavigator({
   Main: {
-    screen: ToDo,
+    screen: TaskNavigator,
     navigationOptions: {
       tabBarLabel: 'ToDo'
     },

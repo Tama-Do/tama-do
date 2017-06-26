@@ -25,6 +25,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
     "react-native-animated-sprite": "^0.11.0",
+    "react-native-elements": "^0.13.0",
     "react-native-maps": "^0.15.2",
     "react-navigation": "^1.0.0-beta.11",
     "redux": "^3.7.0",

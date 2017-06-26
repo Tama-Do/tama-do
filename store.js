@@ -19,4 +19,7 @@ export default store;
 // fetch Pet information immediately
 import { fetchPets } from './reducers/pets';
 
+import { fetchTasks } from './reducers/tasks'
+
 store.dispatch(fetchPets());
+store.dispatch(fetchTasks())
