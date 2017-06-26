@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
-  pets: require('./pets').default
+  pets: require('./pets').default,
+  tasks: require('./tasks').default
 
 });
 
