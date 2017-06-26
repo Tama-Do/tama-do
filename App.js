@@ -4,6 +4,7 @@ import { connect, Provider } from 'react-redux';
 
 import database from './firebase';
 import { Tabs } from './Tabs';
+import LoginForm from './components/LoginForm'
 import store from './store';
 
 // **** Testing Firebase Connection **** //
@@ -31,7 +32,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Tabs />
+        <LoginForm />
       </Provider>
     );
   }
