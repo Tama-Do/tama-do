@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as firebase from "firebase";
-import TodoList from './components/TodoList'
+import {TodoListScreen} from './components/TodoList'
+import AddTask from './components/AddTask'
+import { StackNavigator } from 'react-navigation'
+import { AppRegistry } from 'react-native'
 
 // Initialize Firebase
 var config = {
@@ -15,15 +18,14 @@ firebase.initializeApp(config);
 // Get a reference to the database service
 var database = firebase.database();
 
-function writeUserData(userId, name, email) {
-  firebase.database().ref('users/' + userId).set({
-    username: name,
-    email: email
-  });
-}
+// function writeUserData(userId, name, email) {
+//   firebase.database().ref('users/' + userId).set({
+//     username: name,
+//     email: email
+//   });
+// }
 
-writeUserData(1, "Stella", "stella@stella.stella")
-
+// writeUserData(1, "Stella", "stella@stella.stella")
 
 
 
@@ -46,10 +48,8 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>This simulator totally works</Text>
-        <Text>I AM A WORKING APP.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-        <TodoList todos={this.state.todos}/>
+        <MainNavigator />
+        {/*<TodoList database={database} todos={this.state.todos} />*/}
       </View>
     );
   }
@@ -63,3 +63,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const MainNavigator = StackNavigator({
+  TodoList: { screen: TodoListScreen }
+});
+
+
