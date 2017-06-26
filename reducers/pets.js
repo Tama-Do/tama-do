@@ -27,8 +27,9 @@ export default reducer
 
 export const fetchPets = () => dispatch => {
 
-    database.ref('/pets/0').once('value')
+    database.ref('/pets/userId0').once('value')
     .then(data => {
+        console.log('******', data.val())
         dispatch(getPets(data.val()));
     })
     .catch(err => console.error(`Fetch all pets: unsuccessful`, err));

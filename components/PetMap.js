@@ -2,20 +2,22 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
 
 class PetMap extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-    }
-    console.log('this.props', this.props)
-  }
-
   render() {
+
     return (
-      <View style={styles.container} >
-        <Text>Map</Text>
+      <View style={styles.container}>
+       <MapView style={styles.map}
+          initialRegion = {{
+            latitude: 40.712784,
+            longitude: -74.005941,
+            latitudeDelta: 0.0222,
+            longitudeDelta: 0.0201
+          }}
+      />
       </View>
     );
   }
@@ -27,6 +29,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  map: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
 });
 

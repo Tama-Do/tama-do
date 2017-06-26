@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux'
 
 import database from '../firebase';
@@ -17,6 +16,8 @@ class Pets extends Component {
     }
   }
 
+  _keyExtractor = (item) => item.name
+
   componentDidMount() {
 
     // ** If we don't use redux, we would set state on containers by directly
@@ -30,29 +31,73 @@ class Pets extends Component {
   }
 
   render() {
+    console.log('this.props.pets', this.props.pets)
     return (
       <View style={styles.container} >
-        <Text>My Monster</Text>
-        <Text>{this.props.pets.name}</Text>
-        <Text>Latitude: {this.props.pets.latitude}</Text>
-        <Text>Longitude: {this.props.pets.longitude}</Text>
-        <Image source={require('../sprites/monster/monster_eat02.png')} />
+        <Text style={styles.heading}>My Monsters</Text>
+          <FlatList
+              style={{flex: 1}}
+              data={this.props.pets}
+              keyExtractor={this._keyExtractor}
+              removeClippedSubviews={false}
+              renderItem={({ item }) =>
+                <View style={styles.listItem}>
+                  <Image
+                    source={require('../sprites/monster/monster_eat02.png')}
+                    style={styles.itemImage}
+                  />
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text style={styles.itemText}>{item.location}</Text>
+                </View>
+              }
+          />
       </View>
     );
   }
 }
 
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 30,
+    flexDirection: 'column',
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
-});
+  heading: {
+    fontSize: 18,
+    paddingBottom: 30
+  },
+  listItem: {
+
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  itemText: {
+    fontSize: 15,
+  },
+  itemImage: {
+    width: 50,
+    height: 50
+  }
+})
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   item: {
+//     padding: 10,
+//     fontSize: 18,
+//     height: 44,
+//   },
+// });
 
 
 const mapState = ({pets}) => ({pets})
