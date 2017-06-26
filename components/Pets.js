@@ -31,7 +31,6 @@ class Pets extends Component {
   }
 
   render() {
-    console.log('this.props.pets', this.props.pets)
     return (
       <View style={styles.container} >
         <Text style={styles.heading}>My Monsters</Text>
@@ -83,22 +82,6 @@ const styles = StyleSheet.create({
     height: 50
   }
 })
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   item: {
-//     padding: 10,
-//     fontSize: 18,
-//     height: 44,
-//   },
-// });
-
 
 const mapState = ({pets}) => ({pets})
 

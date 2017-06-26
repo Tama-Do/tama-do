@@ -3,24 +3,30 @@ import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
+import store from '../store'
 
-class ToDo extends Component {
+export class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tasks: this.props.tasks
+      tasks: []
     }
-    console.log('this.props', this.props)
   }
+
+  componentDidMount() {
+    let unsubscribe = store.subscribe(()=> {
+      this.setState(store.getState())
+    })
+  }
+
+  _keyExtractor = (item) => item.name
 
    render() {
         const { navigate } = this.props.navigation;
-        console.log("****************", this.props)
         return (
-
             <View style={styles.container}>
                 <FlatList
-                    data={this.props.tasks}
+                    data={this.state.tasks}
                     removeClippedSubviews={false}
                     keyExtractor={this._keyExtractor}
                     renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
@@ -52,9 +58,11 @@ const mapState = ({tasks}) => ({tasks})
 
 const mapDispatch = { }
 
-export default connect(mapState, mapDispatch)(ToDo)
+
 
 export const TaskNavigator = StackNavigator({
     ToDo: { screen: ToDo },
     AddTask: { screen: AddTask }
 })
+
+export default connect(mapState, mapDispatch)(ToDo)
