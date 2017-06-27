@@ -25,12 +25,10 @@ export default reducer
 
 // /* ------------       DISPATCHERS     ------------------ */
 
-export const fetchPets = () => dispatch => {
+export const fetchPets = (userId) => dispatch => {
 
-    database.ref('/pets/').once('value')
-    .then(data => {
-        dispatch(getPets(data.val()));
+    database.ref(`/users/${userId}/pets`).on('value', snapshot => {
+        dispatch(getPets(snapshot.val()));
     })
-    .catch(err => console.error(`Fetch all pets: unsuccessful`, err));
 
 }
