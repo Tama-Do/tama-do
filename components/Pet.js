@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, Image, TouchableHighlight } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import sample from 'lodash.sample';
 import { connect } from 'react-redux';
@@ -12,43 +12,45 @@ class Pet extends Component {
     this.state = {
       animationType: 'WALK',
       tweenOptions: {},
-      pet: this.props.navigation.state.params
+      pet: this.props.navigation.state.params,
+      treat: this.props.treats,
+      seeTreats: false
     };
-    console.log('this.props in Pet', this.props)
-    console.log('this.state.pet', this.state.pet)
+    this.showTreats = this.showTreats.bind(this)
   }
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.name
   });
 
-  onPress () {
-    const animation = sample(monsterSprite.animationTypes);
-    debugger;
-    this.setState({ animationType: animation });
+  // onPress () {
+  //   const animation = sample(monsterSprite.animationTypes);
+  //   debugger;
+  //   this.setState({ animationType: animation });
+  // }
+
+  onPress() {
+    console.log('Pet the monster')
   }
 
-  tweenSprite () {
-    const coords = this.refs.monsterRef.getCoordinates();
-    const location = [0, 100, 200, 300, 400, 500];
-    this.setState({
-      tweenOptions: {
-        tweenType: 'sine-wave',
-        startXY: [coords.left, coords.top],
-        xTo: [sample(location), sample(location)],
-        yTo: [sample(location), sample(location)],
-        duration: 1000,
-        loop: false,
-      }
-    }, () => {
-      this.refs.monsterRef.startTween();
-    });
+  _keyExtractor = (item) => item.type
+
+  showTreats () {
+    var oldState = this.state.seeTreats
+    this.setState({ seeTreats: !oldState })
+  }
+
+  feedPet(treat) {
+    console.log('Feed Pet: ', treat.type)
+    // remove treat instance from the database and redux store
+    // reflect action in the pet - increase happiness/size counter?
+    // update the pet in the database and redux store
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
+        <Text style={styles.header}>Home: {this.props.navigation.state.params.location}</Text>
         <AnimatedSprite
           ref={'monsterRef'}
           sprite={monsterSprite}
@@ -69,10 +71,36 @@ class Pet extends Component {
         />
         <Button
           style={styles.button}
-          onPress={() => {this.tweenSprite()}}
+          onPress={() => {this.showTreats()}}
           title="Feed me!"
           color="#841584"
         />
+        {!this.state.seeTreats ? null :
+          <View style={styles.treatList}>
+            <FlatList
+              data={this.props.treats}
+              removeClippedSubviews={false}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item }) =>
+
+                <TouchableHighlight
+                  onPress={() => this.feedPet(item)}
+                  underlayColor="white"
+                  activeOpacity={0.7}
+                >
+                  <View>
+                    <Text style={styles.item}>{item.type}</Text>
+                    <Image source={require('../sprites/treats/cupcake.png')}
+          style={{width: 40, height: 40}} />
+                  </View>
+                </TouchableHighlight>
+
+            }
+            />
+          </View>
+
+        }
+
       </View>
     );
   }
@@ -91,10 +119,13 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingBottom: 10
+  },
+  treatList: {
+    flex: 1
   }
 });
 
-const mapState = ({pets}) => ({pets})
+const mapState = ({pets, treats}) => ({pets, treats})
 
 const mapDispatch = { }
 

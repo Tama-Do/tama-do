@@ -32,7 +32,6 @@ class Pets extends Component {
   }
 
   viewPet(pet) {
-    console.log('this.props.navigation.state', this.props.navigation.state)
     this.props.navigation.navigate('Pet', pet)
   }
 

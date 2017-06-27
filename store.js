@@ -21,9 +21,11 @@ export default store;
 // fetch Pet information immediately by importing fetchPet from reducers and
 // dispatching directly from store
 import { fetchPets } from './reducers/pets';
+import { fetchTreats } from './reducers/treats';
+
 var userId = 1; // until we figure out userID / auth stuff, test with static value
 store.dispatch(fetchPets(1));
-
+store.dispatch(fetchTreats(1))
 
 // doing it this way allows us to listen for changes
 database.ref('/users/1/tasks').on('value', (snapshot) => {
