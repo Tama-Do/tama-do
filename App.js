@@ -6,6 +6,7 @@ import database from './firebase';
 import { Tabs } from './Tabs';
 import LoginForm from './components/LoginForm'
 import store from './store';
+import {auth} from './firebase'
 
 // **** Testing Firebase Connection **** //
 // function writeUserData(userId, name, email) {
@@ -22,7 +23,15 @@ import store from './store';
 // })
 
 
-
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    console.log("auth state changed, user is", user)
+  } else {
+    // No user is signed in.
+    "oh no no user is signed in "
+  }
+});
 
 
 

@@ -1,9 +1,8 @@
+import {auth} from '../firebase';
 import database from '../firebase';
 
 // /* -----------------    ACTIONS     ------------------ */
 
-const EMAIL_CHANGED = 'EMAIL_CHANGED';
-const PASSWORD_CHANGED = 'PASSWORD_CHANGED';
 const LOGIN_USER_START = 'LOGIN_USER_START';
 const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
@@ -11,9 +10,7 @@ const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
 // /* ------------   ACTION CREATORS     ------------------ */
 
-export const emailChanged = text => ({type: EMAIL_CHANGED, text});
-export const passwordChanged = text => ({type: PASSWORD_CHANGED, text});
-// const loginSuccess = user => ({type: LOGIN_USER_SUCCESS, user});
+const loginSuccess = user => ({type: LOGIN_USER_SUCCESS, user});
 // const loginFail = user => ({type: LOGIN_USER_FAIL, user});
 
 
@@ -21,7 +18,6 @@ export const passwordChanged = text => ({type: PASSWORD_CHANGED, text});
 
 const initalState = {
   email: '',
-  password: '',
   loading: false,
   user: null,
   error: ''
@@ -29,14 +25,10 @@ const initalState = {
 
 const reducer = (state = initalState, action) => {
   switch (action.type) {
-    case EMAIL_CHANGED:
-      return { ...state, email: action.payload };
-    case PASSWORD_CHANGED:
-      return { ...state, password: action.payload };
     case LOGIN_USER_START:
       return { ...state, loading: true, error: '' };
     case LOGIN_USER_SUCCESS:
-      return { ...state, ...initalState, user: action.payload };
+      return Object.assign({}, state, action.user);
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Login failed.', password: '', loading: false };
     default:
@@ -48,28 +40,36 @@ export default reducer
 
 // /* ------------       DISPATCHERS     ------------------ */
 
-export const loginUser = ({ email, password }) => {
-  // redux-thunk gives access to dispatch & allows waiting for promise returns
-  // dispatch of the action is not invoked until promise returns
-  // loading spinner page while loading somehow?
+export const loginUser = ( email, password ) => {
+
   return (dispatch) => {
     dispatch({ type: LOGIN_USER_START });
 
-    database.auth().signInWithEmailAndPassword(email, password)
-      .then(user => loginUserSuccess(dispatch, user))
+    auth.signInWithEmailAndPassword(email, password) //this should eventually be refactored so that instead of automatically creating user
+      .then(user => {                                 // it redirects to a signup page where users can create an username 
+        loginUserSuccess(dispatch, user)})
       .catch((authError) => {
-        console.log(
-          `firebase.auth().signInWithEmailAndPassword ${authError}`);
-        database.auth().createUserWithEmailAndPassword(email, password)
-          .then(user => loginUserSuccess(dispatch, user))
-          .catch((createError) => {
-            console.log(
-              `firebase.auth().createUserWithEmailAndPassword ${createError}`);
-              loginUserFail(dispatch, user);
-          });
+        auth.createUserWithEmailAndPassword(email, password)
+        .then(data => {
+          createUser(data.email, data.uid)
+          dispatch(loginSuccess({email:data.email, uid: data.uid}))
+        })
+        .catch(error => console.log(error))
+          //dispatch login user fail at some point
       });
     };
 };
+
+const createUser = (email, uid) => {
+  database.ref('users/' + uid).set({ 
+    //username: name,
+    email: email
+    //profile_picture : imageUrl
+  })
+  .then(data => console.log("data is", data)) //here we've succeeded and can dispatch success, maybe with email or uid??? data is nothing
+  .catch(error => console.log("error is", error))
+}
+
 
 const loginUserSuccess = (dispatch, user) => {
   dispatch({
@@ -85,3 +85,5 @@ const loginUserFail = (dispatch, user) => {
     payload: user
   });
 };
+
+

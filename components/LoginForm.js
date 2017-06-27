@@ -8,18 +8,20 @@ import {
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
-  onEmailChange(text) {
-    this.props.emailChanged(text);
-  }
 
-  onPasswordChange(text) {
-    this.props.passwordChanged(text);
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      email: '',
+      password: ''
+    }
+
+    this.onButtonPress = this.onButtonPress.bind(this)
   }
 
   onButtonPress() {
-    const { email, password } = this.props;
-
-    this.props.loginUser({ email, password });
+    this.props.loginUser(this.state.email, this.state.password);
   }
 
   renderButton() {
@@ -28,7 +30,7 @@ class LoginForm extends Component {
     }
 
     return (
-      <Button onPress={this.onButtonPress.bind(this)}>
+      <Button onPress={this.onButtonPress}>
         Login
       </Button>
     );
@@ -41,8 +43,8 @@ class LoginForm extends Component {
           <Input
             label="Email"
             placeholder="email@gmail.com"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
+            onChangeText={(email) => this.setState({email})} 
+            value={this.state.email}
           />
         </CardSection>
 
@@ -51,8 +53,8 @@ class LoginForm extends Component {
           secureTextEntry
           label="Password"
           placeholder="password"
-          onChangeText={this.onPasswordChange.bind(this)}
-          value={this.props.password}
+          onChangeText={(password) => this.setState({password})}
+          value={this.state.password}
         />
         </CardSection>
 
@@ -76,11 +78,21 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
-  return { email, password, error, loading };
-};
 
-export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
-})(LoginForm);
+const mapStateToProps = ({email, password}) => {
+  return {email, password}
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  emailChanged: (text) => {
+    dispatch(emailChanged(text))
+  },
+  passwordChanged: (text) => {
+    dispatch(passwordChanged(text))
+  },
+  loginUser: (email, password) => {
+    dispatch(loginUser(email, password))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
