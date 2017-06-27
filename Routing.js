@@ -7,6 +7,7 @@ import ToDoContainer from './components/ToDo';
 import AddTask from './components/AddTask';
 import PetMap from './components/PetMap';
 import Treats from './components/Treats';
+import Form from './components/LocationSearchForm';
 
 const TaskNavigator = StackNavigator({
     ToDo: {
@@ -48,6 +49,12 @@ export const Tabs = TabNavigator({
     navigationOptions: {
       tabBarLabel: 'Map'
     },
+  },
+  Form: {
+    screen: Form,
+    navigationOptions: {
+      tabBarLabel: 'Form'
+    }
   },
   Treats: {
     screen: Treats,
