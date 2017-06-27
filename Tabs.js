@@ -6,6 +6,7 @@ import ToDo from './components/ToDo';
 import Pets from './components/Pets';
 import PetMap from './components/PetMap';
 import Treats from './components/Treats';
+import Form from './components/LocationSearchForm';
 
 export const Tabs = TabNavigator({
   Main: {
@@ -26,10 +27,17 @@ export const Tabs = TabNavigator({
       tabBarLabel: 'Map'
     },
   },
+  Form: {
+      screen: Form,
+      navigationOptions: {
+        tabBarLabel: 'Form'
+      }
+    },
   Treats: {
     screen: Treats,
     navigationOptions: {
       tabBarLabel: 'Treats'
     },
+
   }
 })
