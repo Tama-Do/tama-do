@@ -7,7 +7,6 @@ class Treats extends Component {
     super(props)
     this.state = {
     }
-    console.log('this.props', this.props)
   }
 
   render() {
