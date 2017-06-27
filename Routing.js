@@ -2,7 +2,7 @@ import React from 'react';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 
 import PetsContainer from './components/Pets';
-import Pet from './components/Pet';
+import PetContainer from './components/Pet';
 import ToDoContainer from './components/ToDo';
 import AddTask from './components/AddTask';
 import PetMap from './components/PetMap';
@@ -26,7 +26,7 @@ const PetNavigator = StackNavigator({
       }
     },
     Pet: {
-      screen: Pet
+      screen: PetContainer
     }
 })
 
