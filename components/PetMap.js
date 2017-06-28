@@ -41,9 +41,9 @@ constructor(props) {
           showsUserLocation={true}
           userLocationAnnotationTitle="you are here!"
           showsCompass={true}>
-          <FormView />
     {this.state.markers.map(marker => marker)}
           </MapView>
+          <FormView style={styles.form}/>
       </View>
     );
   }
@@ -53,8 +53,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   map: {
     position: 'absolute',
