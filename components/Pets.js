@@ -45,7 +45,11 @@ class Pets extends Component {
               keyExtractor={this._keyExtractor}
               removeClippedSubviews={false}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => this.viewPet(item)}>
+                <TouchableHighlight
+                  onPress={() => this.viewPet(item)}
+                  underlayColor="white"
+                  activeOpacity={0.7}
+                >
                   <View style={styles.listItem}>
                     <Image
                       source={require('../sprites/monster/monster_eat02.png')}
@@ -77,9 +81,18 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   listItem: {
-
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center', // cross axis
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 18,
+    paddingRight: 16,
+    marginLeft: 14,
+    marginRight: 14,
+    marginTop: 0,
+    marginBottom: 6,
   },
   itemText: {
     fontSize: 15,

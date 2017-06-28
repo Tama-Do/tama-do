@@ -1,12 +1,13 @@
 // import React from 'react';
 // import { TabNavigator, StackNavigator } from 'react-navigation';
 
-// import PetsContainer from './components/Pets';
-// import Pet from './components/Pet';
-// import ToDoContainer from './components/ToDo';
-// import AddTask from './components/AddTask';
-// import PetMap from './components/PetMap';
-// import Treats from './components/Treats';
+import PetsContainer from './components/Pets';
+import PetContainer from './components/Pet';
+import ToDoContainer from './components/ToDo';
+import AddTask from './components/AddTask';
+import PetMap from './components/PetMap';
+import Treats from './components/Treats';
+>>>>>>> single pet view with animated sprite
 
 // const TaskNavigator = StackNavigator({
 //     ToDo: {
@@ -18,17 +19,17 @@
 //     AddTask: { screen: AddTask }
 // })
 
-// const PetNavigator = StackNavigator({
-//     Pets: {
-//       screen: PetsContainer,
-//       navigationOptions: {
-//         title: 'My Monsters'
-//       }
-//     },
-//     Pet: {
-//       screen: Pet
-//     }
-// })
+const PetNavigator = StackNavigator({
+    Pets: {
+      screen: PetsContainer,
+      navigationOptions: {
+        title: 'My Monsters'
+      }
+    },
+    Pet: {
+      screen: PetContainer
+    }
+})
 
 // export const Tabs = TabNavigator({
 //   Main: {
