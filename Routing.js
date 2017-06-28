@@ -7,7 +7,6 @@ import ToDoContainer from './components/ToDo';
 import AddTask from './components/AddTask';
 import PetMap from './components/PetMap';
 import Treats from './components/Treats';
->>>>>>> single pet view with animated sprite
 
 // const TaskNavigator = StackNavigator({
 //     ToDo: {
