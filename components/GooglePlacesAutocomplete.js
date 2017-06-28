@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import Qs from 'qs';
 import debounce from 'lodash.debounce';
+import { googleApiKey } from '../apikeys'
 
 const WINDOW = Dimensions.get('window');
 
@@ -135,7 +136,7 @@ const GooglePlacesAutocomplete = React.createClass({
       timeout: 20000,
       onTimeout: () => console.warn('google places autocomplete: request timeout'),
       query: {
-        key: 'AIzaSyBHE-nGPQe8luUBJDXngUNfz7FT4X9w2Rs',
+        key: googleApiKey,
         language: 'en',
         types: 'geocode',
       },
