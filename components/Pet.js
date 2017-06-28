@@ -10,7 +10,7 @@ class Pet extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      animationType: 'WALK',
+      animationType: 'IDLE',
       tweenOptions: {},
       pet: this.props.navigation.state.params
     };
@@ -23,9 +23,9 @@ class Pet extends Component {
   });
 
   onPress () {
-    const animation = sample(monsterSprite.animationTypes);
-    debugger;
-    this.setState({ animationType: animation });
+    console.log('pet monster')
+    this.setState({ animationType: 'CELEBRATE' });
+    setTimeout(() => this.setState({animationType: 'IDLE'}), 2000)
   }
 
   tweenSprite () {
