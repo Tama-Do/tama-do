@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux'
-
+import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
 import { fetchPets } from '../reducers/pets';
-
+import { Pet } from './Pet'
 
 
 class Pets extends Component {
@@ -14,6 +14,7 @@ class Pets extends Component {
       // ** if we are using redux, we probably don't need a stateful container
       pets: this.props.pets
     }
+    this.viewPet = this.viewPet.bind(this)
   }
 
   _keyExtractor = (item) => item.name
@@ -30,24 +31,30 @@ class Pets extends Component {
 
   }
 
+  viewPet(pet) {
+    console.log('this.props.navigation.state', this.props.navigation.state)
+    this.props.navigation.navigate('Pet', pet)
+  }
+
   render() {
     return (
       <View style={styles.container} >
-        <Text style={styles.heading}>My Monsters</Text>
           <FlatList
-              style={{flex: 1}}
+              style={styles.flatlist}
               data={this.props.pets}
               keyExtractor={this._keyExtractor}
               removeClippedSubviews={false}
               renderItem={({ item }) =>
-                <View style={styles.listItem}>
-                  <Image
-                    source={require('../sprites/monster/monster_eat02.png')}
-                    style={styles.itemImage}
-                  />
-                  <Text style={styles.itemText}>{item.name}</Text>
-                  <Text style={styles.itemText}>{item.location}</Text>
-                </View>
+                <TouchableHighlight onPress={() => this.viewPet(item)}>
+                  <View style={styles.listItem}>
+                    <Image
+                      source={require('../sprites/monster/monster_eat02.png')}
+                      style={styles.itemImage}
+                    />
+                    <Text style={styles.itemText}>{item.name}</Text>
+                    <Text style={styles.itemText}>{item.location}</Text>
+                  </View>
+                </TouchableHighlight>
               }
           />
       </View>
@@ -65,9 +72,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  heading: {
-    fontSize: 18,
-    paddingBottom: 30
+  flatlist: {
+    marginTop: 14,
+    alignSelf: "stretch",
   },
   listItem: {
 
@@ -87,4 +94,7 @@ const mapState = ({pets}) => ({pets})
 
 const mapDispatch = { }
 
-export default connect(mapState, mapDispatch)(Pets);
+const PetsContainer = connect(mapState, mapDispatch)(Pets);
+
+export default PetsContainer
+
