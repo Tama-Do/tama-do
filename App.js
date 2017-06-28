@@ -22,8 +22,6 @@ auth.onAuthStateChanged(function(user) {
 });
 
 
-
-
 export default class App extends Component {
 
   render() {
@@ -34,3 +32,4 @@ export default class App extends Component {
     );
   }
 }
+
