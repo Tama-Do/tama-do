@@ -12,7 +12,7 @@ import { TaskNavigator } from './components/ToDo'
 
 export const Tabs = TabNavigator({
   Main: {
-    screen: TaskNavigator,
+    screen: ToDo,
     navigationOptions: {
       tabBarLabel: 'ToDo'
     },
