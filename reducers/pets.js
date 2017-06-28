@@ -28,7 +28,12 @@ export default reducer
 export const fetchPets = (userId) => dispatch => {
 
     database.ref(`/users/${userId}/pets`).on('value', snapshot => {
-        dispatch(getPets(snapshot.val()));
+        const obj = snapshot.val();
+        const array = [];
+        for (let key in obj) {
+          array.push(obj[key]);
+        }
+        dispatch(getPets(array));
     })
 
 }
