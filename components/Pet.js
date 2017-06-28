@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import sample from 'lodash.sample';
 import { connect } from 'react-redux';
@@ -12,17 +12,23 @@ class Pet extends Component {
     this.state = {
       animationType: 'IDLE',
       tweenOptions: {},
-      pet: this.props.navigation.state.params
+      pet: this.props.navigation.state.params,
+      treats: this.props.treats,
+      showTreats: false
     };
+    this.feedPet = this.feedPet.bind(this);
+    this.onPress = this.onPress.bind(this);
   }
 
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.name
   });
 
+  _keyExtractor = (item) => item.type
+
   onPress () {
     this.setState({ animationType: 'CELEBRATE' });
-    setTimeout(() => this.setState({animationType: 'IDLE'}), 2000)
+    setTimeout(() => this.setState({animationType: 'IDLE'}), 1500)
   }
 
 //   tweenSprite () {
@@ -44,6 +50,8 @@ class Pet extends Component {
 
     feedPet () {
         console.log('feed monster button pressed')
+        const oldState = this.state.showTreats;
+        this.setState({showTreats: !oldState})
     }
 
   render() {
@@ -68,6 +76,17 @@ class Pet extends Component {
           tweenStart={'fromMethod'}
           onPress={() => {this.onPress();}}
         />
+        {
+            !this.state.showTreats ? null :
+            <View style={styles.treatsView}>
+                <FlatList
+                    data={this.props.treats}
+                    removeClippedSubviews={false}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={({ item }) => <Text>{item.type}</Text>}
+                />
+            </View>
+        }
         <Button
           style={styles.button}
           onPress={() => {this.feedPet()}}
@@ -88,14 +107,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {
-    paddingTop: 10
+    paddingTop: 10,
+    flex: 5
   },
   button: {
-    paddingBottom: 10
+    paddingBottom: 10,
+    flex: 2
+  },
+  treatsView: {
+    height: 50,
+    flex: 1,
+    justifyContent: 'flex-end'
   }
 });
 
-const mapState = ({pets}) => ({pets})
+const mapState = ({pets, treats}) => ({pets, treats})
 
 const mapDispatch = { }
 
