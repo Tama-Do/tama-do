@@ -14,8 +14,6 @@ class Pet extends Component {
       tweenOptions: {},
       pet: this.props.navigation.state.params
     };
-    console.log('this.props in Pet', this.props)
-    console.log('this.state.pet', this.state.pet)
   }
 
   static navigationOptions = ({ navigation, screenProps }) => ({
@@ -23,27 +21,30 @@ class Pet extends Component {
   });
 
   onPress () {
-    console.log('pet monster')
     this.setState({ animationType: 'CELEBRATE' });
     setTimeout(() => this.setState({animationType: 'IDLE'}), 2000)
   }
 
-  tweenSprite () {
-    const coords = this.refs.monsterRef.getCoordinates();
-    const location = [0, 100, 200, 300, 400, 500];
-    this.setState({
-      tweenOptions: {
-        tweenType: 'sine-wave',
-        startXY: [coords.left, coords.top],
-        xTo: [sample(location), sample(location)],
-        yTo: [sample(location), sample(location)],
-        duration: 1000,
-        loop: false,
-      }
-    }, () => {
-      this.refs.monsterRef.startTween();
-    });
-  }
+//   tweenSprite () {
+//     const coords = this.refs.monsterRef.getCoordinates();
+//     const location = [0, 100, 200, 300, 400, 500];
+//     this.setState({
+//       tweenOptions: {
+//         tweenType: 'sine-wave',
+//         startXY: [coords.left, coords.top],
+//         xTo: [sample(location), sample(location)],
+//         yTo: [sample(location), sample(location)],
+//         duration: 1000,
+//         loop: false,
+//       }
+//     }, () => {
+//       this.refs.monsterRef.startTween();
+//     });
+//   }
+
+    feedPet () {
+        console.log('feed monster button pressed')
+    }
 
   render() {
     return (
@@ -69,7 +70,7 @@ class Pet extends Component {
         />
         <Button
           style={styles.button}
-          onPress={() => {this.tweenSprite()}}
+          onPress={() => {this.feedPet()}}
           title="Feed me!"
           color="#841584"
         />

@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 
 class Treats extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      treats: [{type: 'Cake'}, {type: 'Cookie'}]
     }
   }
 
+  _keyExtractor = (item) => item.type
+
   render() {
     return (
-      <View style={styles.container} >
-        <Text>Treats</Text>
+      <View style={styles.container}>
+          <FlatList
+              data={this.props.treats}
+              removeClippedSubviews={false}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item }) => <Text>{item.type}</Text>}
+          />
       </View>
     );
   }
@@ -28,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({pets}) => ({pets});
+const mapState = ({treats}) => ({treats});
 
 const mapDispatch = { }
 

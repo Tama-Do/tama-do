@@ -29,3 +29,6 @@ store.dispatch(fetchPets(1));
 database.ref('/users/1/tasks').on('value', (snapshot) => {
       store.dispatch(getTasks(snapshot.val()))
     })
+
+import { fetchTreats } from './reducers/treats'
+store.dispatch(fetchTreats(1));
