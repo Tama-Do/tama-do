@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import sample from 'lodash.sample';
 import { connect } from 'react-redux';
@@ -91,7 +91,13 @@ class Pet extends Component {
         const screenHeight = Dimensions.get('window').height;
         // Needs more math for centering 0_0
         const location = (screenWidth - length) / 6;
-        console.log('location', location)
+        console.log('location', location);
+        const treatPaths = {
+            cherry: require("../sprites/treats/cherry.jpg"),
+            donut: require("../sprites/treats/donut.png"),
+            candy: require("../sprites/treats/candy.png")
+        }
+
         return (
             <View style={styles.container}>
                 <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
@@ -124,6 +130,7 @@ class Pet extends Component {
                         !this.state.showTreats ? null :
                             <View style={styles.treatsView}>
                                 <FlatList
+                                    horizontal={true}
                                     data={this.props.treats}
                                     removeClippedSubviews={false}
                                     keyExtractor={this._keyExtractor}
@@ -134,7 +141,11 @@ class Pet extends Component {
                                             underlayColor="white"
                                             activeOpacity={0.7}
                                         >
-                                            <Text>{item.type}</Text>
+                                            <View>
+                                                <Image source={treatPaths[item.type]}/>
+                                                <Text>{item.quantity}</Text>
+                                            </View>
+
                                         </TouchableHighlight>
 
                                     }
@@ -170,7 +181,8 @@ const styles = StyleSheet.create({
         flex: 2
     },
     treatsView: {
-        height: 50,
+        flex: 1,
+        flexDirection: 'row',
     },
     treat: {
         marginBottom: 5,
