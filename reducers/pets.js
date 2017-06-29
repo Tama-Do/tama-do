@@ -43,7 +43,7 @@ export const fetchPets = (userId) => dispatch => {
 
 export const increasePet = (userId, petId, points) => dispatch => {
 
-    database.ref.child(`/users/${userId}/pets/${petId}`)
+    database.ref().child(`/users/${userId}/pets/${petId}`)
         .update({ size: points });
 
 };

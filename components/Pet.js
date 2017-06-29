@@ -60,13 +60,13 @@ class Pet extends Component {
     feedPet (treat) {
         console.log(`clicked on ${treat.type}`)
         const userId = 1;
-        const quantity = treat.quantity - 1;
         // remove treat from database
+        const quantity = treat.quantity - 1;
         store.dispatch(removeTreat(userId, treat.id, quantity))
         // increase size of pet
         const petId = this.state.pet.id;
         const points = treat.points + this.state.pet.size;
-        // store.dispatch(increasePet(userId, petId, points))
+        store.dispatch(increasePet(userId, petId, points))
     }
   render() {
     return (
