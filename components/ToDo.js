@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
 import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
+
 
 //what todo list needs:
 // check boxes for complete or uncomplete
@@ -70,21 +71,15 @@ class ToDo extends Component {
                             )}
                     }
                 />
-                <Button
-                    onPress={() => {
-                        navigate('AddTask')
-                    }
-                    }
-                    title="Add a Task"
-                    color="#841584"
-                />
+               {/*}
                 <Button
                     onPress={() => {
                     }
                     }
                     title="Clear Completed Tasks"
                     color="#841584"
-                />
+                /> */}
+            <AddTask/>
             </View>
         )
     }
