@@ -17,7 +17,7 @@ class Pets extends Component {
     this.viewPet = this.viewPet.bind(this)
   }
 
-  _keyExtractor = (item) => item.name
+  _keyExtractor = (item) => item.id
 
   componentDidMount() {
 

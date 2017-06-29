@@ -5,8 +5,8 @@ import sample from 'lodash.sample';
 import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
-import store from '../store';
-import { increasePet } from '../reducers/pets'
+import { increasePet } from '../reducers/pets';
+import database from '../firebase.js';
 
 class Pet extends Component {
   constructor (props) {
@@ -14,7 +14,7 @@ class Pet extends Component {
     this.state = {
       animationType: 'IDLE',
       tweenOptions: {},
-      pet: this.props.navigation.state.params,
+      pet: {},
       treats: this.props.treats,
       showTreats: false
     };
@@ -23,33 +23,25 @@ class Pet extends Component {
     this.showTreats = this.showTreats.bind(this);
   }
 
+  componentDidMount () {
+    const userId = 1;
+    const petId = this.props.navigation.state.params.id;
+    database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
+      let pet = snapshot.val();
+      this.setState({ pet: pet })
+    })
+  }
+
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.name
   });
 
-  _keyExtractor = (item) => item.type
+  _keyExtractor = (item) => item.id
 
   onPress () {
     this.setState({ animationType: 'CELEBRATE' });
     setTimeout(() => this.setState({animationType: 'IDLE'}), 1500)
   }
-
-//   tweenSprite () {
-//     const coords = this.refs.monsterRef.getCoordinates();
-//     const location = [0, 100, 200, 300, 400, 500];
-//     this.setState({
-//       tweenOptions: {
-//         tweenType: 'sine-wave',
-//         startXY: [coords.left, coords.top],
-//         xTo: [sample(location), sample(location)],
-//         yTo: [sample(location), sample(location)],
-//         duration: 1000,
-//         loop: false,
-//       }
-//     }, () => {
-//       this.refs.monsterRef.startTween();
-//     });
-//   }
 
     showTreats () {
         console.log('feed monster button pressed')
@@ -62,11 +54,11 @@ class Pet extends Component {
         const userId = 1;
         // remove treat from database
         const quantity = treat.quantity - 1;
-        store.dispatch(removeTreat(userId, treat.id, quantity))
+        this.props.removeTreat(userId, treat.id, quantity);
         // increase size of pet
-        const petId = this.state.pet.id;
+        const petId = this.props.navigation.state.params.id;
         const points = treat.points + this.state.pet.size;
-        store.dispatch(increasePet(userId, petId, points))
+        this.props.increasePet(userId, petId, points);
     }
   render() {
     return (
@@ -151,7 +143,7 @@ const styles = StyleSheet.create({
 
 const mapState = ({pets, treats}) => ({pets, treats})
 
-const mapDispatch = { }
+const mapDispatch = {increasePet, removeTreat}
 
 const PetContainer = connect(mapState, mapDispatch)(Pet);
 
