@@ -25,13 +25,17 @@ export default reducer
 
 // /* ------------       DISPATCHERS     ------------------ */
 
-export const fetchPets = () => dispatch => {
-
-    database.ref('/pets/').once('value')
-    .then(data => {
-        // console.log("DATA.VAL()", data.val())
-        dispatch(getPets(data.val()));
-    })
-    .catch(err => console.error(`Fetch all pets: unsuccessful`, err));
+export const fetchPets = (userId) => dispatch => {
+    //this will change when we integrate sign in and have
+    // userid on state via the auth object
+    database.ref(`/users/1/pets`).on('value', snapshot => {
+        const obj = snapshot.val();
+        const array = [];
+        for(let key in obj) {
+          array.push(obj[key]);
+        }
+        console.log("pets are ", array)
+        dispatch(getPets(array));
+    });
 
 }
