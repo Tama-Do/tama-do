@@ -4,7 +4,7 @@ import { connect, Provider } from 'react-redux';
 
 import database from './firebase';
 import { Tabs } from './Tabs';
-import LoginForm from './components/LoginForm'
+import LoginNavigator from './components/LoginForm'
 import store from './store';
 import {auth} from './firebase'
 
@@ -44,7 +44,7 @@ export default class App extends Component {
     }
     return (
       <Provider store={store}>
-        <LoginForm />
+        <LoginNavigator />
       </Provider>
     );
   }

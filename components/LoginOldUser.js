@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
-import LoginOldUser from './LoginOldUser'
+import LoginForm from './LoginForm'
 import {
   emailChanged,
   passwordChanged,
   loginUser } from '../reducers/login';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
-
-class LoginForm extends Component {
+class LoginOldUser extends Component {
 
   constructor(props) {
     super(props)
@@ -34,13 +33,12 @@ class LoginForm extends Component {
 
     return (
       <Button onPress={this.onButtonPress}>
-        Sign Up
+        Login
       </Button>
     );
   }
 
   render() {
-    console.log(this.props)
     const { navigate } = this.props.navigation;
 
     return (
@@ -72,17 +70,10 @@ class LoginForm extends Component {
           {this.renderButton()}
         </CardSection>
 
-        <TouchableOpacity onPress={() => {navigate('LoginOldUser')}}>
-          <Text style={styles.loginTest}>
-            Already Have An Account?
-          </Text>
-        </TouchableOpacity>
-
       </Card>
     );
   }
 }
-
 
 const styles = {
   errorTextStyle: {
@@ -115,9 +106,4 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 
-const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
-
-export default LoginNavigator = StackNavigator({
-    LoginForm: { screen: LoginFormContainer},
-    LoginOldUser: { screen: LoginOldUser }
-})
+export default connect(mapStateToProps, mapDispatchToProps)(LoginOldUser);
