@@ -30,10 +30,20 @@ export const fetchPets = (userId) => dispatch => {
     database.ref(`/users/${userId}/pets`).on('value', snapshot => {
         const obj = snapshot.val();
         const array = [];
+        let newObj;
         for (let key in obj) {
-          array.push(obj[key]);
+            newObj = Object.assign({}, obj[key])
+            newObj.id = key;
+            array.push(newObj);
         }
         dispatch(getPets(array));
-    })
+    });
 
-}
+};
+
+export const increasePet = (userId, petId, points) => dispatch => {
+
+    database.ref.child(`/users/${userId}/pets/${petId}`)
+        .update({ size: points });
+
+};

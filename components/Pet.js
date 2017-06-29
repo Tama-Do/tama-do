@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import store from '../store';
+import { increasePet } from '../reducers/pets'
 
 class Pet extends Component {
   constructor (props) {
@@ -57,10 +58,15 @@ class Pet extends Component {
     }
 
     feedPet (treat) {
-        console.log(`clicked on treat ${treat.type}`)
+        console.log(`clicked on ${treat.type}`)
+        const userId = 1;
+        const quantity = treat.quantity - 1;
         // remove treat from database
-        store.dispatch(removeTreat(1, 1))
+        store.dispatch(removeTreat(userId, treat.id, quantity))
         // increase size of pet
+        const petId = this.state.pet.id;
+        const points = treat.points + this.state.pet.size;
+        // store.dispatch(increasePet(userId, petId, points))
     }
   render() {
     return (
