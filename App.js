@@ -9,6 +9,7 @@ import { Tabs } from './Tabs';
 import LoginNavigator from './components/LoginForm'
 import store from './store';
 import { auth } from './firebase'
+import {setUser} from './reducers/login'
 
 
 export default class App extends Component {
@@ -27,6 +28,7 @@ export default class App extends Component {
         console.log("auth state changed, user is", user)
         store.dispatch(fetchTasks(user.uid))
         store.dispatch(fetchPets(user.uid))
+        store.dispatch(setUser({user: user.uid}))
         this.setState({ user });
       } else {
         // No user is signed in.

@@ -30,6 +30,7 @@ export const fetchPets = (userId) => dispatch => {
         const obj = snapshot.val();
         const array = [];
         for(let key in obj) {
+          obj[key].key = key
           array.push(obj[key]);
         }
         console.log("pets are ", array)

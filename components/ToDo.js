@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
 import store from '../store'
 import Checkbox from './common/checkbox'
+import database from '../firebase'
 
 //what todo list needs:
 // check boxes for complete or uncomplete
@@ -13,12 +14,13 @@ import Checkbox from './common/checkbox'
  // need to be able to add a todo.
  // 
 
-export class ToDo extends Component {
+class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
       tasks: []
     }
+    this.onChange = this.onChange.bind(this)
   }
 
   componentDidMount() {
@@ -27,7 +29,25 @@ export class ToDo extends Component {
     })
   }
 
-  _keyExtractor = (item) => item.name
+  onChange(userId, taskId, completed) {
+    //if unchecked changes to checked, change database item to completed through redux
+    //add treat to treat list
+    // treat should contain reference to this task so that if it's unchecked again the treat
+    // can be taken away.  
+    //if checked changes to unchecked, change database item to completed = false
+    // treat is taken away
+
+    var updates = {}
+    if (completed) {
+        updates = {completed: false}
+    } else {
+        updates = {completed: true}
+    }
+    database.ref(`/users/${userId}/tasks/${taskId}`).update(updates)
+
+  }
+
+  _keyExtractor = (item) => item.key
 
    render() {
         const { navigate } = this.props.navigation;
@@ -38,9 +58,14 @@ export class ToDo extends Component {
                     removeClippedSubviews={false}
                     keyExtractor={this._keyExtractor}
                     renderItem={({ item }) => {
+                        console.log("completed ", item.completed)
                         return (
                             <View style={styles.listItem}>
-                            <Checkbox label={item.name}/>
+                            <Checkbox 
+                              label={item.name} 
+                              onChange={()=>this.onChange(this.state.auth.user, item.key, item.completed)} 
+                              checked={item.completed}
+                              />
                             </View>
                             )}
                     }
@@ -51,6 +76,13 @@ export class ToDo extends Component {
                     }
                     }
                     title="Add a Task"
+                    color="#841584"
+                />
+                <Button
+                    onPress={() => {
+                    }
+                    }
+                    title="Clear Completed Tasks"
                     color="#841584"
                 />
             </View>
@@ -73,7 +105,7 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({tasks}) => ({tasks})
+const mapState = ({tasks, auth}) => ({tasks, auth})
 
 const mapDispatch = { }
 

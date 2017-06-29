@@ -6,11 +6,13 @@ import database from '../firebase';
 const LOGIN_USER_START = 'LOGIN_USER_START';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
+const SET_USER = 'SET_USER'
 
 
 // /* ------------   ACTION CREATORS     ------------------ */
 
 const loginSuccess = user => ({type: LOGIN_SUCCESS, user});
+export const setUser = user => ({type: SET_USER, user})
 // const loginFail = user => ({type: LOGIN_USER_FAIL, user});
 
 
@@ -31,6 +33,8 @@ const reducer = (state = initalState, action) => {
       return Object.assign({}, state, action.user);
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Login failed.', password: '', loading: false };
+    case SET_USER:
+      return Object.assign({}, state, action.user)
     default:
       return state;
   }
