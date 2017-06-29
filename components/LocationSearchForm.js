@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Switch, Slider, DatePickerIOS, Picker, PickerIOS } from 'react-native'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
+import GooglePlacesWidget from './GooglePlacesWidget'
 
 
 
@@ -10,7 +11,7 @@ class FormView extends Component  {
 <GiftedForm style={styles.form}
 formName='locationSearch'
     >
-    <GiftedForm.GooglePlacesWidget style={styles.googlePlaces}
+    <GooglePlacesWidget style={styles.googlePlaces}
         name='locationSearch'
         placeholder='Search for location'
         />
