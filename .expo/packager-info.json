@@ -1,8 +1,8 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 2476,
-  "expoServerNgrokUrl": "https://yh-nnu.stella-yc.tama-do.exp.direct",
-  "packagerNgrokUrl": "https://packager.yh-nnu.stella-yc.tama-do.exp.direct",
-  "ngrokPid": 756
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://yh-nnu.ksurrence.tama-do.exp.direct",
+  "packagerNgrokUrl": "https://packager.yh-nnu.ksurrence.tama-do.exp.direct",
+  "ngrokPid": 10848
 }

@@ -4,46 +4,51 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
-import  FormView  from './LocationSearchForm'
+import FormView from './LocationSearchForm'
+
 
 
 export class PetMap extends Component {
-constructor(props) {
+  constructor(props) {
     super(props)
     //markers will eventually come from firebase, not state
+
     this.state = {
-      markers : [(<MapView.Marker
-      coordinate={{latitude: 40.712784,
-      longitude: -74.005941}}
-      title={"Pretty Kitty"}
-      description={"Come feed me! I haven't eaten in days!!"}
-      key={Date}
-    >
-    <Image source={require("../images/cat.png")}
-      style={styles.marker}
-      />
-       </MapView.Marker>)]
+      userId: 1,
+      markers: [(<MapView.Marker
+        coordinate={{
+          latitude: 40.712784,
+          longitude: -74.005941
+        }}
+        title={"Pretty Kitty"}
+        key={Date}
+      >
+        <Image source={require("../images/cat.png")}
+          style={styles.marker}
+        />
+      </MapView.Marker>)]
     }
   }
+
   render() {
 
     return (
       <View style={styles.container}>
-       <MapView style={styles.map}
-          initialRegion = {{
+        <MapView style={styles.map}
+          initialRegion={{
             latitude: 40.712784,
-      longitude: -74.005941,
-       latitudeDelta: 0.0222,
-      longitudeDelta: 0.0201
+            longitude: -74.005941,
+            latitudeDelta: 0.0222,
+            longitudeDelta: 0.0201
           }}
 
           mapType="hybrid"
           showsUserLocation={true}
           userLocationAnnotationTitle="you are here!"
           showsCompass={true}>
-    {this.state.markers.map(marker => marker)}
-          </MapView>
-          <FormView style={styles.form}/>
+          {this.state.markers.map(marker => marker)}
+        </MapView>
+        <FormView style={styles.form} />
       </View>
     );
   }
@@ -62,16 +67,16 @@ const styles = StyleSheet.create({
     right: 0
   },
   marker: {
-   width: 60,
-   height: 40
+    width: 60,
+    height: 40
   },
-  
+
 });
 
 
-const mapState = ({pets}) => ({pets});
+const mapState = ({ pets }) => ({ pets });
 
-const mapDispatch = { }
+const mapDispatch = {}
 
 
 export default connect(mapState, mapDispatch)(PetMap)
