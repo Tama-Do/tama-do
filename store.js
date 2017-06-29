@@ -22,7 +22,7 @@ export default store;
 import { fetchPets } from './reducers/pets';
 
 // doing it this way allows us to listen for changes
-database.ref('/users/1/tasks').once('value', (snapshot) => {
+database.ref('/users/1/tasks').on('value', (snapshot) => {
       store.dispatch(getTasks(snapshot.val()))
     })
 
