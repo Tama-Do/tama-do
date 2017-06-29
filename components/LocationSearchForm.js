@@ -34,7 +34,7 @@ class FormView extends Component {
                             backgroundColor: '#2185D0',
                         }
                     }}
-                    onSubmit={(isValid, values) => {
+                    onSubmit={(isValid, values, validationResults, postSubmit = null) => {
                         if (isValid) {
                             let updates = {
                                 latitude: values.locationSearch.details.geometry.location.lat,
@@ -45,6 +45,7 @@ class FormView extends Component {
                                 .catch(error => console.log("error is", error))
 
                             console.log('coords', values.locationSearch.details.geometry.location, 'place', values.locationSearch.details.address_components)
+                            postSubmit()
                         }
                     }
                     } />
