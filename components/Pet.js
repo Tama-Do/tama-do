@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import sample from 'lodash.sample';
 import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
-
+import { removeTreat } from '../reducers/treats';
+import store from '../store';
 
 class Pet extends Component {
   constructor (props) {
@@ -18,6 +19,7 @@ class Pet extends Component {
     };
     this.feedPet = this.feedPet.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.showTreats = this.showTreats.bind(this);
   }
 
   static navigationOptions = ({ navigation, screenProps }) => ({
@@ -48,12 +50,18 @@ class Pet extends Component {
 //     });
 //   }
 
-    feedPet () {
+    showTreats () {
         console.log('feed monster button pressed')
         const oldState = this.state.showTreats;
         this.setState({showTreats: !oldState})
     }
 
+    feedPet (treat) {
+        console.log(`clicked on treat ${treat.type}`)
+        // remove treat from database
+        store.dispatch(removeTreat(1, 1))
+        // increase size of pet
+    }
   render() {
     return (
       <View style={styles.container}>
@@ -83,13 +91,23 @@ class Pet extends Component {
                     data={this.props.treats}
                     removeClippedSubviews={false}
                     keyExtractor={this._keyExtractor}
-                    renderItem={({ item }) => <Text>{item.type}</Text>}
+                    renderItem={({ item }) =>
+                        <TouchableHighlight
+                            style={styles.treat}
+                            onPress={() => this.feedPet(item)}
+                            underlayColor="white"
+                            activeOpacity={0.7}
+                        >
+                            <Text>{item.type}</Text>
+                        </TouchableHighlight>
+
+                    }
                 />
             </View>
         }
         <Button
           style={styles.button}
-          onPress={() => {this.feedPet()}}
+          onPress={() => {this.showTreats()}}
           title="Feed me!"
           color="#841584"
         />
@@ -118,6 +136,10 @@ const styles = StyleSheet.create({
     height: 50,
     flex: 1,
     justifyContent: 'flex-end'
+  },
+  treat: {
+      marginBottom: 5,
+      padding: 5
   }
 });
 

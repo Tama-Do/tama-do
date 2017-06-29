@@ -4,11 +4,9 @@ import database from '../firebase';
 
 const GET_TREATS = 'GET_TREATS';
 
-
 // /* ------------   ACTION CREATORS     ------------------ */
 
 const getTreats = treats => ({ type: GET_TREATS, treats });
-
 
 // /* ------------       REDUCER     ------------------ */
 
@@ -30,10 +28,19 @@ export const fetchTreats = (userId) => dispatch => {
     database.ref(`/users/${userId}/treats`).on('value', snapshot => {
         const obj = snapshot.val();
         const array = [];
+        let newObj;
         for (let key in obj) {
-          array.push(obj[key]);
+          newObj = Object.assign({}, obj[key])
+          newObj.id = key;
+          array.push(newObj);
         }
         dispatch(getTreats(array));
-    })
+    });
 
-}
+};
+
+export const removeTreat = (userId, treatId) => dispatch => {
+
+  database.ref(`/users/${userId}/treats/`).child(treatId).remove();
+
+};
