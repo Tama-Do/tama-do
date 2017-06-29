@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import sample from 'lodash.sample';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ class Pet extends Component {
             tweenOptions: {},
             pet: {},
             treats: this.props.treats,
-            showTreats: false
+            showTreats: false,
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -32,6 +32,12 @@ class Pet extends Component {
         })
     }
 
+    componentWillUnmount() {
+        const userId = 1;
+        const petId = this.props.navigation.state.params.id;
+        database.ref(`/users/${userId}/pets/${petId}`).off
+    }
+
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: navigation.state.params.name
     });
@@ -44,13 +50,28 @@ class Pet extends Component {
     }
 
     showTreats() {
-        console.log('feed monster button pressed')
         const oldState = this.state.showTreats;
         this.setState({ showTreats: !oldState })
     }
 
+    // tweenSprite () {
+    //     const coords = this.refs.monsterRef.getCoordinates();
+    //     const location = [0, 100, 200, 300, 400, 500];
+    //     this.setState({
+    //     tweenOptions: {
+    //         tweenType: 'sineWave',
+    //         startXY: [coords.left, coords.top],
+    //         xTo: [sample(location), sample(location)],
+    //         yTo: [sample(location), sample(location)],
+    //         duration: 1000,
+    //         loop: false,
+    //     }
+    //     }, () => {
+    //     this.refs.monsterRef.startTween();
+    //     });
+    // }
+
     feedPet(treat) {
-        console.log(`clicked on ${treat.type}`)
         const userId = 1;
         // remove treat from database
         const quantity = treat.quantity - 1;
@@ -59,56 +80,74 @@ class Pet extends Component {
         const petId = this.props.navigation.state.params.id;
         const points = treat.points + this.state.pet.size;
         this.props.increasePet(userId, petId, points);
+        this.setState({ animationType: 'EAT' });
+        setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        this.forceUpdate()
     }
     render() {
+        const size = this.state.pet.size;
+        const length = 70 + size * 5;
+        const screenWidth = Dimensions.get('window').width;
+        const screenHeight = Dimensions.get('window').height;
+        // Needs more math for centering 0_0
+        const location = (screenWidth - length) / 6;
+        console.log('location', location)
         return (
             <View style={styles.container}>
                 <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
-                <AnimatedSprite
-                    ref={'monsterRef'}
-                    sprite={monsterSprite}
-                    animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-                    loopAnimation={true}
-                    coordinates={{
-                        top: 10,
-                        left: 10,
-                    }}
-                    size={{
-                        width: monsterSprite.size.width * 1.5,
-                        height: monsterSprite.size.height * 1.5,
-                    }}
-                    draggable={true}
-                    tweenOptions={this.state.tweenOptions}
-                    tweenStart={'fromMethod'}
-                    onPress={() => { this.onPress(); }}
-                />
                 {
-                    !this.state.showTreats ? null :
-                        <View style={styles.treatsView}>
-                            <FlatList
-                                data={this.props.treats}
-                                removeClippedSubviews={false}
-                                keyExtractor={this._keyExtractor}
-                                renderItem={({ item }) =>
-                                    <TouchableHighlight
-                                        style={styles.treat}
-                                        onPress={() => this.feedPet(item)}
-                                        underlayColor="white"
-                                        activeOpacity={0.7}
-                                    >
-                                        <Text>{item.type}</Text>
-                                    </TouchableHighlight>
+                    !(size && location) ? null :
 
-                                }
-                            />
-                        </View>
+                    <View style={{backgroundColor: 'steelblue', flex: 4}}>
+                        <AnimatedSprite
+                            ref={'monsterRef'}
+                            sprite={monsterSprite}
+                            animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+                            loopAnimation={true}
+                            coordinates={{
+                                top: 0,
+                                left: -location,
+                            }}
+                            size={{
+                                width: length,
+                                height: length,
+                            }}
+                            draggable={true}
+                            tweenOptions={this.state.tweenOptions}
+                            tweenStart={'fromMethod'}
+                            onPress={() => { this.onPress(); }}
+                        />
+                    </View>
                 }
-                <Button
-                    style={styles.button}
-                    onPress={() => { this.showTreats() }}
-                    title="Feed me!"
-                    color="#841584"
-                />
+                <View style={{flex: 2}}>
+                    {
+                        !this.state.showTreats ? null :
+                            <View style={styles.treatsView}>
+                                <FlatList
+                                    data={this.props.treats}
+                                    removeClippedSubviews={false}
+                                    keyExtractor={this._keyExtractor}
+                                    renderItem={({ item }) =>
+                                        <TouchableHighlight
+                                            style={styles.treat}
+                                            onPress={() => this.feedPet(item)}
+                                            underlayColor="white"
+                                            activeOpacity={0.7}
+                                        >
+                                            <Text>{item.type}</Text>
+                                        </TouchableHighlight>
+
+                                    }
+                                />
+                            </View>
+                    }
+                    <Button
+                        style={styles.button}
+                        onPress={() => { this.showTreats() }}
+                        title="Feed me!"
+                        color="#841584"
+                    />
+                </View>
             </View>
         );
     }
@@ -120,11 +159,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
     },
     header: {
         paddingTop: 10,
-        flex: 5
+        flex: 1
     },
     button: {
         paddingBottom: 10,
@@ -132,13 +171,11 @@ const styles = StyleSheet.create({
     },
     treatsView: {
         height: 50,
-        flex: 1,
-        justifyContent: 'flex-end'
     },
     treat: {
         marginBottom: 5,
         padding: 5
-    }
+    },
 });
 
 const mapState = ({ pets, treats }) => ({ pets, treats })

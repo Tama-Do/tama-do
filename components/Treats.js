@@ -8,11 +8,12 @@ class Treats extends Component {
     this.state = {
       treats: [{type: 'Cake'}, {type: 'Cookie'}]
     }
+    this._keyExtractor = this._keyExtractor.bind(this)
   }
 
-  _keyExtractor = (item) => {
+  _keyExtractor (item) {
     console.log('keyExtractor item.type', item.id)
-    item.id
+    return item.id;
   }
 
   render() {
