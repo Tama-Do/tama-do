@@ -26,9 +26,7 @@ export default reducer
 // /* ------------       DISPATCHERS     ------------------ */
 
 export const fetchPets = (userId) => dispatch => {
-    //this will change when we integrate sign in and have
-    // userid on state via the auth object
-    database.ref(`/users/1/pets`).on('value', snapshot => {
+    database.ref(`/users/${userId}/pets`).on('value', snapshot => {
         const obj = snapshot.val();
         const array = [];
         for(let key in obj) {
