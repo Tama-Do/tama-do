@@ -28,6 +28,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
     "react-native-animated-sprite": "^0.11.0",
+    "react-native-checkbox": "^1.1.0",
     "react-native-clean-form": "^0.4.1",
     "react-native-elements": "^0.13.0",
     "react-native-form": "^2.1.2",

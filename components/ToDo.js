@@ -4,6 +4,14 @@ import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
 import store from '../store'
+import Checkbox from './common/checkbox'
+
+//what todo list needs:
+// check boxes for complete or uncomplete
+ // on complete a treat is added to the users/treats
+ // on uncheck the treat is taken away again
+ // need to be able to add a todo.
+ // 
 
 export class ToDo extends Component {
   constructor(props) {
@@ -29,7 +37,13 @@ export class ToDo extends Component {
                     data={this.state.tasks}
                     removeClippedSubviews={false}
                     keyExtractor={this._keyExtractor}
-                    renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
+                    renderItem={({ item }) => {
+                        return (
+                            <View style={styles.listItem}>
+                            <Checkbox label={item.name}/>
+                            </View>
+                            )}
+                    }
                 />
                 <Button
                     onPress={() => {
@@ -51,6 +65,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+   listItem: {
+
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
 });
 
 
