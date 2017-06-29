@@ -3,10 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import LoginOldUser from './LoginOldUser'
-import {
-  emailChanged,
-  passwordChanged,
-  loginUser } from '../reducers/login';
+import { loginUser } from '../reducers/login';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 import AnimatedSprite from 'react-native-animated-sprite';
 import monsterSprite from '../sprites/monster/monsterSprite';
@@ -21,10 +18,11 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      animationType: 'WALK'
+      animationType: 'WALK',
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
+
   }
 
   onButtonPress() {
@@ -32,10 +30,6 @@ class LoginForm extends Component {
   }
 
   renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
     return (
       <Button onPress={this.onButtonPress}>
         Sign Up
@@ -45,7 +39,7 @@ class LoginForm extends Component {
 
 
   render() {
-    console.log(this.props)
+    console.log("PROPSSSSSS", this.props)
     const { navigate } = this.props.navigation;
 
     return (
@@ -134,12 +128,6 @@ const mapStateToProps = ({email, password}) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  emailChanged: (text) => {
-    dispatch(emailChanged(text))
-  },
-  passwordChanged: (text) => {
-    dispatch(passwordChanged(text))
-  },
   loginUser: (email, password) => {
     dispatch(loginUser(email, password))
   }
