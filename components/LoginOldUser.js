@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
-import LoginOldUser from './LoginOldUser'
+import LoginForm from './LoginForm'
 import {
   emailChanged,
   passwordChanged,
   loginUser } from '../reducers/login';
 import { Card, CardSection, Input, Button, Spinner } from './common';
-import AnimatedSprite from 'react-native-animated-sprite';
-import monsterSprite from '../sprites/monster/monsterSprite';
 
-
-
-class LoginForm extends Component {
+class LoginOldUser extends Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
       email: '',
-      password: '',
-      animationType: 'WALK'
+      password: ''
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
@@ -38,36 +33,16 @@ class LoginForm extends Component {
 
     return (
       <Button onPress={this.onButtonPress}>
-        Sign Up
+        Login
       </Button>
     );
   }
 
-
   render() {
-    console.log(this.props)
     const { navigate } = this.props.navigation;
 
     return (
       <Card>
-        <View style={styles.hello}>
-          <Text style={styles.helloText}>Tama-Do</Text>
-            <AnimatedSprite
-            ref={'monsterRef'}
-            sprite={monsterSprite}
-            animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-            loopAnimation={true}
-            coordinates={{
-              top: 10,
-              left: 40,
-            }}
-            size={{
-              width: monsterSprite.size.width * 1.5,
-              height: monsterSprite.size.height * 1.5,
-            }}
-            draggable={false}
-          />
-        </View>
         <CardSection>
           <Input
             label="Email"
@@ -95,27 +70,12 @@ class LoginForm extends Component {
           {this.renderButton()}
         </CardSection>
 
-        <TouchableOpacity onPress={() => {navigate('LoginOldUser')}}>
-          <Text style={styles.loginTest}>
-            Already Have An Account?
-          </Text>
-        </TouchableOpacity>
-
       </Card>
     );
   }
 }
 
-
 const styles = {
-  hello: {
-    height:425
-  },
-  helloText: {
-    fontSize:50,
-    alignSelf: 'center',
-    fontFamily: "Courier"
-  },
   errorTextStyle: {
     fontSize: 18,
     alignSelf: 'center',
@@ -146,22 +106,4 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 
-const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
-
-export default LoginNavigator = StackNavigator({
-    LoginForm: { screen: LoginFormContainer,
-      navigationOptions:{
-        headerStyle:{
-            backgroundColor: '#66ccff'
-        }
-      }
-    },
-    LoginOldUser: { screen: LoginOldUser,
-      navigationOptions:{
-        title: "Back To Sign Up",
-        headerStyle:{
-            backgroundColor: '#66ccff'
-        }
-      }
-    }
-})
+export default connect(mapStateToProps, mapDispatchToProps)(LoginOldUser);
