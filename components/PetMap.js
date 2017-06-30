@@ -17,137 +17,138 @@ export class PetMap extends Component {
     super(props)
     //markers will eventually come from firebase, not state
 
-    this.state = {
+    this.state = { //remove construcor and make state = object(not this.state)
       component: 'map',
       selected: false,
       userId: 1,
       currMonster: '',
-      markers: [(<MapView.Marker
-        coordinate={{
-          latitude: 40.712784,
-          longitude: -74.005941
-        }}
-        title={"Pretty Kitty"}
-        key={Date}
-      >
-        <Image source={require("../images/cat.png")}
-          style={styles.marker}
-        />
-      </MapView.Marker>)]
+      // markers: [(<MapView.Marker
+      //   coordinate={{
+      //     latitude: 40.712784,
+      //     longitude: -74.005941
+      //   }}
+      //   title={"Pretty Kitty"}
+      //   key={Date}
+      // >
+      //   <Image source={require("../images/cat.png")}
+      //     style={styles.marker}
+      //   />
+      // </MapView.Marker>)]
     }
 
-    this.goToLocationForm = this.goToLocationForm.bind(this)
-    this.pickAMonster = this.pickAMonster.bind(this)
+    // this.goToLocationForm = this.goToLocationForm.bind(this)
+    // this.pickAMonster = this.pickAMonster.bind(this)
   }
 
   goToLocationForm = () => {
-    this.setState({component: 'form', selected: false})
+    this.setState({ component: 'form', selected: false })
   }
 
   pickAMonster = (petName) => {
-    this.setState({currMonster: petName, selected: true})
+    this.setState({ currMonster: petName, selected: true })
+    //look into ref.key or snapshot.key for firebase
   }
 
 
   render() {
 
-const imgs = {
-  grayMonster: {
-    notClicked: require('../sprites/monster/monster_celebrate01.png'),
-    clicked: require('../sprites/monster/monster_celebrate_selected01.png')
-  }
-}
+    const imgs = {
+      grayMonster: {
+        notClicked: require('../sprites/monster/monster_celebrate01.png'),
+        clicked: require('../sprites/monster/monster_celebrate_selected01.png')
+      }
+    }
 
-if (this.state.component === 'map') {
-    
-    return (
-      <View style={styles.container}>
-        <MapView style={styles.map}
-          initialRegion={{
-            latitude: 40.712784,
-            longitude: -74.005941,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0201
-          }}
+    if (this.state.component === 'map') {
 
-          mapType="hybrid"
-          showsUserLocation={true}
-          userLocationAnnotationTitle="you are here!"
-          showsCompass={true}>
-          {this.props.pets.map(pet => (
-            <MapView.Marker
-        coordinate={{
-          latitude: pet.latitude,
-          longitude: pet.longitude
-        }}
-        title={pet.name}
-        key={pet.name}
-      >
-        {/*<Image source={imgs[pet.type].notClicked}
-        style={styles.marker}
-        />*/}
-      </MapView.Marker>
-          ))}
-        </MapView>
-        <Button onPress={() => this.goToLocationForm()}>
-          Add or Change a Pet's Location
-          </Button>
-      </View>
-    ) 
-} else {
-  return (
-    <View>
-            <GiftedForm style={styles.form}
-                formName='locationSearch'
-            >
-                  <View style={styles.row}>
-      {this.props.pets.map(pet => (
-        
-        <View style={{alignContent: 'center'}}>
-          <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.name)}>
-        <Image style={styles.petImage} source={this.state.selected && this.state.currMonster === pet.name ? imgs[pet.type].clicked : imgs[pet.type].notClicked}/>
-        </TouchableHighlight>
-        <Text style={styles.row}>{pet.name}</Text>
-        <Text style={styles.row}>{pet.location}</Text>
-        </View>
-        ))}
-        </View>
-                <GooglePlacesWidget style={styles.googlePlaces}
-                    name='locationSearch'
-                    placeholder='Search for location'
+      return (
+        <View style={styles.container}>
+          <MapView style={styles.map}
+            initialRegion={{
+              latitude: 40.712784,
+              longitude: -74.005941,
+              latitudeDelta: 0.0222,
+              longitudeDelta: 0.0201
+            }}
+
+            mapType="hybrid"
+            showsUserLocation={true}
+            userLocationAnnotationTitle="you are here!"
+            showsCompass={true}>
+            {this.props.pets.map(pet => (
+              <MapView.Marker
+                coordinate={{
+                  latitude: pet.latitude,
+                  longitude: pet.longitude
+                }}
+                title={pet.name}
+                key={pet.name}
+              >
+                <Image source={imgs[pet.type].notClicked}
+                  style={styles.marker}
                 />
-                <GiftedForm.SubmitWidget
-                    title='Submit'
-                    widgetStyles={{
-                        submitButton: {
-                            backgroundColor: '#2185D0',
-                        }
-                    }}
-                    onSubmit={(isValid, values, validationResults, postSubmit = null) => {
-                        if (isValid) {
-                            let updates = {
-                                latitude: values.locationSearch.details.geometry.location.lat,
-                                longitude: values.locationSearch.details.geometry.location.lng
-                            }
-                            database.ref(`/users/${this.state.userId}/pets/1`).update(updates)
-                                .then(response => console.log("success response", response))
-                                .catch(error => console.log("error is", error))
+              </MapView.Marker>
+            ))}
+          </MapView>
+          <Button onPress={() => this.goToLocationForm()}>
+            Add or Change a Pet's Location
+          </Button>
+        </View>
+      )
+    } else {
+      return (
+        <View>
+          <GiftedForm style={styles.form}
+            formName='locationSearch'
+          >
+            <View style={styles.row}>
+              {this.props.pets.map(pet => (
 
-                                {/*database.ref(`users/${this.state.userId}/pets/`)
+                <View style={{ alignContent: 'center' }}>
+                  <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.name)}>
+                    <Image style={styles.petImage} source={this.state.selected && this.state.currMonster === pet.name ? imgs[pet.type].clicked : imgs[pet.type].notClicked} />
+                  </TouchableHighlight>
+                  <Text style={styles.row}>{pet.name}</Text>
+                  <Text style={styles.row}>{pet.location}</Text>
+                </View>
+              ))}
+            </View>
+            <GooglePlacesWidget style={styles.googlePlaces}
+              name='locationSearch'
+              placeholder='Search for location'
+            />
+            <GiftedForm.SubmitWidget
+              title='Submit'
+              widgetStyles={{
+                submitButton: {
+                  backgroundColor: '#2185D0',
+                }
+              }}
+              onSubmit={(isValid, values, validationResults, postSubmit = null) => {
+                if (isValid) {
+                  let updates = {
+                    latitude: values.locationSearch.details.geometry.location.lat,
+                    longitude: values.locationSearch.details.geometry.location.lng
+                  }
+                  database.ref(`/users/${this.state.userId}/pets/1`).update(updates)
+                    .then(response => console.log("success response", response))
+                    .catch(error => console.log("error is", error))
+
+                  {/*database.ref(`users/${this.state.userId}/pets/`)
                                 .orderByChild("name").equalTo(this.state.currMonster).update(updates)
                                 .then(response => console.log("success response", response))
                                 .catch(error => console.log("error is", error))*/}
 
-                            console.log('coords', values.locationSearch.details.geometry.location, 'place', values.locationSearch.details.address_components)
-                            postSubmit()
-                            this.setState({component: "map"})
-                        }
-                    }
-                    } />
-            </GiftedForm>
-            </View>
-        )
-}
+                  console.log('coords', values.locationSearch.details.geometry.location, 'place', values.locationSearch.details.address_components)
+                  postSubmit()
+                  this.setState({ component: "map" })
+                }
+              }
+              } />
+          </GiftedForm>
+        </View>
+      )
+    }
   }
 }
 

@@ -40,7 +40,7 @@ class Pet extends Component {
         //const userId = 1;
         let userId = this.props.auth.user
         console.log("this.props", this.props)
-        const petId = this.props.navigation.state.params.id;
+        const petId = this.props.navigation.state.params.key;
         console.log("petId is ", petId)
         database.ref(`/users/${userId}/pets/${petId}`).off
     }
@@ -49,7 +49,7 @@ class Pet extends Component {
         title: navigation.state.params.name
     });
 
-    _keyExtractor = (item) => item.id
+    _keyExtractor = (item) => item.key
 
     onPress() {
         this.setState({ animationType: 'CELEBRATE' });
@@ -84,9 +84,12 @@ class Pet extends Component {
         console.log("this.props", this.props)
         // remove treat from database
         const quantity = treat.quantity - 1;
-        this.props.removeTreat(userId, treat.id, quantity);
+        console.log('treat', treat.key);
+        console.log('userId', userId);
+        console.log('quantity', quantity);
+        this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
-        const petId = this.props.navigation.state.params.id;
+        const petId = this.props.navigation.state.params.key;
         const points = treat.points + this.state.pet.size;
         this.props.increasePet(userId, petId, points);
         this.setState({ animationType: 'EAT' });

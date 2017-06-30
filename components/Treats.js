@@ -12,7 +12,7 @@ class Treats extends Component {
   }
 
   _keyExtractor(item) {
-    return item.id;
+    return item.key;
   }
 
   render() {
