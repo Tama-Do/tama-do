@@ -28,7 +28,7 @@ class Pet extends Component {
         const petId = this.props.navigation.state.params.id;
         database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
             let pet = snapshot.val();
-            this.setState({ pet: pet })
+            this.setState({pet: null}, () => this.setState({ pet: pet }));
         })
     }
 
@@ -85,6 +85,8 @@ class Pet extends Component {
         this.forceUpdate()
     }
     render() {
+
+        if (!this.state.pet) return null
         const size = this.state.pet.size;
         const length = 70 + size * 5;
         const location = length / 2;
@@ -100,7 +102,8 @@ class Pet extends Component {
                 {
                     !(size && location) ? null :
 
-                    <View style={{backgroundColor: 'steelblue', flex: 4}}>
+                    <View style={{backgroundColor: 'steelblue', flex: 4, alignContent: 'center', justifyContent: 'center'}}>
+
                         <AnimatedSprite
                             ref={'monsterRef'}
                             sprite={monsterSprite}
@@ -119,6 +122,7 @@ class Pet extends Component {
                             tweenStart={'fromMethod'}
                             onPress={() => { this.onPress(); }}
                         />
+
                     </View>
                 }
                 <View style={{flex: 2}}>
