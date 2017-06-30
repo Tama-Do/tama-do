@@ -11,7 +11,7 @@ const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 // /* ------------   ACTION CREATORS     ------------------ */
 
 const loginSuccess = user => ({type: LOGIN_SUCCESS, user});
-// const loginFail = user => ({type: LOGIN_USER_FAIL, user});
+//const loginFail = user => ({type: LOGIN_USER_FAIL, user});
 
 
 // /* ------------       REDUCER     ------------------ */
@@ -44,41 +44,48 @@ export const loginUser = ( email, password ) => {
 
   return (dispatch) => {
     dispatch({ type: LOGIN_USER_START });
-    // should the following eventually be refactored so that instead of automatically 
-    // creating user it redirects to a signup page where users can create an username? 
-    auth.signInWithEmailAndPassword(email, password) 
-      .then(data => { 
-        dispatch(loginSuccess({email: data.email, uid: data.uid}))
+    // should the following eventually be refactored so that instead of automatically
+    // creating user it redirects to a signup page where users can create an username?
+      auth.createUserWithEmailAndPassword(email, password)
+      .then(data => {
+        createUser(data.email, data.uid, dispatch)
       })
-      .catch((authError) => {
-        auth.createUserWithEmailAndPassword(email, password)
-        .then(data => {
-          createUser(data.email, data.uid, dispatch)
-        })
-        .catch(error => console.log(error))
-          //dispatch login user fail at some point
-      });
+      .catch(error => console.log(error))
+        //dispatch login user fail at some point
     };
 };
 
-const createUser = (email, uid, dispatch) => {
-  database.ref('users/' + uid).set({ 
+export const signInUser = ( email, password ) => {
+
+  return (dispatch) => {
+    dispatch({ type: LOGIN_USER_START });
+    // should the following eventually be refactored so that instead of automatically
+    // creating user it redirects to a signup page where users can create an username?
+    auth.signInWithEmailAndPassword(email, password)
+      .then(data => {
+        dispatch(loginSuccess({email: data.email, uid: data.uid}))
+      })
+      .catch(error => console.log(error))
+          //dispatch login user fail at some point
+    };
+};
+
+export const createUser = (email, uid, dispatch) => {
+  database.ref('users/' + uid).set({
     //username: name,
     email: email
     //profile_picture : imageUrl
-  }) 
+  })
   .then(() => {
     dispatch(loginSuccess({email, uid}))
-  }) 
+  })
   .catch(error => console.log("error is", error))
 }
 
 
-// const loginUserFail = (dispatch, user) => {
+// const loginFail = (dispatch, user) => {
 //   dispatch({
 //     type: LOGIN_USER_FAIL,
 //     payload: user
 //   });
 // };
-
-

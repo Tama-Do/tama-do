@@ -47,3 +47,4 @@ export const increasePet = (userId, petId, points) => dispatch => {
         .update({ size: points });
 
 };
+
