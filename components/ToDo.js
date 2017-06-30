@@ -39,10 +39,17 @@ class ToDo extends Component {
     // treat is taken away
 
     var updates = {}
+    var treatsRef = database.ref(`/users/${this.state.auth.user}`).child('treats')
     if (completed) {
         updates = {completed: false}
+        var newTreatRef = treatsRef.push();
+        newTreatRef.set({
+            type: this.state.task,
+            task: taskId
+        });
     } else {
         updates = {completed: true}
+        //find treat where taskId = taskId and delete it.  
     }
     database.ref(`/users/${userId}/tasks/${taskId}`).update(updates)
 

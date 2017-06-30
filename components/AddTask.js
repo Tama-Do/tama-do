@@ -23,10 +23,8 @@ export default class AddTaskModal extends Component {
   }
 
     onButtonPress() {
-        "IN HERRRRE"
         var tasksRef = database.ref(`/users/${this.state.auth.user}`).child('tasks')
         var newTaskRef = tasksRef.push();
-        console.log("new task ref is ", newTaskRef)
         newTaskRef.set({
             name: this.state.task,
             completed: false
