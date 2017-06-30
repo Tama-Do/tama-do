@@ -24,20 +24,17 @@ export default reducer;
 // /* ------------       DISPATCHERS     ------------------ */
 
 export const fetchTreats = (userId) => dispatch => {
+    database.ref(`/users/${userId}/treats`).on('value', snapshot => {
+        const obj = snapshot.val();
+        const array = [];
+        for(let key in obj) {
+          obj[key].key = key
+          array.push(obj[key]);
+        }
+        dispatch(getTreats(array));
+    });
 
-  database.ref(`/users/${userId}/treats`).on('value', snapshot => {
-    const obj = snapshot.val();
-    const array = [];
-    let newObj;
-    for (let key in obj) {
-      newObj = Object.assign({}, obj[key])
-      newObj.id = key;
-      array.push(newObj);
-    }
-    dispatch(getTreats(array));
-  });
-
-};
+}
 
 export const removeTreat = (userId, treatId, quantity) => dispatch => {
 
@@ -48,4 +45,4 @@ export const removeTreat = (userId, treatId, quantity) => dispatch => {
       .update({ quantity: quantity });
   }
 
-};
+}

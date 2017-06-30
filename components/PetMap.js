@@ -83,9 +83,9 @@ if (this.state.component === 'map') {
         title={pet.name}
         key={pet.name}
       >
-        <Image source={imgs[pet.type].notClicked}
+        {/*<Image source={imgs[pet.type].notClicked}
         style={styles.marker}
-        />
+        />*/}
       </MapView.Marker>
           ))}
         </MapView>

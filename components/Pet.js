@@ -24,8 +24,12 @@ class Pet extends Component {
     }
 
     componentDidMount() {
-        const userId = 1;
-        const petId = this.props.navigation.state.params.id;
+        //const userId = 1;
+        let userId = this.props.auth.user
+        console.log("this.props", this.props)
+        //const petId = this.props.navigation.state.params.id;
+        const petId = this.props.navigation.state.params.key;
+        console.log("petId is", petId)
         database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
             let pet = snapshot.val();
             this.setState({pet: null}, () => this.setState({ pet: pet }));
@@ -33,8 +37,11 @@ class Pet extends Component {
     }
 
     componentWillUnmount() {
-        const userId = 1;
+        //const userId = 1;
+        let userId = this.props.auth.user
+        console.log("this.props", this.props)
         const petId = this.props.navigation.state.params.id;
+        console.log("petId is ", petId)
         database.ref(`/users/${userId}/pets/${petId}`).off
     }
 
@@ -72,7 +79,9 @@ class Pet extends Component {
     // }
 
     feedPet(treat) {
-        const userId = 1;
+        //const userId = 1;
+        let userId = this.props.auth.user
+        console.log("this.props", this.props)
         // remove treat from database
         const quantity = treat.quantity - 1;
         this.props.removeTreat(userId, treat.id, quantity);
@@ -190,7 +199,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapState = ({ pets, treats }) => ({ pets, treats })
+const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
 
 const mapDispatch = { increasePet, removeTreat }
 
