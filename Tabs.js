@@ -23,6 +23,19 @@ const PetNavigator = StackNavigator({
     }
 })
 
+const MapNavigator = StackNavigator({
+    Map: {
+      screen: PetMap,
+      navigationOptions: {
+        title: 'Map'
+      }
+    },
+    Form: {
+      screen: Form
+    }
+})
+
+
 export const Tabs = TabNavigator({
   Main: {
     screen: ToDo,
