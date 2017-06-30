@@ -18,8 +18,8 @@ const store = createStore(
 
 export default store;
 
-// fetch Pet information immediately
-import { fetchPets } from './reducers/pets';
+
+
 
 // doing it this way allows us to listen for changes
 // database.ref('/users/1/tasks').on('value', (snapshot) => {
@@ -28,5 +28,6 @@ import { fetchPets } from './reducers/pets';
 //     })
 
 
-store.dispatch(fetchPets()); //to actually give userId
+import { fetchTreats } from './reducers/treats'
+store.dispatch(fetchTreats(1));
 

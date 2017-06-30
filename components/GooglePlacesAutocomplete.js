@@ -138,7 +138,6 @@ const GooglePlacesAutocomplete = React.createClass({
       query: {
         key: googleApiKey,
         language: 'en',
-        types: 'geocode',
       },
       GoogleReverseGeocodingQuery: {},
       GooglePlacesSearchQuery: {

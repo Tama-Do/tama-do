@@ -104,11 +104,12 @@ const mapState = ({tasks, auth}) => ({tasks, auth})
 
 const mapDispatch = { }
 
+const ToDoContainer = connect(mapState, mapDispatch)(ToDo);
 
+export default ToDoContainer;
 
-export const TaskNavigator = StackNavigator({
-    ToDo: { screen: ToDo },
-    AddTask: { screen: AddTask }
-})
+// export const TaskNavigator = StackNavigator({
+//     ToDo: { screen: ToDoContainer },
+//     AddTask: { screen: AddTask }
+// })
 
-export default connect(mapState, mapDispatch)(ToDo)

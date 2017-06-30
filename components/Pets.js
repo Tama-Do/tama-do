@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux'
-
+import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
 import { fetchPets } from '../reducers/pets';
-
+import { Pet } from './Pet'
 
 
 class Pets extends Component {
@@ -14,9 +14,10 @@ class Pets extends Component {
       // ** if we are using redux, we probably don't need a stateful container
       pets: this.props.pets
     }
+    this.viewPet = this.viewPet.bind(this)
   }
 
-  _keyExtractor = (item) => item.name
+  _keyExtractor = (item) => item.id
 
   componentDidMount() {
 
@@ -30,24 +31,38 @@ class Pets extends Component {
 
   }
 
+  viewPet(pet) {
+    this.props.navigation.navigate('Pet', pet)
+  }
+
   render() {
     return (
       <View style={styles.container} >
-        <Text style={styles.heading}>My Monsters</Text>
           <FlatList
-              style={{flex: 1}}
+              style={styles.flatlist}
               data={this.props.pets}
               keyExtractor={this._keyExtractor}
               removeClippedSubviews={false}
               renderItem={({ item }) =>
-                <View style={styles.listItem}>
-                  <Image
-                    source={require('../sprites/monster/monster_eat02.png')}
-                    style={styles.itemImage}
-                  />
-                  <Text style={styles.itemText}>{item.name}</Text>
-                  <Text style={styles.itemText}>{item.location}</Text>
-                </View>
+                <TouchableHighlight
+                  onPress={() => this.viewPet(item)}
+                  underlayColor="white"
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.listItem}>
+                    <Image
+                      source={require('../sprites/monster/monster_idle.png')}
+                      style={styles.itemImage}
+                    />
+                    <View style={styles.name}>
+                      <Text style={styles.itemText}>{item.name}</Text>
+                    </View>
+                    <View style={styles.place}>
+                      <Text style={styles.itemText}>{item.location}</Text>
+                    </View>
+
+                  </View>
+                </TouchableHighlight>
               }
           />
       </View>
@@ -65,14 +80,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  heading: {
-    fontSize: 18,
-    paddingBottom: 30
+  flatlist: {
+    marginTop: 14,
+    alignSelf: "stretch",
   },
   listItem: {
-
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start',
+    alignItems: 'center', // cross axis
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 18,
+    paddingRight: 16,
+    marginLeft: 14,
+    marginRight: 14,
+    marginTop: 0,
+    marginBottom: 6,
   },
   itemText: {
     fontSize: 15,
@@ -80,6 +104,12 @@ const styles = StyleSheet.create({
   itemImage: {
     width: 50,
     height: 50
+  },
+  name: {
+    marginLeft: 30,
+    width: 70
+  },
+  place: {
   }
 })
 
@@ -87,4 +117,7 @@ const mapState = ({pets}) => ({pets})
 
 const mapDispatch = { }
 
-export default connect(mapState, mapDispatch)(Pets);
+const PetsContainer = connect(mapState, mapDispatch)(Pets);
+
+export default PetsContainer
+

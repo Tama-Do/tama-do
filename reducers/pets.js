@@ -32,9 +32,17 @@ export const fetchPets = (userId) => dispatch => {
         for(let key in obj) {
           obj[key].key = key
           array.push(obj[key]);
+
         }
-        console.log("pets are ", array)
         dispatch(getPets(array));
     });
 
-}
+};
+
+export const increasePet = (userId, petId, points) => dispatch => {
+
+    database.ref().child(`/users/${userId}/pets/${petId}`)
+        .update({ size: points });
+
+};
+

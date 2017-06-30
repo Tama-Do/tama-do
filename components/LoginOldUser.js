@@ -3,10 +3,7 @@ import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import LoginForm from './LoginForm'
-import {
-  emailChanged,
-  passwordChanged,
-  loginUser } from '../reducers/login';
+import { signInUser } from '../reducers/login';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginOldUser extends Component {
@@ -23,14 +20,10 @@ class LoginOldUser extends Component {
   }
 
   onButtonPress() {
-    this.props.loginUser(this.state.email, this.state.password);
+    this.props.signInUser(this.state.email, this.state.password);
   }
 
   renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
     return (
       <Button onPress={this.onButtonPress}>
         Login
@@ -94,14 +87,8 @@ const mapStateToProps = ({email, password}) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  emailChanged: (text) => {
-    dispatch(emailChanged(text))
-  },
-  passwordChanged: (text) => {
-    dispatch(passwordChanged(text))
-  },
-  loginUser: (email, password) => {
-    dispatch(loginUser(email, password))
+  signInUser: (email, password) => {
+    dispatch(signInUser(email, password))
   }
 })
 
