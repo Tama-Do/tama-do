@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
 import store from '../store'
+import Checkbox from './common/checkbox'
+import database from '../firebase'
 
-export class ToDo extends Component {
+
+//what todo list needs:
+// check boxes for complete or uncomplete
+ // on complete a treat is added to the users/treats
+ // on uncheck the treat is taken away again
+ // need to be able to add a todo.
+ // 
+
+class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
       tasks: []
     }
+    this.onChange = this.onChange.bind(this)
   }
 
   componentDidMount() {
@@ -19,7 +30,25 @@ export class ToDo extends Component {
     })
   }
 
-  _keyExtractor = (item) => item.name
+  onChange(userId, taskId, completed) {
+    //if unchecked changes to checked, change database item to completed through redux
+    //add treat to treat list
+    // treat should contain reference to this task so that if it's unchecked again the treat
+    // can be taken away.  
+    //if checked changes to unchecked, change database item to completed = false
+    // treat is taken away
+
+    var updates = {}
+    if (completed) {
+        updates = {completed: false}
+    } else {
+        updates = {completed: true}
+    }
+    database.ref(`/users/${userId}/tasks/${taskId}`).update(updates)
+
+  }
+
+  _keyExtractor = (item) => item.key
 
    render() {
         const { navigate } = this.props.navigation;
@@ -29,16 +58,28 @@ export class ToDo extends Component {
                     data={this.state.tasks}
                     removeClippedSubviews={false}
                     keyExtractor={this._keyExtractor}
-                    renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
+                    renderItem={({ item }) => {
+                        console.log("completed ", item.completed)
+                        return (
+                            <View style={styles.listItem}>
+                            <Checkbox 
+                              label={item.name} 
+                              onChange={()=>this.onChange(this.state.auth.user, item.key, item.completed)} 
+                              checked={item.completed}
+                              />
+                            </View>
+                            )}
+                    }
                 />
+               {/*}
                 <Button
                     onPress={() => {
-                        navigate('AddTask')
                     }
                     }
-                    title="Add a Task"
+                    title="Clear Completed Tasks"
                     color="#841584"
-                />
+                /> */}
+            <AddTask/>
             </View>
         )
     }
@@ -51,10 +92,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+   listItem: {
+
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
 });
 
 
-const mapState = ({tasks}) => ({tasks})
+const mapState = ({tasks, auth}) => ({tasks, auth})
 
 const mapDispatch = { }
 

@@ -26,14 +26,18 @@ export default reducer
 // /* ------------       DISPATCHERS     ------------------ */
 
 export const fetchTasks = (userId) => dispatch => {
-
-    let userId = 1 //need to do something other than hard code this in the future.
-    var path = `/users/${userId}/tasks`
-    database.ref(path).on('value',  (data => {
-        dispatch(getTasks(data.val()))
-   
-    }))
-
-    
+    database.ref(`/users/${userId}/tasks`).on('value', snapshot => {
+        const obj = snapshot.val();
+        const array = [];
+        for(let key in obj) {
+          obj[key].key = key
+          array.push(obj[key]);
+        }
+        console.log("tasks are ", array)
+        dispatch(getTasks(array));
+    });
 
 }
+    
+
+
