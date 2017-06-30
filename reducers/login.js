@@ -76,12 +76,25 @@ export const signInUser = ( email, password ) => {
           //dispatch login user fail at some point
     };
 };
+// let monsters = {0: {name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}}
 
 export const createUser = (email, uid, dispatch) => {
+  let monsters = {0: {name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}}
+
   database.ref('users/' + uid).set({
-    //username: name,
     email: email
-    //profile_picture : imageUrl
+
+  })
+  // database.ref('users/' + uid + '/pets').set({
+  //   0:{name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}
+  // })
+  let petsRef = database.ref(`users/${uid}`).child('pets')
+  let newPetsRef = petsRef.push();
+  newPetsRef.set({
+    name: "",
+    size: 1,
+    type: "grayMonster",
+    location: ""
   })
   .then(() => {
     dispatch(loginSuccess({email, uid}))
