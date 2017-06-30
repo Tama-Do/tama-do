@@ -22,7 +22,7 @@ const styles = {
     paddingBottom: 10
   },
   buttonStyle: {
-    flex: 1,
+    flex: 0,
     alignSelf: 'stretch',
     borderRadius: 5,
     borderWidth: 1,
