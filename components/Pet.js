@@ -90,7 +90,7 @@ class Pet extends Component {
         const screenWidth = Dimensions.get('window').width;
         const screenHeight = Dimensions.get('window').height;
         // Needs more math for centering 0_0
-        const location = (screenWidth - length) / 6;
+        const location = length / 2;
         console.log('location', location);
         const treatPaths = {
             cherry: require("../sprites/treats/cherry.jpg"),

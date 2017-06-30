@@ -51,7 +51,7 @@ class Pets extends Component {
                 >
                   <View style={styles.listItem}>
                     <Image
-                      source={require('../sprites/monster/monster_eat02.png')}
+                      source={require('../sprites/monster/monster_idle.png')}
                       style={styles.itemImage}
                     />
                     <View style={styles.name}>
