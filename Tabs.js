@@ -29,12 +29,6 @@ export const Tabs = TabNavigator({
       tabBarLabel: 'Map'
     },
   },
-  Form: {
-      screen: Form,
-      navigationOptions: {
-        tabBarLabel: 'Form'
-      }
-    },
   Treats: {
     screen: Treats,
     navigationOptions: {
