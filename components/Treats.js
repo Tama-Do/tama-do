@@ -12,7 +12,6 @@ class Treats extends Component {
   }
 
   _keyExtractor (item) {
-    console.log('keyExtractor item.type', item.id)
     return item.id;
   }
 

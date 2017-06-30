@@ -32,7 +32,6 @@ class Pets extends Component {
   }
 
   viewPet(pet) {
-    console.log('this.props.navigation.state', this.props.navigation.state)
     this.props.navigation.navigate('Pet', pet)
   }
 
@@ -55,8 +54,13 @@ class Pets extends Component {
                       source={require('../sprites/monster/monster_eat02.png')}
                       style={styles.itemImage}
                     />
-                    <Text style={styles.itemText}>{item.name}</Text>
-                    <Text style={styles.itemText}>{item.location}</Text>
+                    <View style={styles.name}>
+                      <Text style={styles.itemText}>{item.name}</Text>
+                    </View>
+                    <View style={styles.place}>
+                      <Text style={styles.itemText}>{item.location}</Text>
+                    </View>
+
                   </View>
                 </TouchableHighlight>
               }
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
   listItem: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center', // cross axis
     paddingTop: 10,
     paddingBottom: 10,
@@ -100,6 +104,12 @@ const styles = StyleSheet.create({
   itemImage: {
     width: 50,
     height: 50
+  },
+  name: {
+    marginLeft: 30,
+    width: 70
+  },
+  place: {
   }
 })
 
