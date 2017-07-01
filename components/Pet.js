@@ -33,10 +33,13 @@ class Pet extends Component {
             let pet = snapshot.val();
             this.setState({pet: null}, () => this.setState({ pet: pet }));
         })
-      const latitude = this.props.navigation.state.params.latitude;
-      const longitude = this.props.navigation.state.params.longitude;
-      console.log('latitude', latitude);
-      console.log('longitude', longitude);
+
+        // Function to check if user is at pet's location
+        // Then set this.state.checkedIn to boolean value
+        const latitude = this.props.navigation.state.params.latitude;
+        const longitude = this.props.navigation.state.params.longitude;
+        console.log('latitude', latitude);
+        console.log('longitude', longitude);
     }
 
     componentWillUnmount() {
