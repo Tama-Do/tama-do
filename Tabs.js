@@ -8,8 +8,10 @@ import PetMap from './components/PetMap';
 import Treats from './components/Treats';
 import Form from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
+import PetNotCheckedInContainer from './components/PetNotCheckedIn';
+import PetToggle from './components/PetToggle';
 
-import { TaskNavigator } from './components/ToDo'
+import { TaskNavigator } from './components/ToDo';
 
 const PetNavigator = StackNavigator({
     Pets: {
@@ -19,7 +21,7 @@ const PetNavigator = StackNavigator({
       }
     },
     Pet: {
-      screen: PetContainer
+      screen: PetToggle
     }
 })
 

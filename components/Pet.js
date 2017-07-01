@@ -17,7 +17,7 @@ class Pet extends Component {
             pet: null,
             treats: this.props.treats,
             showTreats: false,
-            spriteVertical: null
+            spriteVertical: null,
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -25,9 +25,9 @@ class Pet extends Component {
     }
 
     componentDidMount() {
-        let userId = this.props.auth.user
-        const petId = this.props.navigation.state.params.key;
-        database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
+        let userId = this.props.auth.user;
+        const petKey = this.props.petKey;
+        database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
             let pet = snapshot.val();
             this.setState({pet: null}, () => this.setState({ pet: pet }));
         })
@@ -35,13 +35,13 @@ class Pet extends Component {
 
     componentWillUnmount() {
         let userId = this.props.auth.user
-        const petId = this.props.navigation.state.params.key;
-        database.ref(`/users/${userId}/pets/${petId}`).off
+        const petKey = this.props.petKey;
+        database.ref(`/users/${userId}/pets/${petKey}`).off
     }
 
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.name
-    });
+    // static navigationOptions = ({ navigation, screenProps }) => ({
+    //     title: navigation.state.params.name
+    // });
 
     _keyExtractor = (item) => item.key
 
@@ -78,9 +78,9 @@ class Pet extends Component {
         const quantity = treat.quantity - 1;
         this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
-        const petId = this.props.navigation.state.params.key;
+        const petKey = this.props.petKey;
         const points = treat.points + this.state.pet.size;
-        this.props.increasePet(userId, petId, points);
+        this.props.increasePet(userId, petKey, points);
         // pet eating animation
         this.setState({ animationType: 'EAT' });
         setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
@@ -105,7 +105,7 @@ class Pet extends Component {
         return (
             <View style={styles.container}>
 
-                <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
+                <Text style={styles.header}>Location: {this.state.pet.location}</Text>
 
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
                 {
