@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
-import sample from 'lodash.sample';
 import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
+import treatPaths from './TreatPaths';
 
 class Pet extends Component {
     constructor(props) {
@@ -14,9 +14,10 @@ class Pet extends Component {
         this.state = {
             animationType: 'IDLE',
             tweenOptions: {},
-            pet: {},
+            pet: null,
             treats: this.props.treats,
             showTreats: false,
+            spriteVertical: null
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -24,12 +25,8 @@ class Pet extends Component {
     }
 
     componentDidMount() {
-        //const userId = 1;
         let userId = this.props.auth.user
-        console.log("this.props", this.props)
-        //const petId = this.props.navigation.state.params.id;
         const petId = this.props.navigation.state.params.key;
-        console.log("petId is", petId)
         database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
             let pet = snapshot.val();
             this.setState({pet: null}, () => this.setState({ pet: pet }));
@@ -37,11 +34,8 @@ class Pet extends Component {
     }
 
     componentWillUnmount() {
-        //const userId = 1;
         let userId = this.props.auth.user
-        console.log("this.props", this.props)
         const petId = this.props.navigation.state.params.key;
-        console.log("petId is ", petId)
         database.ref(`/users/${userId}/pets/${petId}`).off
     }
 
@@ -79,68 +73,69 @@ class Pet extends Component {
     // }
 
     feedPet(treat) {
-        //const userId = 1;
         let userId = this.props.auth.user
-        console.log("this.props", this.props)
         // remove treat from database
         const quantity = treat.quantity - 1;
-        console.log('treat', treat.key);
-        console.log('userId', userId);
-        console.log('quantity', quantity);
         this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
         const petId = this.props.navigation.state.params.key;
         const points = treat.points + this.state.pet.size;
         this.props.increasePet(userId, petId, points);
+        // pet eating animation
         this.setState({ animationType: 'EAT' });
         setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
-        this.forceUpdate()
     }
+
+    onLayout = event => {
+        if (this.state.spriteDimensions) return // layout was already called
+        const size = this.state.pet.size;
+        const length = 70 + size * 5;
+        let {width, height} = event.nativeEvent.layout;
+        let spriteVertical = (height / 2) - (length / 1.5);
+        this.setState({spriteVertical: null}, () => this.setState({ spriteVertical }));
+    }
+
     render() {
 
         if (!this.state.pet) return null
-        const size = this.state.pet.size;
-        const length = 70 + size * 5;
-        const location = length / 2;
-        const treatPaths = {
-            cherry: require("../sprites/treats/cherry.jpg"),
-            donut: require("../sprites/treats/donut.png"),
-            candy: require("../sprites/treats/candy.png")
-        }
+
+        const petLength = 70 + this.state.pet.size * 5;
+        const xlocation = petLength / 2;
 
         return (
             <View style={styles.container}>
+
                 <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
+
+                <View style={styles.spriteContainer} onLayout={this.onLayout}>
                 {
-                    !(size && location) ? null :
-
-                    <View style={{backgroundColor: 'steelblue', flex: 4, alignContent: 'center', justifyContent: 'center'}}>
-
+                    !this.state.spriteVertical ? null :
                         <AnimatedSprite
+                            style={styles.sprite}
                             ref={'monsterRef'}
                             sprite={monsterSprite}
                             animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
                             loopAnimation={true}
                             coordinates={{
-                                top: 0,
-                                left: -location,
+                                top: this.state.spriteVertical,
+                                left: -xlocation,
                             }}
                             size={{
-                                width: length,
-                                height: length,
+                                width: petLength,
+                                height: petLength,
                             }}
                             draggable={true}
                             tweenOptions={this.state.tweenOptions}
                             tweenStart={'fromMethod'}
                             onPress={() => { this.onPress(); }}
                         />
-
-                    </View>
                 }
-                <View style={{flex: 2}}>
+                </View>
+
+                <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
-                            <View style={styles.treatsView}>
+                            <View style={styles.treatsContainer}>
                                 <FlatList
                                     horizontal={true}
                                     data={this.props.treats}
@@ -171,6 +166,7 @@ class Pet extends Component {
                         color="#841584"
                     />
                 </View>
+
             </View>
         );
     }
@@ -182,17 +178,23 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
     },
     header: {
         paddingTop: 10,
         flex: 1
     },
+    spriteContainer: {
+        flex: 4,
+    },
+    feedContainer: {
+        flex: 2
+    },
     button: {
         paddingBottom: 10,
         flex: 2
     },
-    treatsView: {
+    treatsContainer: {
         flex: 1,
         flexDirection: 'row',
     },

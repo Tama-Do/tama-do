@@ -1,26 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
+import treatPaths from './TreatPaths';
 
 class Treats extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      treats: [{ type: 'Cake' }, { type: 'Cookie' }]
-    }
-    this._keyExtractor = this._keyExtractor.bind(this)
-  }
 
-  _keyExtractor(item) {
+  _keyExtractor (item) {
     return item.key;
   }
 
   render() {
-    const treatPaths = {
-      cherry: require("../sprites/treats/cherry.jpg"),
-      donut: require("../sprites/treats/donut.png"),
-      candy: require("../sprites/treats/candy.png")
-    }
     return (
       <View style={styles.container}>
         <Text>My Treats</Text>
