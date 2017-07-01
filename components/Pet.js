@@ -18,41 +18,52 @@ class Pet extends Component {
             treats: this.props.treats,
             showTreats: false,
             spriteVertical: null,
+            checkedIn: true
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
         this.showTreats = this.showTreats.bind(this);
+        this.buttonColor = this.buttonColor.bind(this);
     }
 
     componentDidMount() {
         let userId = this.props.auth.user;
-        const petKey = this.props.petKey;
+        const petKey = this.props.navigation.state.params.key;
         database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
             let pet = snapshot.val();
             this.setState({pet: null}, () => this.setState({ pet: pet }));
         })
+      const latitude = this.props.navigation.state.params.latitude;
+      const longitude = this.props.navigation.state.params.longitude;
+      console.log('latitude', latitude);
+      console.log('longitude', longitude);
     }
 
     componentWillUnmount() {
         let userId = this.props.auth.user
-        const petKey = this.props.petKey;
+        const petKey = this.props.navigation.state.params.key;
         database.ref(`/users/${userId}/pets/${petKey}`).off
     }
 
-    // static navigationOptions = ({ navigation, screenProps }) => ({
-    //     title: navigation.state.params.name
-    // });
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: navigation.state.params.name
+    });
 
     _keyExtractor = (item) => item.key
 
     onPress() {
-        this.setState({ animationType: 'CELEBRATE' });
-        setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        if(this.state.checkedIn) {
+            this.setState({ animationType: 'CELEBRATE' });
+            setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        }
+
     }
 
     showTreats() {
-        const oldState = this.state.showTreats;
-        this.setState({ showTreats: !oldState })
+        if(this.state.checkedIn) {
+            const oldState = this.state.showTreats;
+            this.setState({ showTreats: !oldState });
+        }
     }
 
     // tweenSprite () {
@@ -78,7 +89,7 @@ class Pet extends Component {
         const quantity = treat.quantity - 1;
         this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
-        const petKey = this.props.petKey;
+        const petKey = this.props.navigation.state.params.key;
         const points = treat.points + this.state.pet.size;
         this.props.increasePet(userId, petKey, points);
         // pet eating animation
@@ -93,6 +104,11 @@ class Pet extends Component {
         let {width, height} = event.nativeEvent.layout;
         let spriteVertical = (height / 2) - (length / 1.5);
         this.setState({spriteVertical: null}, () => this.setState({ spriteVertical }));
+    }
+
+
+    buttonColor () {
+        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
     }
 
     render() {
@@ -132,6 +148,8 @@ class Pet extends Component {
                 }
                 </View>
 
+                { this.state.checkedIn ?  null : <View style={styles.overlay}></View> }
+
                 <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
@@ -163,8 +181,9 @@ class Pet extends Component {
                         style={styles.button}
                         onPress={() => { this.showTreats() }}
                         title="Feed me!"
-                        color="#841584"
+                        color={this.buttonColor()}
                     />
+                    { this.state.checkedIn ? null : <Text>You are too far away!</Text>}
                 </View>
 
             </View>
@@ -202,6 +221,14 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         padding: 5
     },
+    overlay:{
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.6)'
+    }
 });
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
