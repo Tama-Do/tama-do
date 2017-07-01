@@ -8,12 +8,6 @@ import Checkbox from './common/checkbox'
 import database from '../firebase'
 
 
-//what todo list needs:
-// check boxes for complete or uncomplete
-// on complete a treat is added to the users/treats
-// on uncheck the treat is taken away again
-// need to be able to add a todo.
-// 
 
 class ToDo extends Component {
   constructor(props) {
@@ -22,6 +16,7 @@ class ToDo extends Component {
       tasks: []
     }
     this.onChange = this.onChange.bind(this)
+    this.updateQuantity = this.updateQuantity.bind(this)
   }
 
 
@@ -43,30 +38,56 @@ class ToDo extends Component {
     }
   }
   // 
-  addTreat(treatsRef, taskRef, taskUpdates) {
+  addTreat(treatsRef, taskRef) {
+    // check for treatType on task
+    taskRef.once('value').then((snapshot) => {
+      return snapshot.val().treat
+    })
+      .then(treatType => {
+        //what if task does not yet have a treatType associated?
+        if (!treatType) {
+          //treatType = this.getTreatType()
+          treatType = 'anger'
+          // update task to have treat type
+          taskRef.update({ treat: treatType })
+          console.log("I should only be here if treat type is unassigned")
+        }
+        return treatType
+      })
+      .then(treatType => {
+        var query = treatsRef.orderByChild("type").equalTo(treatType)
+
+        //what if query returns nothing because treatType does not exist on treats?
+        query.once('value', (snapshot) => {
+          if (!snapshot.val()) {
+            //create treat
+            var newTreatRef = treatsRef.push()
+            newTreatRef.set({
+              type: treatType,
+              quantity: 0
+            })
+              .then(() => { this.updateQuantity(query) })
+          } else {
+            this.updateQuantity(query)
+          }
+        })
+      })
+  }
+
+  subtractTreat(treatsRef, taskRef) {
+    taskRef.once('value').then((snapshot) => {
+      return snapshot.val().treat
+    })
+      .then((treatType) => {
+        var query = treatsRef.orderByChild("type").equalTo(treatType)
+        this.updateQuantity(query, 'decrement')
+      })
 
   }
 
-  onChange(userId, taskId, completed) {
-
-    var taskUpdates = {}
-    var treatsRef = database.ref(`/users/${this.state.auth.user}`).child('treats')
-    var taskRef = database.ref(`/users/${this.state.auth.user}/tasks/${taskId}`)
-    var treatType = this.getTreatType()
-    //var treatType = 'cherry'
-    console.log('treatType', treatType)
-
-    if (completed) {
-      console.log("we're unchecking a checked box")
-      taskUpdates = { completed: false }
-    } else {
-      console.log("we're checking an unchecked box")
-      taskUpdates = { completed: true }
-
-      var query = treatsRef.orderByChild("type").equalTo(treatType)
-      var quant
-      query.once('value', function(snapshot) {
-        console.log("snapshot", snapshot.val())
+  updateQuantity(query, direction = 'increment') {
+    var quant
+    query.once('value', function (snapshot) {
       var snapArr = []
       if (!Array.isArray(snapshot.val())) {
         for (var key in snapshot.val()) {
@@ -75,23 +96,39 @@ class ToDo extends Component {
       } else {
         snapArr = snapshot.val()
       }
-        console.log("snapArr", snapArr)
-        snapArr = snapArr.filter(child => child)
-        console.log("snapArr", snapArr)
-        quant = snapArr[0].quantity
-      })
-      query.once('child_added', function (snapshot) {
-         quant = (Number(quant) + 1)
-         snapshot.ref.update({quantity: quant})
-         })
+      snapArr = snapArr.filter(child => child)
+      quant = snapArr[0].quantity
+    })
+    query.once('child_added', function (snapshot) {
+      if (direction == 'increment') {
+        quant = (Number(quant) + 1)
+      } else {
+        quant = (Number(quant) - 1)
+      }
+      snapshot.ref.update({ quantity: quant })
+    })
+  }
+
+
+  onChange(userId, taskId, completed) {
+    console.log("we're heerrre !")
+    var taskUpdates = {}
+    var treatsRef = database.ref(`/users/${this.state.auth.user}`).child('treats')
+    var taskRef = database.ref(`/users/${this.state.auth.user}/tasks/${taskId}`)
+
+
+    if (completed) {
+      console.log("we're unchecking a checked box")
+      taskUpdates = { completed: false }
+      this.subtractTreat(treatsRef, taskRef)
+    } else {
+      console.log("we're checking an unchecked box")
+      taskUpdates = { completed: true }
+      this.addTreat(treatsRef, taskRef)
     }
     database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
 
-// var query db.ref("-Users").orderByKey("uid").equalTo("jRXMsNZHR2exqifnR2rXcceEMxF2");
-// query.once("child_added", function(snapshot) {
-//   snapshot.ref.update({ displayName: "New trainer" })
-// });
 
   // if (completed) {
   //   // if you "uncomplete a task"
@@ -171,7 +208,9 @@ class ToDo extends Component {
               <View style={styles.listItem}>
                 <Checkbox
                   label={item.name}
-                  onChange={() => this.onChange(this.state.auth.user, item.key, item.completed)}
+                  onChange={() => {
+                    console.log("got here!")
+                    this.onChange(this.state.auth.user, item.key, item.completed)}}
                   checked={item.completed}
                 />
               </View>
