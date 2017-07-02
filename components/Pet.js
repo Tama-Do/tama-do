@@ -23,31 +23,6 @@ import database from '../firebase.js';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
 
-const optionsStyles = {
-  optionsContainer: {
-    backgroundColor: 'green',
-    padding: 5,
-    flex: 1,
-  },
-  optionsWrapper: {
-    backgroundColor: 'purple',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start'
-  },
-  optionWrapper: {
-    backgroundColor: 'yellow',
-    margin: 5,
-  },
-  optionTouchable: {
-    underlayColor: 'gold',
-    activeOpacity: 70,
-  },
-  optionText: {
-    color: 'brown',
-  },
-};
-
 class Pet extends Component {
     constructor(props) {
         super(props);
@@ -62,7 +37,8 @@ class Pet extends Component {
             showDraggable: true,
             dropZoneValues  : null,
             pan: new Animated.ValueXY(),
-            visibleModal: false
+            visibleModal: false,
+            selectedTreat: null
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -82,6 +58,8 @@ class Pet extends Component {
                     this.setState({
                         showDraggable : false
                     });
+                    this.feedPet(this.state.selectedTreat);
+                    this.setState({selectedTreat: null, showTreats: false})
                 }else{
                     Animated.spring(
                         this.state.pan,
@@ -174,39 +152,47 @@ class Pet extends Component {
     renderDraggable(treat){
         if (this.state.showDraggable){
             return (
-                <TouchableHighlight
+                <View
                     style={styles.draggableContainer}
-                    onPress={() => console.log('i was pressed')}
                     key={treat.key}
                 >
-                    <TouchableHighlight
-                        onPress={() => console.log('i was pressed')}
-                    >
                         <Animated.Image
                             {...this.panResponder.panHandlers}
                             style={[this.state.pan.getLayout()]}
                         >
                                 <Image source={treatPaths[treat.type]} />
                         </Animated.Image>
-                    </TouchableHighlight>
-                </TouchableHighlight>
+                </View>
             );
         }
     }
 
-  _renderButton = (text, onPress) => (
-    <TouchableOpacity onPress={onPress}>
-      <View style={modalStyles.button}>
-        <Text>{text}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+    setTreat (treat) {
+        console.log(`${treat.type} pressed`)
+        this.setState({selectedTreat: treat})
+        this.setState({showTreats: true})
+        this.setState({visibleModal: false})
+    }
+
+  _renderButton = (text, onPress) => {
+      if (!this.state.showTreats) {
+        return (<TouchableOpacity onPress={onPress}>
+                    <View style={modalStyles.button}>
+                        <Text>{text}</Text>
+                    </View>
+                </TouchableOpacity>
+        )}
+
+  };
 
   _renderModalContent = () => (
     <View style={modalStyles.modalContent}>
         {this.props.treats.map(treat =>
             <View key={treat.key}style={modalStyles.treats}>
-                <Image source={treatPaths[treat.type]} />
+                <TouchableHighlight
+                    onPress={() => this.setTreat(treat)}>
+                    <Image source={treatPaths[treat.type]} />
+                </TouchableHighlight>
                 <Text>{treat.quantity}</Text>
             </View>
             )}
@@ -254,7 +240,7 @@ class Pet extends Component {
                 <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
-                        this.props.treats.map(treat => this.renderDraggable(treat))
+                        this.renderDraggable(this.state.selectedTreat)
 
 
                             // <View style={styles.treatsContainer}>
