@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image, PanResponder, Animated, } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
@@ -19,13 +19,48 @@ class Pet extends Component {
             treats: this.props.treats,
             showTreats: false,
             spriteVertical: null,
-            checkedIn: false
+            checkedIn: false,
+            showDraggable: true,
+            dropZoneValues  : null,
+            pan: new Animated.ValueXY()
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
         this.showTreats = this.showTreats.bind(this);
         this.buttonColor = this.buttonColor.bind(this);
         this.distance = distance.bind(this);
+        this.setDropZoneValues.bind(this)
+        this.panResponder = PanResponder.create({
+            onStartShouldSetPanResponder : () => true,
+            onPanResponderMove           : Animated.event([null,{
+                dx : this.state.pan.x,
+                dy : this.state.pan.y
+            }]),
+            onPanResponderRelease        : (e, gesture) => {
+                if(this.isDropZone(gesture)){
+                    this.setState({
+                        showDraggable : false
+                    });
+                }else{
+                    Animated.spring(
+                        this.state.pan,
+                        {toValue:{x:0,y:0}}
+                    ).start();
+                }
+            }
+        });
+
+    }
+
+    setDropZoneValues(event){
+        this.setState({
+            dropZoneValues : event.nativeEvent.layout
+        });
+    }
+
+    isDropZone(gesture){
+        var dz = this.state.dropZoneValues;
+        return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
     }
 
     componentDidMount() {
@@ -66,26 +101,9 @@ class Pet extends Component {
         }
     }
 
-    // tweenSprite () {
-    //     const coords = this.refs.monsterRef.getCoordinates();
-    //     const location = [0, 100, 200, 300, 400, 500];
-    //     this.setState({
-    //     tweenOptions: {
-    //         tweenType: 'sineWave',
-    //         startXY: [coords.left, coords.top],
-    //         xTo: [sample(location), sample(location)],
-    //         yTo: [sample(location), sample(location)],
-    //         duration: 1000,
-    //         loop: false,
-    //     }
-    //     }, () => {
-    //     this.refs.monsterRef.startTween();
-    //     });
-    // }
-
     feedPet(treat) {
         let userId = this.props.auth.user
-        // remove treat from database
+        // remove a treat from database
         const quantity = treat.quantity - 1;
         this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
@@ -104,11 +122,26 @@ class Pet extends Component {
         let { width, height } = event.nativeEvent.layout;
         let spriteVertical = (height / 2) - (length / 1.5);
         this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
+        this.setDropZoneValues(event);
     }
 
 
     buttonColor() {
         return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
+    }
+
+    renderDraggable(){
+        if (this.state.showDraggable){
+            return (
+                <View style={styles.draggableContainer}>
+                    <Animated.Image
+                        {...this.panResponder.panHandlers}
+                        style={[this.state.pan.getLayout()]}>
+                        <Image source={require('../sprites/treats/candy.png')} />
+                    </Animated.Image>
+                </View>
+            );
+        }
     }
 
     render() {
@@ -152,29 +185,30 @@ class Pet extends Component {
                 <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
-                            <View style={styles.treatsContainer}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={this.props.treats}
-                                    removeClippedSubviews={false}
-                                    keyExtractor={this._keyExtractor}
-                                    renderItem={({ item }) =>
-                                        <TouchableHighlight
-                                            style={styles.treat}
-                                            onPress={() => this.feedPet(item)}
-                                            underlayColor="white"
-                                            activeOpacity={0.7}
-                                        >
-                                            <View>
-                                                <Image source={treatPaths[item.type]} />
-                                                <Text>{item.quantity}</Text>
-                                            </View>
+                            this.renderDraggable()
+                            // <View style={styles.treatsContainer}>
+                            //     <FlatList
+                            //         horizontal={true}
+                            //         data={this.props.treats}
+                            //         removeClippedSubviews={false}
+                            //         keyExtractor={this._keyExtractor}
+                            //         renderItem={({ item }) =>
+                            //             <TouchableHighlight
+                            //                 style={styles.treat}
+                            //                 onPress={() => this.feedPet(item)}
+                            //                 underlayColor="white"
+                            //                 activeOpacity={0.7}
+                            //             >
+                            //                 <View>
+                            //                     <Image source={treatPaths[item.type]} />
+                            //                     <Text>{item.quantity}</Text>
+                            //                 </View>
 
-                                        </TouchableHighlight>
+                            //             </TouchableHighlight>
 
-                                    }
-                                />
-                            </View>
+                            //         }
+                            //     />
+                            // </View>
                     }
                     <Button
                         style={styles.button}
@@ -189,7 +223,8 @@ class Pet extends Component {
         );
     }
 }
-
+let CIRCLE_RADIUS = 36;
+let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -227,6 +262,15 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.6)'
+    },
+    draggableContainer: {
+        position    : 'absolute',
+    },
+    circle      : {
+        backgroundColor     : '#1abc9c',
+        width               : CIRCLE_RADIUS*2,
+        height              : CIRCLE_RADIUS*2,
+        borderRadius        : CIRCLE_RADIUS
     }
 });
 
