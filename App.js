@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { connect, Provider } from 'react-redux';
 import { fetchTasks, getTasks } from './reducers/tasks'
 import { fetchPets, getPets } from './reducers/pets'
-import { MenuContext } from 'react-native-popup-menu';
 
 import database from './firebase';
 import { Tabs } from './Tabs';
@@ -45,9 +44,7 @@ export default class App extends Component {
     if (this.state.user) {
       return (
         <Provider store={store}>
-          <MenuContext>
             <Tabs />
-          </MenuContext>
         </Provider>
       )
     }
@@ -58,3 +55,4 @@ export default class App extends Component {
     );
   }
 }
+

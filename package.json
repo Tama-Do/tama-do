@@ -36,6 +36,7 @@
     "react-native-gifted-form": "0.0.15",
     "react-native-google-places-autocomplete": "^1.2.12",
     "react-native-maps": "^0.15.2",
+    "react-native-modal": "^2.4.0",
     "react-native-modalbox": "^1.4.0",
     "react-native-popup-menu": "^0.7.5",
     "react-navigation": "^1.0.0-beta.11",

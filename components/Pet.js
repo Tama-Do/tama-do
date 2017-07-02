@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image, PanResponder, Animated, } from 'react-native';
+import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image, PanResponder, Animated, TouchableOpacity } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
 import {
@@ -7,7 +7,14 @@ import {
   MenuOptions,
   MenuOption,
   MenuTrigger,
+  renderers,
+  MenuContext
 } from 'react-native-popup-menu';
+
+const { ContextMenu, SlideInMenu } = renderers;
+
+
+import Modal from 'react-native-modal'
 
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
@@ -15,6 +22,31 @@ import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
+
+const optionsStyles = {
+  optionsContainer: {
+    backgroundColor: 'green',
+    padding: 5,
+    flex: 1,
+  },
+  optionsWrapper: {
+    backgroundColor: 'purple',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  optionWrapper: {
+    backgroundColor: 'yellow',
+    margin: 5,
+  },
+  optionTouchable: {
+    underlayColor: 'gold',
+    activeOpacity: 70,
+  },
+  optionText: {
+    color: 'brown',
+  },
+};
 
 class Pet extends Component {
     constructor(props) {
@@ -29,7 +61,8 @@ class Pet extends Component {
             checkedIn: false,
             showDraggable: true,
             dropZoneValues  : null,
-            pan: new Animated.ValueXY()
+            pan: new Animated.ValueXY(),
+            visibleModal: false
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -161,7 +194,24 @@ class Pet extends Component {
         }
     }
 
+  _renderButton = (text, onPress) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={modalStyles.button}>
+        <Text>{text}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
+  _renderModalContent = () => (
+    <View style={modalStyles.modalContent}>
+        {this.props.treats.map(treat =>
+            <View key={treat.key}style={modalStyles.treats}>
+                <Image source={treatPaths[treat.type]} />
+                <Text>{treat.quantity}</Text>
+            </View>
+            )}
+      {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
+    </View> );
 
     render() {
 
@@ -238,24 +288,22 @@ class Pet extends Component {
                         color={this.buttonColor()}
                     />
                     {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
+                    {this._renderButton('Feed Me!', () => this.setState({ visibleModal: true }))}
+                    <Modal
+                        isVisible={this.state.visibleModal}
+                        style={modalStyles.bottomModal}
+                        backdropOpacity={0.2}
+                    >
+                        {this._renderModalContent()}
+                    </Modal>
                 </View>
 
-                <Menu>
-                <MenuTrigger text='Select action' />
-                <MenuOptions>
-                    <MenuOption onSelect={() => alert(`Save`)} text='Save' />
-                    <MenuOption onSelect={() => alert(`Delete`)} >
-                    <Text style={{color: 'red'}}>Delete</Text>
-                    </MenuOption>
-                    <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
-                </MenuOptions>
-                </Menu>
 
             </View>
         );
     }
 }
-let CIRCLE_RADIUS = 36;
+
 let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
@@ -297,13 +345,42 @@ const styles = StyleSheet.create({
     },
     draggableContainer: {
         position    : 'absolute',
-    },
-    circle      : {
-        backgroundColor     : '#1abc9c',
-        width               : CIRCLE_RADIUS*2,
-        height              : CIRCLE_RADIUS*2,
-        borderRadius        : CIRCLE_RADIUS
     }
+});
+
+
+const modalStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: 'lightblue',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    flexDirection: 'row'
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  treats: {
+    flex: 1,
+    flexDirection: 'row',
+  }
 });
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
