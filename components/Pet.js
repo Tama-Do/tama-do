@@ -31,10 +31,9 @@ class Pet extends Component {
             tweenOptions: {},
             pet: null,
             treats: this.props.treats,
-            showTreats: false,
             spriteVertical: null,
             checkedIn: false,
-            showDraggable: true,
+            showDraggable: false,
             dropZoneValues  : null,
             pan: new Animated.ValueXY(),
             visibleModal: false,
@@ -57,11 +56,16 @@ class Pet extends Component {
             }]),
             onPanResponderRelease: (e, gesture) => {
                 if(this.isDropZone(gesture)){
+                    Animated.spring(
+                        this.state.pan,
+                        {toValue:{x:0,y:0}}
+                    ).start();
                     this.setState({
                         showDraggable : false
                     });
                     this.feedPet(this.state.selectedTreat);
                     this.setState({selectedTreat: null, showTreats: false})
+
                 } else {
                     Animated.spring(
                         this.state.pan,
@@ -167,17 +171,18 @@ class Pet extends Component {
     }
 
     setTreat (treat) {
-        console.log(`${treat.type} pressed`)
-        this.setState({selectedTreat: treat})
-        this.setState({showTreats: true})
-        this.setState({visibleModal: false})
+        this.setState({
+            selectedTreat: treat,
+            showDraggable: true,
+            visibleModal: false
+        });
     }
 
   _renderButton = (text, onPress) => {
 
       // make button unclickable if user is too far away
 
-      if (!this.state.showTreats) {
+      if (!this.state.showDraggable) {
         return (<TouchableOpacity onPress={onPress}>
                     <View style={modalStyles.button}>
                         <Text>{text}</Text>
@@ -201,9 +206,6 @@ class Pet extends Component {
       {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
     </View> );
 
-
-    _keyExtractor = (item) => item.key
-
     render() {
         if (!this.state.pet) return null
 
@@ -213,9 +215,7 @@ class Pet extends Component {
 
         return (
             <View style={styles.container}>
-
                 <Text style={styles.header}>Location: {this.state.pet.location}</Text>
-
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
                     {
                         !this.state.spriteVertical ? null :
@@ -244,10 +244,8 @@ class Pet extends Component {
                 {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
 
                 <View style={styles.feedContainer}>
-                    {
-                        !this.state.showTreats ? null :
-                        this.renderDraggable(this.state.selectedTreat)
-                    }
+
+                    {this.renderDraggable(this.state.selectedTreat)}
 
                     {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
 
