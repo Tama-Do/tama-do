@@ -7,7 +7,7 @@ import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
 import treatPaths from './helpers/TreatPaths';
-import { distance, _getLocationAsync } from './helpers/distance';
+import { distance } from './helpers/distance';
 
 class Pet extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class Pet extends Component {
             treats: this.props.treats,
             showTreats: false,
             spriteVertical: null,
-            checkedIn: true
+            checkedIn: false
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -28,29 +28,16 @@ class Pet extends Component {
         this.distance = distance.bind(this);
     }
 
-    isCheckedIn = async (latitude, longitude) => {
-        let bool = await distance(latitude, longitude)
-        this.setState({checkedIn: bool});
-    }
-
     componentDidMount() {
         let userId = this.props.auth.user;
         const petKey = this.props.navigation.state.params.key;
         database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
             let pet = snapshot.val();
-            this.setState({pet: null}, () => this.setState({ pet: pet }));
+            this.setState({ pet: null }, () => this.setState({ pet: pet }));
         })
-
-        // Function to check if user is at pet's location
-        // Then set this.state.checkedIn to boolean value
-        const latitude = this.props.navigation.state.params.latitude;
-        const longitude = this.props.navigation.state.params.longitude;
-        console.log('latitude', latitude);
-        console.log('longitude', longitude);
-        // const distance = distance.bind(this);
-        console.log('distance', distance);
-        distance(latitude, longitude);
-        // this.isCheckedIn(latitude, longitude);
+        // Check if user is at pet's location
+        const { latitude, longitude } = this.props.navigation.state.params;
+        this.distance(latitude, longitude);
     }
 
     componentWillUnmount() {
@@ -66,15 +53,14 @@ class Pet extends Component {
     _keyExtractor = (item) => item.key
 
     onPress() {
-        if(this.state.checkedIn) {
+        if (this.state.checkedIn) {
             this.setState({ animationType: 'CELEBRATE' });
             setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
         }
-
     }
 
     showTreats() {
-        if(this.state.checkedIn) {
+        if (this.state.checkedIn) {
             const oldState = this.state.showTreats;
             this.setState({ showTreats: !oldState });
         }
@@ -115,13 +101,13 @@ class Pet extends Component {
         if (this.state.spriteDimensions) return // layout was already called
         const size = this.state.pet.size;
         const length = 70 + size * 5;
-        let {width, height} = event.nativeEvent.layout;
+        let { width, height } = event.nativeEvent.layout;
         let spriteVertical = (height / 2) - (length / 1.5);
-        this.setState({spriteVertical: null}, () => this.setState({ spriteVertical }));
+        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
     }
 
 
-    buttonColor () {
+    buttonColor() {
         return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
     }
 
@@ -131,39 +117,37 @@ class Pet extends Component {
 
         const petLength = 70 + this.state.pet.size * 5;
         const xlocation = petLength / 2;
-
-        console.log('this.state.checkedIn', this.state.checkedIn);
         return (
             <View style={styles.container}>
 
                 <Text style={styles.header}>Location: {this.state.pet.location}</Text>
 
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
-                {
-                    !this.state.spriteVertical ? null :
-                        <AnimatedSprite
-                            style={styles.sprite}
-                            ref={'monsterRef'}
-                            sprite={monsterSprite}
-                            animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-                            loopAnimation={true}
-                            coordinates={{
-                                top: this.state.spriteVertical,
-                                left: -xlocation,
-                            }}
-                            size={{
-                                width: petLength,
-                                height: petLength,
-                            }}
-                            draggable={true}
-                            tweenOptions={this.state.tweenOptions}
-                            tweenStart={'fromMethod'}
-                            onPress={() => { this.onPress(); }}
-                        />
-                }
+                    {
+                        !this.state.spriteVertical ? null :
+                            <AnimatedSprite
+                                style={styles.sprite}
+                                ref={'monsterRef'}
+                                sprite={monsterSprite}
+                                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+                                loopAnimation={true}
+                                coordinates={{
+                                    top: this.state.spriteVertical,
+                                    left: -xlocation,
+                                }}
+                                size={{
+                                    width: petLength,
+                                    height: petLength,
+                                }}
+                                draggable={true}
+                                tweenOptions={this.state.tweenOptions}
+                                tweenStart={'fromMethod'}
+                                onPress={() => { this.onPress(); }}
+                            />
+                    }
                 </View>
 
-                { this.state.checkedIn ?  null : <View style={styles.overlay}></View> }
+                {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
 
                 <View style={styles.feedContainer}>
                     {
@@ -182,7 +166,7 @@ class Pet extends Component {
                                             activeOpacity={0.7}
                                         >
                                             <View>
-                                                <Image source={treatPaths[item.type]}/>
+                                                <Image source={treatPaths[item.type]} />
                                                 <Text>{item.quantity}</Text>
                                             </View>
 
@@ -198,7 +182,7 @@ class Pet extends Component {
                         title="Feed me!"
                         color={this.buttonColor()}
                     />
-                    { this.state.checkedIn ? null : <Text>You are too far away!</Text>}
+                    {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
                 </View>
 
             </View>
@@ -236,7 +220,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         padding: 5
     },
-    overlay:{
+    overlay: {
         position: 'absolute',
         top: 0,
         bottom: 0,
