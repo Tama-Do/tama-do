@@ -24,7 +24,8 @@ export function distance (lat2, lon2) {
     var d = (R * c * 3.2808).toFixed();
     var bool = d <= 100;
     this.setState({checkedIn: bool});
-  });
+  })
+  .catch(console.error);
 };
 
 // async request to get the user's location
