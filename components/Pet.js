@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image, PanResponder, Animated, } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
@@ -29,7 +36,8 @@ class Pet extends Component {
         this.showTreats = this.showTreats.bind(this);
         this.buttonColor = this.buttonColor.bind(this);
         this.distance = distance.bind(this);
-        this.setDropZoneValues.bind(this)
+        this.setDropZoneValues.bind(this);
+        this.renderDraggable = this.renderDraggable.bind(this);
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder : () => true,
             onPanResponderMove           : Animated.event([null,{
@@ -130,19 +138,30 @@ class Pet extends Component {
         return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
     }
 
-    renderDraggable(){
+    renderDraggable(treat){
         if (this.state.showDraggable){
             return (
-                <View style={styles.draggableContainer}>
-                    <Animated.Image
-                        {...this.panResponder.panHandlers}
-                        style={[this.state.pan.getLayout()]}>
-                        <Image source={require('../sprites/treats/candy.png')} />
-                    </Animated.Image>
-                </View>
+                <TouchableHighlight
+                    style={styles.draggableContainer}
+                    onPress={() => console.log('i was pressed')}
+                    key={treat.key}
+                >
+                    <TouchableHighlight
+                        onPress={() => console.log('i was pressed')}
+                    >
+                        <Animated.Image
+                            {...this.panResponder.panHandlers}
+                            style={[this.state.pan.getLayout()]}
+                        >
+                                <Image source={treatPaths[treat.type]} />
+                        </Animated.Image>
+                    </TouchableHighlight>
+                </TouchableHighlight>
             );
         }
     }
+
+
 
     render() {
 
@@ -185,7 +204,9 @@ class Pet extends Component {
                 <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
-                            this.renderDraggable()
+                        this.props.treats.map(treat => this.renderDraggable(treat))
+
+
                             // <View style={styles.treatsContainer}>
                             //     <FlatList
                             //         horizontal={true}
@@ -218,6 +239,17 @@ class Pet extends Component {
                     />
                     {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
                 </View>
+
+                <Menu>
+                <MenuTrigger text='Select action' />
+                <MenuOptions>
+                    <MenuOption onSelect={() => alert(`Save`)} text='Save' />
+                    <MenuOption onSelect={() => alert(`Delete`)} >
+                    <Text style={{color: 'red'}}>Delete</Text>
+                    </MenuOption>
+                    <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
+                </MenuOptions>
+                </Menu>
 
             </View>
         );
