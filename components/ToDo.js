@@ -7,14 +7,6 @@ import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
 
-
-//what todo list needs:
-// check boxes for complete or uncomplete
- // on complete a treat is added to the users/treats
- // on uncheck the treat is taken away again
- // need to be able to add a todo.
- // 
-
 class ToDo extends Component {
   constructor(props) {
     super(props)
@@ -22,56 +14,137 @@ class ToDo extends Component {
       tasks: []
     }
     this.onChange = this.onChange.bind(this)
+    this.updateQuantity = this.updateQuantity.bind(this)
   }
 
+
   componentDidMount() {
-    let unsubscribe = store.subscribe(()=> {
+    let unsubscribe = store.subscribe(() => {
       this.setState(store.getState())
     })
   }
 
-  onChange(userId, taskId, completed) {
-    //if unchecked changes to checked, change database item to completed through redux
-    //add treat to treat list
-    // treat should contain reference to this task so that if it's unchecked again the treat
-    // can be taken away.  
-    //if checked changes to unchecked, change database item to completed = false
-    // treat is taken away
-
-    var updates = {}
-    if (completed) {
-        updates = {completed: false}
-    } else {
-        updates = {completed: true}
+  getTreatType() { // figure out whether this is working 
+    min = 0;
+    max = 3;
+    randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    switch (randInt) {
+      case 0: return 'cherry'
+      case 1: return 'donut'
+      case 2: return 'candy'
+      default: return null
     }
-    database.ref(`/users/${userId}/tasks/${taskId}`).update(updates)
+  }
+  // 
+  addTreat(treatsRef, taskRef) {
+    // check for treatType on task
+    taskRef.once('value').then((snapshot) => {
+      return snapshot.val().treat
+    })
+      .then(treatType => {
+        //what if task does not yet have a treatType associated?
+        if (!treatType) {
+          treatType = this.getTreatType()
+          // update task to have treat type
+          taskRef.update({ treat: treatType })
+        }
+        return treatType
+      })
+      .then(treatType => {
+        var query = treatsRef.orderByChild("type").equalTo(treatType)
 
+        //what if query returns nothing because treatType does not exist on treats?
+        query.once('value', (snapshot) => {
+          if (!snapshot.val()) {
+            //create treat
+            var newTreatRef = treatsRef.push()
+            newTreatRef.set({
+              type: treatType,
+              quantity: 0
+            })
+              .then(() => { this.updateQuantity(query) })
+          } else {
+            this.updateQuantity(query)
+          }
+        })
+      })
+  }
+
+  subtractTreat(treatsRef, taskRef) {
+    taskRef.once('value').then((snapshot) => {
+      return snapshot.val().treat
+    })
+      .then((treatType) => {
+        var query = treatsRef.orderByChild("type").equalTo(treatType)
+        this.updateQuantity(query, 'decrement')
+      })
+
+  }
+
+  updateQuantity(query, direction = 'increment') {
+    var quant
+    query.once('value', function (snapshot) {
+      var snapArr = []
+      if (!Array.isArray(snapshot.val())) {
+        for (var key in snapshot.val()) {
+          snapArr.push(snapshot.val()[key])
+        }
+      } else {
+        snapArr = snapshot.val()
+      }
+      snapArr = snapArr.filter(child => child)
+      quant = snapArr[0].quantity
+    })
+    query.once('child_added', function (snapshot) {
+      if (direction == 'increment') {
+        quant = (Number(quant) + 1)
+      } else {
+        quant = (Number(quant) - 1)
+      }
+      snapshot.ref.update({ quantity: quant })
+    })
+  }
+
+  onChange(userId, taskId, completed) {
+    var taskUpdates = {}
+    var treatsRef = database.ref(`/users/${this.state.auth.user}`).child('treats')
+    var taskRef = database.ref(`/users/${this.state.auth.user}/tasks/${taskId}`)
+
+    if (completed) {
+      taskUpdates = { completed: false }
+      this.subtractTreat(treatsRef, taskRef)
+    } else {
+      taskUpdates = { completed: true }
+      this.addTreat(treatsRef, taskRef)
+    }
+    database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
 
   _keyExtractor = (item) => item.key
 
-   render() {
-        const { navigate } = this.props.navigation;
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={this.state.tasks}
-                    removeClippedSubviews={false}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={({ item }) => {
-                        console.log("completed ", item.completed)
-                        return (
-                            <View style={styles.listItem}>
-                            <Checkbox 
-                              label={item.name} 
-                              onChange={()=>this.onChange(this.state.auth.user, item.key, item.completed)} 
-                              checked={item.completed}
-                              />
-                            </View>
-                            )}
-                    }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.tasks}
+          removeClippedSubviews={false}
+          keyExtractor={this._keyExtractor}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.listItem}>
+                <Checkbox
+                  label={item.name}
+                  onChange={() => {
+                    this.onChange(this.state.auth.user, item.key, item.completed)}}
+                  checked={item.completed}
                 />
-               {/*}
+              </View>
+            )
+          }
+          }
+        />
+        {/*}
                 <Button
                     onPress={() => {
                     }
@@ -79,10 +152,10 @@ class ToDo extends Component {
                     title="Clear Completed Tasks"
                     color="#841584"
                 /> */}
-            <AddTask/>
-            </View>
-        )
-    }
+        <AddTask />
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -92,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-   listItem: {
+  listItem: {
 
     flexDirection: 'row',
     justifyContent: 'space-between'
@@ -100,16 +173,15 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({tasks, auth}) => ({tasks, auth})
+const mapState = ({ tasks, auth }) => ({ tasks, auth })
 
-const mapDispatch = { }
+const mapDispatch = {}
 
-const ToDoContainer = connect(mapState, mapDispatch)(ToDo);
 
-export default ToDoContainer;
 
-// export const TaskNavigator = StackNavigator({
-//     ToDo: { screen: ToDoContainer },
-//     AddTask: { screen: AddTask }
-// })
+export const TaskNavigator = StackNavigator({
+  ToDo: { screen: ToDo },
+  AddTask: { screen: AddTask }
+})
 
+export default connect(mapState, mapDispatch)(ToDo)
