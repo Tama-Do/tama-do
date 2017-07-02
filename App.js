@@ -10,7 +10,7 @@ import LoginNavigator from './components/LoginForm'
 import store from './store';
 import { auth } from './firebase'
 import {setUser} from './reducers/login'
-
+import { fetchTreats } from './reducers/treats'
 
 export default class App extends Component {
   constructor(props) {
@@ -29,6 +29,8 @@ export default class App extends Component {
         store.dispatch(fetchTasks(user.uid))
         store.dispatch(fetchPets(user.uid))
         store.dispatch(setUser({user: user.uid}))
+        store.dispatch(fetchTreats(user.uid));
+
         this.setState({ user });
       } else {
         // No user is signed in.

@@ -9,7 +9,7 @@ import Treats from './components/Treats';
 import Form from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 
-import { TaskNavigator } from './components/ToDo'
+import { TaskNavigator } from './components/ToDo';
 
 const PetNavigator = StackNavigator({
     Pets: {

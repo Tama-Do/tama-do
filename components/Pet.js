@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image } from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
-import sample from 'lodash.sample';
 import { connect } from 'react-redux';
 import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
+import treatPaths from './helpers/TreatPaths';
+import { distance } from './helpers/distance';
 
 class Pet extends Component {
     constructor(props) {
@@ -14,51 +15,55 @@ class Pet extends Component {
         this.state = {
             animationType: 'IDLE',
             tweenOptions: {},
-            pet: {},
+            pet: null,
             treats: this.props.treats,
             showTreats: false,
+            spriteVertical: null,
+            checkedIn: false
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
         this.showTreats = this.showTreats.bind(this);
+        this.buttonColor = this.buttonColor.bind(this);
+        this.distance = distance.bind(this);
     }
 
     componentDidMount() {
-        //const userId = 1;
-        let userId = this.props.auth.user
-        console.log("this.props", this.props)
-        //const petId = this.props.navigation.state.params.id;
-        const petId = this.props.navigation.state.params.key;
-        console.log("petId is", petId)
-        database.ref(`/users/${userId}/pets/${petId}`).on('value', (snapshot) => {
+        let userId = this.props.auth.user;
+        const petKey = this.props.navigation.state.params.key;
+        database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
             let pet = snapshot.val();
-            this.setState({pet: null}, () => this.setState({ pet: pet }));
+            this.setState({ pet: null }, () => this.setState({ pet: pet }));
         })
+        // Check if user is at pet's location
+        const { latitude, longitude } = this.props.navigation.state.params;
+        this.distance(latitude, longitude);
     }
 
     componentWillUnmount() {
-        //const userId = 1;
         let userId = this.props.auth.user
-        console.log("this.props", this.props)
-        const petId = this.props.navigation.state.params.id;
-        console.log("petId is ", petId)
-        database.ref(`/users/${userId}/pets/${petId}`).off
+        const petKey = this.props.navigation.state.params.key;
+        database.ref(`/users/${userId}/pets/${petKey}`).off
     }
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: navigation.state.params.name
     });
 
-    _keyExtractor = (item) => item.id
+    _keyExtractor = (item) => item.key
 
     onPress() {
-        this.setState({ animationType: 'CELEBRATE' });
-        setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        if (this.state.checkedIn) {
+            this.setState({ animationType: 'CELEBRATE' });
+            setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        }
     }
 
     showTreats() {
-        const oldState = this.state.showTreats;
-        this.setState({ showTreats: !oldState })
+        if (this.state.checkedIn) {
+            const oldState = this.state.showTreats;
+            this.setState({ showTreats: !oldState });
+        }
     }
 
     // tweenSprite () {
@@ -79,65 +84,75 @@ class Pet extends Component {
     // }
 
     feedPet(treat) {
-        //const userId = 1;
         let userId = this.props.auth.user
-        console.log("this.props", this.props)
         // remove treat from database
         const quantity = treat.quantity - 1;
-        this.props.removeTreat(userId, treat.id, quantity);
+        this.props.removeTreat(userId, treat.key, quantity);
         // increase size of pet
-        const petId = this.props.navigation.state.params.id;
+        const petKey = this.props.navigation.state.params.key;
         const points = treat.points + this.state.pet.size;
-        this.props.increasePet(userId, petId, points);
+        this.props.increasePet(userId, petKey, points);
+        // pet eating animation
         this.setState({ animationType: 'EAT' });
         setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
-        this.forceUpdate()
     }
+
+    onLayout = event => {
+        if (this.state.spriteDimensions) return // layout was already called
+        const size = this.state.pet.size;
+        const length = 70 + size * 5;
+        let { width, height } = event.nativeEvent.layout;
+        let spriteVertical = (height / 2) - (length / 1.5);
+        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
+    }
+
+
+    buttonColor() {
+        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
+    }
+
     render() {
 
         if (!this.state.pet) return null
-        const size = this.state.pet.size;
-        const length = 70 + size * 5;
-        const location = length / 2;
-        const treatPaths = {
-            cherry: require("../sprites/treats/cherry.jpg"),
-            donut: require("../sprites/treats/donut.png"),
-            candy: require("../sprites/treats/candy.png")
-        }
 
+        const petLength = 70 + this.state.pet.size * 5;
+        const xlocation = petLength / 2;
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>Location: {this.props.navigation.state.params.location}</Text>
-                {
-                    !(size && location) ? null :
 
-                    <View style={{backgroundColor: 'steelblue', flex: 4, alignContent: 'center', justifyContent: 'center'}}>
+                <Text style={styles.header}>Location: {this.state.pet.location}</Text>
 
-                        <AnimatedSprite
-                            ref={'monsterRef'}
-                            sprite={monsterSprite}
-                            animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-                            loopAnimation={true}
-                            coordinates={{
-                                top: 0,
-                                left: -location,
-                            }}
-                            size={{
-                                width: length,
-                                height: length,
-                            }}
-                            draggable={true}
-                            tweenOptions={this.state.tweenOptions}
-                            tweenStart={'fromMethod'}
-                            onPress={() => { this.onPress(); }}
-                        />
+                <View style={styles.spriteContainer} onLayout={this.onLayout}>
+                    {
+                        !this.state.spriteVertical ? null :
+                            <AnimatedSprite
+                                style={styles.sprite}
+                                ref={'monsterRef'}
+                                sprite={monsterSprite}
+                                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+                                loopAnimation={true}
+                                coordinates={{
+                                    top: this.state.spriteVertical,
+                                    left: -xlocation,
+                                }}
+                                size={{
+                                    width: petLength,
+                                    height: petLength,
+                                }}
+                                draggable={true}
+                                tweenOptions={this.state.tweenOptions}
+                                tweenStart={'fromMethod'}
+                                onPress={() => { this.onPress(); }}
+                            />
+                    }
+                </View>
 
-                    </View>
-                }
-                <View style={{flex: 2}}>
+                {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
+
+                <View style={styles.feedContainer}>
                     {
                         !this.state.showTreats ? null :
-                            <View style={styles.treatsView}>
+                            <View style={styles.treatsContainer}>
                                 <FlatList
                                     horizontal={true}
                                     data={this.props.treats}
@@ -151,7 +166,7 @@ class Pet extends Component {
                                             activeOpacity={0.7}
                                         >
                                             <View>
-                                                <Image source={treatPaths[item.type]}/>
+                                                <Image source={treatPaths[item.type]} />
                                                 <Text>{item.quantity}</Text>
                                             </View>
 
@@ -165,9 +180,11 @@ class Pet extends Component {
                         style={styles.button}
                         onPress={() => { this.showTreats() }}
                         title="Feed me!"
-                        color="#841584"
+                        color={this.buttonColor()}
                     />
+                    {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
                 </View>
+
             </View>
         );
     }
@@ -179,17 +196,23 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
     },
     header: {
         paddingTop: 10,
         flex: 1
     },
+    spriteContainer: {
+        flex: 4,
+    },
+    feedContainer: {
+        flex: 2
+    },
     button: {
         paddingBottom: 10,
         flex: 2
     },
-    treatsView: {
+    treatsContainer: {
         flex: 1,
         flexDirection: 'row',
     },
@@ -197,6 +220,14 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         padding: 5
     },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.6)'
+    }
 });
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
