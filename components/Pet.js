@@ -6,7 +6,8 @@ import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
-import treatPaths from './TreatPaths';
+import treatPaths from './helpers/TreatPaths';
+import { distance, _getLocationAsync } from './helpers/distance';
 
 class Pet extends Component {
     constructor(props) {
@@ -24,6 +25,12 @@ class Pet extends Component {
         this.onPress = this.onPress.bind(this);
         this.showTreats = this.showTreats.bind(this);
         this.buttonColor = this.buttonColor.bind(this);
+        this.distance = distance.bind(this);
+    }
+
+    isCheckedIn = async (latitude, longitude) => {
+        let bool = await distance(latitude, longitude)
+        this.setState({checkedIn: bool});
     }
 
     componentDidMount() {
@@ -40,6 +47,10 @@ class Pet extends Component {
         const longitude = this.props.navigation.state.params.longitude;
         console.log('latitude', latitude);
         console.log('longitude', longitude);
+        // const distance = distance.bind(this);
+        console.log('distance', distance);
+        distance(latitude, longitude);
+        // this.isCheckedIn(latitude, longitude);
     }
 
     componentWillUnmount() {
@@ -121,6 +132,7 @@ class Pet extends Component {
         const petLength = 70 + this.state.pet.size * 5;
         const xlocation = petLength / 2;
 
+        console.log('this.state.checkedIn', this.state.checkedIn);
         return (
             <View style={styles.container}>
 
