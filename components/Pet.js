@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, AppRegistry, Button, FlatList, TouchableHighlight, Dimensions, Image, PanResponder, Animated, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Button,
+    FlatList,
+    TouchableHighlight,
+    Dimensions,
+    Image,
+    PanResponder,
+    Animated,
+    TouchableOpacity
+} from 'react-native';
 import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-  renderers,
-  MenuContext
-} from 'react-native-popup-menu';
-
-const { ContextMenu, SlideInMenu } = renderers;
-
-
 import Modal from 'react-native-modal'
 
 import monsterSprite from '../sprites/monster/monsterSprite';
@@ -47,20 +47,22 @@ class Pet extends Component {
         this.distance = distance.bind(this);
         this.setDropZoneValues.bind(this);
         this.renderDraggable = this.renderDraggable.bind(this);
+
+        // panResponder handles dragging animation and drop callbacks
         this.panResponder = PanResponder.create({
-            onStartShouldSetPanResponder : () => true,
-            onPanResponderMove           : Animated.event([null,{
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderMove: Animated.event([null,{
                 dx : this.state.pan.x,
                 dy : this.state.pan.y
             }]),
-            onPanResponderRelease        : (e, gesture) => {
+            onPanResponderRelease: (e, gesture) => {
                 if(this.isDropZone(gesture)){
                     this.setState({
                         showDraggable : false
                     });
                     this.feedPet(this.state.selectedTreat);
                     this.setState({selectedTreat: null, showTreats: false})
-                }else{
+                } else {
                     Animated.spring(
                         this.state.pan,
                         {toValue:{x:0,y:0}}
@@ -68,7 +70,6 @@ class Pet extends Component {
                 }
             }
         });
-
     }
 
     setDropZoneValues(event){
@@ -81,6 +82,10 @@ class Pet extends Component {
         var dz = this.state.dropZoneValues;
         return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
     }
+
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: navigation.state.params.name
+    });
 
     componentDidMount() {
         let userId = this.props.auth.user;
@@ -100,13 +105,21 @@ class Pet extends Component {
         database.ref(`/users/${userId}/pets/${petKey}`).off
     }
 
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.name
-    });
+    onLayout = event => {
+        if (this.state.spriteDimensions) return // layout was already called
+        const size = this.state.pet.size;
+        const length = 70 + size * 5;
+        let { width, height } = event.nativeEvent.layout;
+        let spriteVertical = (height / 2) - (length / 1.5);
+        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
+        this.setDropZoneValues(event);
+    }
 
-    _keyExtractor = (item) => item.key
+    buttonColor() {
+        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
+    }
 
-    onPress() {
+    onPress() {  //Petting the monster
         if (this.state.checkedIn) {
             this.setState({ animationType: 'CELEBRATE' });
             setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
@@ -134,20 +147,6 @@ class Pet extends Component {
         setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
     }
 
-    onLayout = event => {
-        if (this.state.spriteDimensions) return // layout was already called
-        const size = this.state.pet.size;
-        const length = 70 + size * 5;
-        let { width, height } = event.nativeEvent.layout;
-        let spriteVertical = (height / 2) - (length / 1.5);
-        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
-        this.setDropZoneValues(event);
-    }
-
-
-    buttonColor() {
-        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
-    }
 
     renderDraggable(treat){
         if (this.state.showDraggable){
@@ -175,6 +174,9 @@ class Pet extends Component {
     }
 
   _renderButton = (text, onPress) => {
+
+      // make button unclickable if user is too far away
+
       if (!this.state.showTreats) {
         return (<TouchableOpacity onPress={onPress}>
                     <View style={modalStyles.button}>
@@ -199,12 +201,16 @@ class Pet extends Component {
       {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
     </View> );
 
-    render() {
 
+    _keyExtractor = (item) => item.key
+
+    render() {
         if (!this.state.pet) return null
 
+        // calculate size of the pet
         const petLength = 70 + this.state.pet.size * 5;
         const xlocation = petLength / 2;
+
         return (
             <View style={styles.container}>
 
@@ -241,39 +247,10 @@ class Pet extends Component {
                     {
                         !this.state.showTreats ? null :
                         this.renderDraggable(this.state.selectedTreat)
-
-
-                            // <View style={styles.treatsContainer}>
-                            //     <FlatList
-                            //         horizontal={true}
-                            //         data={this.props.treats}
-                            //         removeClippedSubviews={false}
-                            //         keyExtractor={this._keyExtractor}
-                            //         renderItem={({ item }) =>
-                            //             <TouchableHighlight
-                            //                 style={styles.treat}
-                            //                 onPress={() => this.feedPet(item)}
-                            //                 underlayColor="white"
-                            //                 activeOpacity={0.7}
-                            //             >
-                            //                 <View>
-                            //                     <Image source={treatPaths[item.type]} />
-                            //                     <Text>{item.quantity}</Text>
-                            //                 </View>
-
-                            //             </TouchableHighlight>
-
-                            //         }
-                            //     />
-                            // </View>
                     }
-                    <Button
-                        style={styles.button}
-                        onPress={() => { this.showTreats() }}
-                        title="Feed me!"
-                        color={this.buttonColor()}
-                    />
+
                     {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
+
                     {this._renderButton('Feed Me!', () => this.setState({ visibleModal: true }))}
                     <Modal
                         isVisible={this.state.visibleModal}
