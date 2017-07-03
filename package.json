@@ -36,6 +36,7 @@
     "react-native-gifted-form": "0.0.15",
     "react-native-google-places-autocomplete": "^1.2.12",
     "react-native-maps": "^0.15.2",
+    "react-native-modal": "^2.4.0",
     "react-native-modalbox": "^1.4.0",
     "react-native-swipe-out": "^2.0.14",
     "react-native-swipeout": "^2.1.3",
