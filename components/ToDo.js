@@ -6,12 +6,16 @@ import AddTask from './AddTask'
 import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
+import Swipeout from 'react-native-swipeout'
+
+
+
 
 class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tasks: []
+      tasks: {}
     }
     this.onChange = this.onChange.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
@@ -22,6 +26,45 @@ class ToDo extends Component {
     let unsubscribe = store.subscribe(() => {
       this.setState(store.getState())
     })
+  }
+
+  makeFlatlist = (completed = 'completed') => {
+    return (
+
+      <FlatList
+        data={this.state.tasks[completed]}
+        removeClippedSubviews={false}
+        keyExtractor={this._keyExtractor}
+        renderItem={({ item }) => {
+          return (
+            <Swipeout right={this.makeSwipeButtons(item)}>
+              <View style={styles.listItem}>
+                <Checkbox
+                  label={item.name}
+                  onChange={() => {
+                    this.onChange(this.state.auth.user, item.key, item[completed])
+                  }}
+                  checked={item.completed}
+                />
+              </View>
+            </Swipeout>
+
+          )
+        }}
+
+      />
+
+    )
+  }
+
+  makeSwipeButtons = (item) => {
+    var taskRef = database.ref(`/users/${this.state.auth.user}/tasks/${item.key}`)
+    return [{
+      text: 'Delete',
+      backgroundColor: 'red',
+      underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+      onPress: () => {taskRef.remove() }
+    }];
   }
 
   getTreatType() { // figure out whether this is working 
@@ -35,7 +78,7 @@ class ToDo extends Component {
       default: return null
     }
   }
-  // 
+  //
   addTreat(treatsRef, taskRef) {
     // check for treatType on task
     taskRef.once('value').then((snapshot) => {
@@ -126,32 +169,8 @@ class ToDo extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.state.tasks}
-          removeClippedSubviews={false}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) => {
-            return (
-              <View style={styles.listItem}>
-                <Checkbox
-                  label={item.name}
-                  onChange={() => {
-                    this.onChange(this.state.auth.user, item.key, item.completed)}}
-                  checked={item.completed}
-                />
-              </View>
-            )
-          }
-          }
-        />
-        {/*}
-                <Button
-                    onPress={() => {
-                    }
-                    }
-                    title="Clear Completed Tasks"
-                    color="#841584"
-                /> */}
+        {this.makeFlatlist('uncompleted')}
+        {this.makeFlatlist('completed')}
         <AddTask />
       </View>
     )
