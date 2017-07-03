@@ -76,26 +76,19 @@ export const signInUser = ( email, password ) => {
           //dispatch login user fail at some point
     };
 };
-// let monsters = {0: {name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}}
+// let monsters = {0: {name:"",type:"grayMonster",size:1,location:""},1:{name:"",type:"grayMonster",size:1,location:""}}
 
 export const createUser = (email, uid, dispatch) => {
-  let monsters = {0: {name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}}
+  //let monsters = {name:"",type:"grayMonster",size:1,location:""}
+  let monsters = {0: {name:"I need name",type:"grayMonster",size:1,location:""},1:{name:"name me",type:"grayMonster",size:1,location:""},2:{name:"no name yet",type:"grayMonster",size:1,location:""}}
 
   database.ref('users/' + uid).set({
-    email: email
-
+    email: email,
+    pets: monsters
   })
-  // database.ref('users/' + uid + '/pets').set({
-  //   0:{name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}
-  // })
-  let petsRef = database.ref(`users/${uid}`).child('pets')
-  let newPetsRef = petsRef.push();
-  newPetsRef.set({
-    name: "",
-    size: 1,
-    type: "grayMonster",
-    location: ""
-  })
+  // let petsRef = database.ref(`users/${uid}`).child('pets')
+  // let newPetsRef = petsRef.push();
+  // newPetsRef.set(monsters)
   .then(() => {
     dispatch(loginSuccess({email, uid}))
   })
