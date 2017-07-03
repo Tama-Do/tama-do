@@ -22,7 +22,10 @@ export function distance (lat2, lon2) {
           Math.sin(Δλ/2) * Math.sin(Δλ/2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var d = (R * c * 3.2808).toFixed();
-    var bool = d <= 100;
+    var bool = d <= 200;
+    console.log('d', d)
+    console.log('lat1 ', lat1, 'lon1 ', lon1)
+    console.log('lat2', lat2, 'lon2 ', lon2)
     this.setState({checkedIn: bool});
   })
   .catch(console.error);

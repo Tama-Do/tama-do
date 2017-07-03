@@ -34,7 +34,7 @@ class Pet extends Component {
             spriteVertical: null,
             checkedIn: false,
             showDraggable: false,
-            dropZoneValues  : null,
+            dropZoneValues: null,
             pan: new Animated.ValueXY(),
             visibleModal: false,
             selectedTreat: null
@@ -49,32 +49,32 @@ class Pet extends Component {
         // panResponder handles dragging animation and drop callbacks
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
-            onPanResponderMove: Animated.event([null,{
-                dx : this.state.pan.x,
-                dy : this.state.pan.y
+            onPanResponderMove: Animated.event([null, {
+                dx: this.state.pan.x,
+                dy: this.state.pan.y
             }]),
             onPanResponderRelease: (e, gesture) => {
-                if(this.isDropZone(gesture)){
-                    this.state.pan.setValue({x: 0, y: 0})
+                if (this.isDropZone(gesture)) {
                     this.feedPet(this.state.selectedTreat);
-                    this.setState({showDraggable: false, selectedTreat: null})
+                    this.state.pan.setValue({ x: 0, y: 0 })
+                    this.setState({ showDraggable: false, selectedTreat: null })
                 } else {
                     Animated.spring(
                         this.state.pan,
-                        {toValue:{x:0,y:0}}
+                        { toValue: { x: 0, y: 0 } }
                     ).start();
                 }
             }
         });
     }
 
-    setDropZoneValues(event){
+    setDropZoneValues(event) {
         this.setState({
-            dropZoneValues : event.nativeEvent.layout
+            dropZoneValues: event.nativeEvent.layout
         });
     }
 
-    isDropZone(gesture){
+    isDropZone(gesture) {
         var dz = this.state.dropZoneValues;
         return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
     }
@@ -88,6 +88,7 @@ class Pet extends Component {
         const petKey = this.props.navigation.state.params.key;
         database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
             let pet = snapshot.val();
+            // this.setState({ pet: pet})
             this.setState({ pet: null }, () => this.setState({ pet: pet }));
         })
         // Check if user is at pet's location
@@ -111,10 +112,6 @@ class Pet extends Component {
         this.setDropZoneValues(event);
     }
 
-    buttonColor() {
-        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
-    }
-
     onPress() {  //Petting the monster
         if (this.state.checkedIn) {
             this.setState({ animationType: 'CELEBRATE' });
@@ -127,35 +124,34 @@ class Pet extends Component {
         // remove a treat from database
         const quantity = treat.quantity - 1;
         this.props.removeTreat(userId, treat.key, quantity);
-        // increase size of pet
-        const petKey = this.props.navigation.state.params.key;
-        const points = treat.points + this.state.pet.size;
-        this.props.increasePet(userId, petKey, points);
         // pet eating animation
         this.setState({ animationType: 'EAT' });
-        setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        setTimeout(() => {
+            this.setState({ animationType: 'IDLE' })
+            const petKey = this.props.navigation.state.params.key;
+            const points = treat.points + this.state.pet.size;
+            this.props.increasePet(userId, petKey, points);
+        }, 1200)
     }
 
 
-    renderDraggable(treat){
-        if (this.state.showDraggable){
+    renderDraggable(treat) {
+        if (this.state.showDraggable) {
             return (
                 <View
                     style={styles.draggableContainer}
-                    key={treat.key}
-                >
+                    key={treat.key}>
                     <Animated.Image
                         {...this.panResponder.panHandlers}
-                        style={[this.state.pan.getLayout()]}
-                    >
-                            <Image source={treatPaths[treat.type]} />
+                        style={[this.state.pan.getLayout()]}>
+                        <Image source={treatPaths[treat.type]} />
                     </Animated.Image>
                 </View>
             );
         }
     }
 
-    setTreat (treat) {
+    setTreat(treat) {
         this.setState({
             selectedTreat: treat,
             showDraggable: true,
@@ -163,37 +159,39 @@ class Pet extends Component {
         });
     }
 
-  _renderButton = (text, onPress) => {
+    buttonColor() {
+        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
+    }
 
-      // make button unclickable if user is too far away
+    _renderButton = (text, onPress) => {
+        if (!this.state.showDraggable && this.state.checkedIn) {
+            return (<TouchableOpacity onPress={onPress}>
+                <View style={modalStyles.button}>
+                    <Text>{text}</Text>
+                </View>
+            </TouchableOpacity>
+            )
+        }
+    };
 
-      if (!this.state.showDraggable) {
-        return (<TouchableOpacity onPress={onPress}>
-                    <View style={modalStyles.button}>
-                        <Text>{text}</Text>
-                    </View>
-                </TouchableOpacity>
-        )}
-
-  };
-
-  _renderModalContent = () => (
-    <View style={modalStyles.modalContent}>
-        {this.props.treats.map(treat =>
-            <View key={treat.key}style={modalStyles.treats}>
-                <TouchableHighlight
-                    onPress={() => this.setTreat(treat)}>
-                    <Image source={treatPaths[treat.type]} />
-                </TouchableHighlight>
-                <Text>{treat.quantity}</Text>
-            </View>
+    _renderModalContent = () => (
+        <View style={modalStyles.modalContent}>
+            {this.props.treats.map(treat =>
+                <View key={treat.key} style={modalStyles.treats}>
+                    <TouchableHighlight
+                        onPress={() => this.setTreat(treat)}>
+                        <Image source={treatPaths[treat.type]} />
+                    </TouchableHighlight>
+                    <Text>{treat.quantity}</Text>
+                </View>
             )}
-      {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
-    </View> );
+            {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
+        </View>);
 
     render() {
-        if (!this.state.pet) return null
-
+        if (!this.state.pet) {
+            return null
+        }
         // calculate size of the pet
         const petLength = 70 + this.state.pet.size * 5;
         const xlocation = petLength / 2;
@@ -290,7 +288,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.6)'
     },
     draggableContainer: {
-        position    : 'absolute',
+        position: 'absolute',
         top: 0,
         left: -60
     }
@@ -298,37 +296,37 @@ const styles = StyleSheet.create({
 
 
 const modalStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: 'lightblue',
-    padding: 12,
-    margin: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    flexDirection: 'row'
-  },
-  bottomModal: {
-    justifyContent: 'flex-end',
-    margin: 0,
-  },
-  treats: {
-    flex: 1,
-    flexDirection: 'row',
-  }
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        backgroundColor: 'lightblue',
+        padding: 12,
+        margin: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        flexDirection: 'row'
+    },
+    bottomModal: {
+        justifyContent: 'flex-end',
+        margin: 0,
+    },
+    treats: {
+        flex: 1,
+        flexDirection: 'row',
+    }
 });
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
