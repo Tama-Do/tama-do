@@ -16,13 +16,10 @@ import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal'
 
-import monsterSprite from '../sprites/monster/monsterSprite';
-import greenMonsterSprite from '../sprites/greenMonster/greenMonsterCharacter';
-import redMonsterSprite from '../sprites/redMonster/redMonsterCharacter';
-
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
+import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
 
@@ -192,20 +189,7 @@ class Pet extends Component {
         </View>);
 
     renderSprite = () => {
-
-        const monsterPicker = (monster) => {
-            switch (monster.type) {
-                case 'grayMonster':
-                    return monsterSprite;
-                case 'redMonster':
-                    return redMonsterSprite;
-                case 'greenMonster':
-                    return greenMonsterSprite;
-                default:
-                    return monsterSprite;
-            }
-        }
-
+        // select appropriate sprite file
         const spriteFile = monsterPicker(this.state.pet)
         // calculate size of the pet
         const petLength = 70 + this.state.pet.size * 5;
@@ -215,7 +199,7 @@ class Pet extends Component {
                 style={styles.sprite}
                 ref={'monsterRef'}
                 sprite={spriteFile}
-                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+                animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
                 loopAnimation={true}
                 coordinates={{
                     top: this.state.spriteVertical,

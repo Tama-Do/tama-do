@@ -5,7 +5,7 @@ import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
 import { fetchPets } from '../reducers/pets';
 import { Pet } from './Pet'
-
+import { monsterPicturePicker } from './helpers/monsterPicker';
 
 class Pets extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class Pets extends Component {
                 >
                   <View style={styles.listItem}>
                     <Image
-                      source={require('../sprites/monster/monster_idle.png')}
+                      source={monsterPicturePicker(item)}
                       style={styles.itemImage}
                     />
                     <View style={styles.name}>
