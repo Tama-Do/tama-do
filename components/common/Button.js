@@ -28,8 +28,7 @@ const styles = {
     borderWidth: 1,
     backgroundColor: '#3B5998',
     marginLeft: 5,
-    marginRight: 5,
-    paddingTop: 100
+    marginRight: 5
   }
 };
 
