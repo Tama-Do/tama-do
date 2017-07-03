@@ -1,15 +1,17 @@
 import React from 'react';
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation';
 import { Icon } from 'react-native-elements';
+import { View } from 'react-native'
 
 import ToDo from './components/ToDo';
 import PetsContainer from './components/Pets';
-import PetMap from './components/PetMap';
+import PetMap  from './components/PetMap';
 import Treats from './components/Treats';
-import Form from './components/LocationSearchForm';
+import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 
 import { TaskNavigator } from './components/ToDo';
+
 
 const PetNavigator = StackNavigator({
     Pets: {
@@ -23,6 +25,24 @@ const PetNavigator = StackNavigator({
     }
 })
 
+const MapNavigator = StackNavigator({
+    Map: {
+      screen: PetMap,
+      navigationOptions: {
+        title: 'Map',
+        headerStyle: {backgroundColor: '#EA7C8B', borderBottomWidth: 1, borderBottomColor: '#E16177'},
+        headerTitleStyle: {color: 'white'},
+      },
+    },
+    Form: {
+      screen: FormView,
+      navigationOptions: {
+        title: 'Location Form'
+    }
+  }
+})
+
+
 export const Tabs = TabNavigator({
   Main: {
     screen: ToDo,
@@ -34,19 +54,34 @@ export const Tabs = TabNavigator({
     screen: PetNavigator,
     navigationOptions: {
       tabBarLabel: 'Pets'
-    },
+    }
   },
   Map: {
-    screen: PetMap,
+    screen: MapNavigator,
     navigationOptions: {
-      tabBarLabel: 'Map'
-    },
+      tabBarLabel: 'Map',
+    }
   },
   Treats: {
     screen: Treats,
     navigationOptions: {
       tabBarLabel: 'Treats'
     },
-
   }
+},
+   {
+    tabBarComponent: props => {
+      const backgroundColor = props.position.interpolate({
+        inputRange: [0,1,2],
+        outputRange: ['#e74c3c','#9b59b6','#3498db'],
+      })
+      return (
+        <TabBarBottom
+          {...props}
+          style={{backgroundColor}}
+        />
+      );
+    },
+  
 })
+

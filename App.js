@@ -41,6 +41,10 @@ export default class App extends Component {
   }
 
   render() {
+
+
+  
+
     if (this.state.user) {
       return (
         <Provider store={store}>
