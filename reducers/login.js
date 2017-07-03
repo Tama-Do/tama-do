@@ -85,9 +85,6 @@ export const createUser = (email, uid, dispatch) => {
     email: email
 
   })
-  // database.ref('users/' + uid + '/pets').set({
-  //   0:{name:"",type:"grayMonster",size:1,location:"",latitude:40,longitude:-73}
-  // })
   let petsRef = database.ref(`users/${uid}`).child('pets')
   let newPetsRef = petsRef.push();
   newPetsRef.set({
