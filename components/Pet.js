@@ -291,6 +291,8 @@ const styles = StyleSheet.create({
     },
     draggableContainer: {
         position    : 'absolute',
+        top: 0,
+        left: -60
     }
 });
 
