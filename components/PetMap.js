@@ -63,7 +63,7 @@ class PetMap extends Component {
         title={pet.name}
         key={pet.name}
       >
-        <Image source={imgs[pet.type].notClicked}
+        <Image source={imgs['grayMonster'].notClicked}
         style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
         />
       </MapView.Marker>)

@@ -17,6 +17,9 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal'
 
 import monsterSprite from '../sprites/monster/monsterSprite';
+import greenMonsterSprite from '../sprites/greenMonster/greenMonsterCharacter';
+import redMonsterSprite from '../sprites/redMonster/redMonsterCharacter';
+
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
@@ -188,40 +191,58 @@ class Pet extends Component {
             {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
         </View>);
 
+    renderSprite = () => {
+
+        const monsterPicker = (monster) => {
+            switch (monster.type) {
+                case 'grayMonster':
+                    return monsterSprite;
+                case 'redMonster':
+                    return redMonsterSprite;
+                case 'greenMonster':
+                    return greenMonsterSprite;
+                default:
+                    return monsterSprite;
+            }
+        }
+
+        const spriteFile = monsterPicker(this.state.pet)
+        // calculate size of the pet
+        const petLength = 70 + this.state.pet.size * 5;
+        const xlocation = petLength / 2;
+        return !this.state.spriteVertical ? null :
+            <AnimatedSprite
+                style={styles.sprite}
+                ref={'monsterRef'}
+                sprite={spriteFile}
+                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+                loopAnimation={true}
+                coordinates={{
+                    top: this.state.spriteVertical,
+                    left: -xlocation,
+                }}
+                size={{
+                    width: petLength,
+                    height: petLength,
+                }}
+                draggable={true}
+                tweenOptions={this.state.tweenOptions}
+                tweenStart={'fromMethod'}
+                onPress={() => { this.onPress(); }}
+            />
+
+    }
+
     render() {
         if (!this.state.pet) {
             return null
         }
-        // calculate size of the pet
-        const petLength = 70 + this.state.pet.size * 5;
-        const xlocation = petLength / 2;
 
         return (
             <View style={styles.container}>
                 <Text style={styles.header}>Location: {this.state.pet.location}</Text>
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
-                    {
-                        !this.state.spriteVertical ? null :
-                            <AnimatedSprite
-                                style={styles.sprite}
-                                ref={'monsterRef'}
-                                sprite={monsterSprite}
-                                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-                                loopAnimation={true}
-                                coordinates={{
-                                    top: this.state.spriteVertical,
-                                    left: -xlocation,
-                                }}
-                                size={{
-                                    width: petLength,
-                                    height: petLength,
-                                }}
-                                draggable={true}
-                                tweenOptions={this.state.tweenOptions}
-                                tweenStart={'fromMethod'}
-                                onPress={() => { this.onPress(); }}
-                            />
-                    }
+                    { this.renderSprite() }
                 </View>
 
                 {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
