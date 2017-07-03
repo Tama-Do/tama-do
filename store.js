@@ -28,6 +28,4 @@ export default store;
 //     })
 
 
-import { fetchTreats } from './reducers/treats'
-store.dispatch(fetchTreats(1));
 
