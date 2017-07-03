@@ -16,21 +16,21 @@ export const monsterPicker = (monster) => {
     }
 }
 
-
-// return single image of the monster
-import monsterPic from '../../sprites/monster/monster_idle.png';
-import greenMonsterPic from '../../sprites/greenMonster/green_monster_idle.png';
-import redMonsterPic from '../../sprites/redMonster/red_monster_idle.png';
-
-export const monsterPicturePicker = (monster) => {
-    switch (monster.type) {
-        case 'grayMonster':
-            return monsterPic;
-        case 'redMonster':
-            return redMonsterPic;
-        case 'greenMonster':
-            return greenMonsterPic;
-        default:
-            return monsterPic;
-    }
-}
+// dictionary to look up the image for the monster
+export const monsterImg = {
+  grayMonster: {
+    notClicked: require('../../sprites/monster/monster_celebrate01.png'),
+    clicked: require('../../sprites/monster/monster_celebrate_selected01.png'),
+    idle: require('../../sprites/monster/monster_idle.png')
+  },
+  redMonster: {
+    notClicked: require('../../sprites/redMonster/red_monster_celebrate01.png'),
+    clicked: require('../../sprites/monster/monster_celebrate_selected01.png'),
+    idle: require('../../sprites/redMonster/red_monster_idle.png')
+  },
+  greenMonster: {
+    notClicked: require('../../sprites/greenMonster/green_monster_celebrate01.png'),
+    clicked: require('../../sprites/monster/monster_celebrate_selected01.png'),
+    idle: require('../../sprites/greenMonster/green_monster_idle.png')
+  }
+};

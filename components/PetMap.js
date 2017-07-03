@@ -8,7 +8,7 @@ import { Button } from './common/MapButton'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
-
+import { monsterImg } from './helpers/monsterPicker';
 
 
 
@@ -29,13 +29,6 @@ class PetMap extends Component {
 
 
   render() {
-
-    const imgs = {
-      grayMonster: {
-        notClicked: require('../sprites/monster/monster_celebrate01.png'),
-        clicked: require('../sprites/monster/monster_celebrate_selected01.png')
-      }
-    }
 
 // if (this.state.component === 'map') {
     console.log('props', this.props)
@@ -63,7 +56,7 @@ class PetMap extends Component {
         title={pet.name}
         key={pet.name}
       >
-        <Image source={imgs['grayMonster'].notClicked}
+        <Image source={monsterImg[pet.type].notClicked}
         style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
         />
       </MapView.Marker>)
