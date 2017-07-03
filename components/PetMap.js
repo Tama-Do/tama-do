@@ -30,12 +30,12 @@ class PetMap extends Component {
 
   render() {
 
-const imgs = {
-  grayMonster: {
-    notClicked: require('../sprites/monster/monster_celebrate01.png'),
-    clicked: require('../sprites/monster/monster_celebrate_selected01.png')
-  }
-}
+    const imgs = {
+      grayMonster: {
+        notClicked: require('../sprites/monster/monster_celebrate01.png'),
+        clicked: require('../sprites/monster/monster_celebrate_selected01.png')
+      }
+    }
 
 // if (this.state.component === 'map') {
     console.log('props', this.props)
@@ -73,7 +73,7 @@ const imgs = {
           Add or Change a Pet's Location
           </Button>
       </View>
-    ) 
+    )
 
 }
   }
