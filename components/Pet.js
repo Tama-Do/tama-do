@@ -4,8 +4,6 @@ import {
     Text,
     View,
     Button,
-    FlatList,
-    TouchableHighlight,
     Dimensions,
     Image,
     PanResponder,
@@ -16,10 +14,10 @@ import AnimatedSprite from 'react-native-animated-sprite';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal'
 
-import monsterSprite from '../sprites/monster/monsterSprite';
 import { removeTreat } from '../reducers/treats';
 import { increasePet } from '../reducers/pets';
 import database from '../firebase.js';
+import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
 
@@ -134,7 +132,6 @@ class Pet extends Component {
         }, 1200)
     }
 
-
     renderDraggable(treat) {
         if (this.state.showDraggable) {
             return (
@@ -178,50 +175,64 @@ class Pet extends Component {
         <View style={modalStyles.modalContent}>
             {this.props.treats.map(treat =>
                 <View key={treat.key} style={modalStyles.treats}>
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress={() => this.setTreat(treat)}>
                         <Image source={treatPaths[treat.type]} />
-                    </TouchableHighlight>
-                    <Text>{treat.quantity}</Text>
+                    </TouchableOpacity>
+                    <View style={modalStyles.quantityCircle}>
+                        <Text style={modalStyles.quantity}>{treat.quantity}</Text>
+                    </View>
                 </View>
             )}
-            {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity onPress={() => this.setState({ visibleModal: false })}>
+                    <View style={modalStyles.closeButton}>
+                        <Text style={modalStyles.buttonX}>X</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
         </View>);
+
+    renderSprite = () => {
+        // select appropriate sprite file
+        const spriteFile = monsterPicker(this.state.pet)
+        // calculate size of the pet
+        const petLength = 70 + this.state.pet.size * 5;
+        const xlocation = petLength / 2;
+        return !this.state.spriteVertical ? null :
+            <AnimatedSprite
+                style={styles.sprite}
+                ref={'monsterRef'}
+                sprite={spriteFile}
+                animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
+                loopAnimation={true}
+                coordinates={{
+                    top: this.state.spriteVertical,
+                    left: -xlocation,
+                }}
+                size={{
+                    width: petLength,
+                    height: petLength,
+                }}
+                draggable={true}
+                tweenOptions={this.state.tweenOptions}
+                tweenStart={'fromMethod'}
+                onPress={() => { this.onPress(); }}
+            />
+
+    }
 
     render() {
         if (!this.state.pet) {
             return null
         }
-        // calculate size of the pet
-        const petLength = 70 + this.state.pet.size * 5;
-        const xlocation = petLength / 2;
 
         return (
             <View style={styles.container}>
                 <Text style={styles.header}>Location: {this.state.pet.location}</Text>
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
-                    {
-                        !this.state.spriteVertical ? null :
-                            <AnimatedSprite
-                                style={styles.sprite}
-                                ref={'monsterRef'}
-                                sprite={monsterSprite}
-                                animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
-                                loopAnimation={true}
-                                coordinates={{
-                                    top: this.state.spriteVertical,
-                                    left: -xlocation,
-                                }}
-                                size={{
-                                    width: petLength,
-                                    height: petLength,
-                                }}
-                                draggable={true}
-                                tweenOptions={this.state.tweenOptions}
-                                tweenStart={'fromMethod'}
-                                onPress={() => { this.onPress(); }}
-                            />
-                    }
+                    { this.renderSprite() }
                 </View>
 
                 {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
@@ -304,15 +315,32 @@ const modalStyles = StyleSheet.create({
     button: {
         backgroundColor: 'lightblue',
         padding: 12,
-        margin: 16,
+        margin: 0,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
+    closeButton: {
+        backgroundColor: 'lightblue',
+        padding: 6,
+        margin: 2,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    buttonContainer: {
+        // flex: 1,
+        // flexDirection: 'column',
+        alignItems: 'flex-end'
+    },
+    buttonX: {
+        color: 'white'
+    },
     modalContent: {
         backgroundColor: 'white',
-        padding: 22,
+        padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
@@ -326,6 +354,15 @@ const modalStyles = StyleSheet.create({
     treats: {
         flex: 1,
         flexDirection: 'row',
+    },
+    quantityCircle: {
+        // width: 5,
+        // height: 5,
+        // borderRadius: 5 / 2,
+        // backgroundColor: 'gray'
+    },
+    quantity: {
+        color: 'black'
     }
 });
 
