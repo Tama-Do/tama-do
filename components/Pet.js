@@ -55,12 +55,9 @@ class Pet extends Component {
             }]),
             onPanResponderRelease: (e, gesture) => {
                 if(this.isDropZone(gesture)){
-                    this.setState({
-                        pan: new Animated.ValueXY(),
-                        showDraggable : false
-                    });
+                    this.state.pan.setValue({x: 0, y: 0})
                     this.feedPet(this.state.selectedTreat);
-                    this.setState({selectedTreat: null})
+                    this.setState({showDraggable: false, selectedTreat: null})
                 } else {
                     Animated.spring(
                         this.state.pan,
