@@ -7,7 +7,6 @@ import ToDoContainer from './components/ToDo';
 import AddTask from './components/AddTask';
 import PetMap from './components/PetMap';
 import Treats from './components/Treats';
-import LocationSearchForm from './components/LocationSearchForm'
 
 // const TaskNavigator = StackNavigator({
 //     ToDo: {
@@ -27,18 +26,6 @@ const PetNavigator = StackNavigator({
       }
     },
     Pet: {
-      screen: PetContainer
-    }
-})
-
-const MapNavigator = StackNavigator({
-    Map: {
-      screen: PetMap,
-      navigationOptions: {
-        title: 'Map'
-      }
-    },
-    Form: {
       screen: PetContainer
     }
 })

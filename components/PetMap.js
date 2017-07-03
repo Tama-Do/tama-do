@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
-import { Button } from './common/Button'
+import { Button } from './common/MapButton'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
@@ -12,7 +12,7 @@ import database from '../firebase';
 
 
 
-export class PetMap extends Component {
+class PetMap extends Component {
   state = {
       component: 'map',
       selected: false,
@@ -20,7 +20,7 @@ export class PetMap extends Component {
     }
 
   goToLocationForm = () => {
-    this.setState({component: 'form', selected: false})
+    this.props.navigation.navigate('Form')
   }
 
   pickAMonster = (petKey) => {
@@ -37,7 +37,7 @@ const imgs = {
   }
 }
 
-if (this.state.component === 'map') {
+// if (this.state.component === 'map') {
     console.log('props', this.props)
     return (
       <View style={styles.container}>
@@ -47,7 +47,7 @@ if (this.state.component === 'map') {
             longitude: -74.005941,
             latitudeDelta: 0.0222,
             longitudeDelta: 0.0201
-          }}
+          }} //reset initial region to user's location
 
           mapType="hybrid"
           showsUserLocation={true}
@@ -64,7 +64,7 @@ if (this.state.component === 'map') {
         key={pet.name}
       >
         <Image source={imgs[pet.type].notClicked}
-        style={{width: Math.ceil(pet.size / 20) * 30, height: Math.ceil(pet.size / 20) * 30}}
+        style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
         />
       </MapView.Marker>)
           }})}
@@ -74,56 +74,10 @@ if (this.state.component === 'map') {
           </Button>
       </View>
     ) 
-} else {
-  return (
-    <View>
-            <GiftedForm style={styles.form}
-                formName='locationSearch'
-            >
-                  <View style={styles.row}>
-      {this.props.pets.map(pet => (
-        
-        <View key={pet.key} style={{alignContent: 'center'}}>
-          <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
-        <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? imgs[pet.type].clicked : imgs[pet.type].notClicked}/>
-        </TouchableHighlight>
-        <Text  style={styles.row}>{pet.name}</Text>
-        <Text style={styles.row}>{pet.location}</Text>
-        </View>
-        ))}
-        </View>
-                <GooglePlacesWidget style={styles.googlePlaces}
-                    name='locationSearch'
-                    placeholder='Search for location'
-                />
-                <GiftedForm.SubmitWidget
-                    title='Submit'
-                    widgetStyles={{
-                        submitButton: {
-                            backgroundColor: '#2185D0',
-                        }
-                    }}
-                    onSubmit={(isValid, values, validationResults, postSubmit = null) => {
-                        if (isValid) {
-                            let updates = {
-                                latitude: values.locationSearch.details.geometry.location.lat,
-                                longitude: values.locationSearch.details.geometry.location.lng
-                            }
-                            database.ref(`/users/${this.props.auth.user}/pets/${this.state.petKey}`).update(updates)
-                                .then(response => console.log("success response", response))
-                                .catch(error => console.log("error is", error))
 
-                            postSubmit()
-                            this.setState({component: "map"})
-                        }
-                    }
-                    } />
-            </GiftedForm>
-            </View>
-        )
 }
   }
-}
+
 
 const styles = StyleSheet.create({
   container: {
