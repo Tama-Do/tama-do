@@ -7,11 +7,35 @@ import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
 
+const makeFlatlist = (completed) => {
+  return (
+    <FlatList
+          data={this.state.tasks[completed]}
+          removeClippedSubviews={false}
+          keyExtractor={this._keyExtractor}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.listItem}>
+                <Checkbox
+                  label={item.name}
+                  onChange={() => {
+                    this.onChange(this.state.auth.user, item.key, item[completed])}}
+                  checked={item.completed}
+                />
+              </View>
+            )
+          }
+          }
+        />
+  )
+}
+
+
 class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tasks: []
+      tasks: {}
     }
     this.onChange = this.onChange.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
@@ -23,6 +47,28 @@ class ToDo extends Component {
       this.setState(store.getState())
     })
   }
+
+  makeFlatlist = (completed='completed') => {
+    console.log("tasks in TODO COMPONENT", this.state.tasks)
+  return (
+    <FlatList
+          data={this.state.tasks[completed]}
+          removeClippedSubviews={false}
+          keyExtractor={this._keyExtractor}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.listItem}>
+                <Checkbox
+                  label={item.name}
+                  onChange={() => {
+                    this.onChange(this.state.auth.user, item.key, item[completed])}}
+                  checked={item.completed}
+                />
+              </View>
+            )}}
+        />
+  )
+}
 
   getTreatType() { // figure out whether this is working 
     min = 0;
@@ -126,32 +172,8 @@ class ToDo extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.state.tasks}
-          removeClippedSubviews={false}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) => {
-            return (
-              <View style={styles.listItem}>
-                <Checkbox
-                  label={item.name}
-                  onChange={() => {
-                    this.onChange(this.state.auth.user, item.key, item.completed)}}
-                  checked={item.completed}
-                />
-              </View>
-            )
-          }
-          }
-        />
-        {/*}
-                <Button
-                    onPress={() => {
-                    }
-                    }
-                    title="Clear Completed Tasks"
-                    color="#841584"
-                /> */}
+        {this.makeFlatlist('uncompleted')}
+        {this.makeFlatlist('completed')}
         <AddTask />
       </View>
     )
