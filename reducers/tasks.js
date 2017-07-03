@@ -7,7 +7,7 @@ const GET_TASKS = 'GET_TASKS';
 
 // /* ------------   ACTION CREATORS     ------------------ */
 
-export const getTasks = tasks => ({ type: GET_TASKS, data: tasks });
+export const getTasks = tasks => ({ type: GET_TASKS, tasks });
 
 
 // /* ------------       REDUCER     ------------------ */
@@ -15,7 +15,9 @@ export const getTasks = tasks => ({ type: GET_TASKS, data: tasks });
 const reducer = (tasks = {}, action) => {
     switch (action.type) {
         case GET_TASKS:
-            return {all: action.data.tasks, completed:action.data.completed, uncompleted: action.data.uncompleted};
+            return {all: action.tasks.tasks, 
+                completed:action.tasks.completed, 
+                uncompleted: action.tasks.uncompleted};
         default:
             return tasks;
     }

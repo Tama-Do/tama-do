@@ -6,29 +6,9 @@ import AddTask from './AddTask'
 import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
+import Swipeout from 'react-native-swipeout'
 
-const makeFlatlist = (completed) => {
-  return (
-    <FlatList
-          data={this.state.tasks[completed]}
-          removeClippedSubviews={false}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) => {
-            return (
-              <View style={styles.listItem}>
-                <Checkbox
-                  label={item.name}
-                  onChange={() => {
-                    this.onChange(this.state.auth.user, item.key, item[completed])}}
-                  checked={item.completed}
-                />
-              </View>
-            )
-          }
-          }
-        />
-  )
-}
+
 
 
 class ToDo extends Component {
@@ -48,27 +28,44 @@ class ToDo extends Component {
     })
   }
 
-  makeFlatlist = (completed='completed') => {
-    console.log("tasks in TODO COMPONENT", this.state.tasks)
-  return (
-    <FlatList
-          data={this.state.tasks[completed]}
-          removeClippedSubviews={false}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) => {
-            return (
+  makeFlatlist = (completed = 'completed') => {
+    return (
+
+      <FlatList
+        data={this.state.tasks[completed]}
+        removeClippedSubviews={false}
+        keyExtractor={this._keyExtractor}
+        renderItem={({ item }) => {
+          return (
+            <Swipeout right={this.makeSwipeButtons(item)}>
               <View style={styles.listItem}>
                 <Checkbox
                   label={item.name}
                   onChange={() => {
-                    this.onChange(this.state.auth.user, item.key, item[completed])}}
+                    this.onChange(this.state.auth.user, item.key, item[completed])
+                  }}
                   checked={item.completed}
                 />
               </View>
-            )}}
-        />
-  )
-}
+            </Swipeout>
+
+          )
+        }}
+
+      />
+
+    )
+  }
+
+  makeSwipeButtons = (item) => {
+    var taskRef = database.ref(`/users/${this.state.auth.user}/tasks/${item.key}`)
+    return [{
+      text: 'Delete',
+      backgroundColor: 'red',
+      underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+      onPress: () => {taskRef.remove() }
+    }];
+  }
 
   getTreatType() { // figure out whether this is working 
     min = 0;
@@ -81,7 +78,7 @@ class ToDo extends Component {
       default: return null
     }
   }
-  // 
+  //
   addTreat(treatsRef, taskRef) {
     // check for treatType on task
     taskRef.once('value').then((snapshot) => {
