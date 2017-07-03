@@ -41,7 +41,6 @@ class Pet extends Component {
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
-        this.showTreats = this.showTreats.bind(this);
         this.buttonColor = this.buttonColor.bind(this);
         this.distance = distance.bind(this);
         this.setDropZoneValues.bind(this);
@@ -56,16 +55,12 @@ class Pet extends Component {
             }]),
             onPanResponderRelease: (e, gesture) => {
                 if(this.isDropZone(gesture)){
-                    Animated.spring(
-                        this.state.pan,
-                        {toValue:{x:0,y:0}}
-                    ).start();
                     this.setState({
+                        pan: new Animated.ValueXY(),
                         showDraggable : false
                     });
                     this.feedPet(this.state.selectedTreat);
-                    this.setState({selectedTreat: null, showTreats: false})
-
+                    this.setState({selectedTreat: null})
                 } else {
                     Animated.spring(
                         this.state.pan,
@@ -130,13 +125,6 @@ class Pet extends Component {
         }
     }
 
-    showTreats() {
-        if (this.state.checkedIn) {
-            const oldState = this.state.showTreats;
-            this.setState({ showTreats: !oldState });
-        }
-    }
-
     feedPet(treat) {
         let userId = this.props.auth.user
         // remove a treat from database
@@ -159,12 +147,12 @@ class Pet extends Component {
                     style={styles.draggableContainer}
                     key={treat.key}
                 >
-                        <Animated.Image
-                            {...this.panResponder.panHandlers}
-                            style={[this.state.pan.getLayout()]}
-                        >
-                                <Image source={treatPaths[treat.type]} />
-                        </Animated.Image>
+                    <Animated.Image
+                        {...this.panResponder.panHandlers}
+                        style={[this.state.pan.getLayout()]}
+                    >
+                            <Image source={treatPaths[treat.type]} />
+                    </Animated.Image>
                 </View>
             );
         }
