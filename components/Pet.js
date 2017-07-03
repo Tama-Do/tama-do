@@ -4,8 +4,6 @@ import {
     Text,
     View,
     Button,
-    FlatList,
-    TouchableHighlight,
     Dimensions,
     Image,
     PanResponder,
@@ -134,7 +132,6 @@ class Pet extends Component {
         }, 1200)
     }
 
-
     renderDraggable(treat) {
         if (this.state.showDraggable) {
             return (
@@ -178,14 +175,23 @@ class Pet extends Component {
         <View style={modalStyles.modalContent}>
             {this.props.treats.map(treat =>
                 <View key={treat.key} style={modalStyles.treats}>
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress={() => this.setTreat(treat)}>
                         <Image source={treatPaths[treat.type]} />
-                    </TouchableHighlight>
-                    <Text>{treat.quantity}</Text>
+                    </TouchableOpacity>
+                    <View style={modalStyles.quantityCircle}>
+                        <Text style={modalStyles.quantity}>{treat.quantity}</Text>
+                    </View>
                 </View>
             )}
-            {this._renderButton('Close', () => this.setState({ visibleModal: false }))}
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity onPress={() => this.setState({ visibleModal: false })}>
+                    <View style={modalStyles.closeButton}>
+                        <Text style={modalStyles.buttonX}>X</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
         </View>);
 
     renderSprite = () => {
@@ -309,15 +315,32 @@ const modalStyles = StyleSheet.create({
     button: {
         backgroundColor: 'lightblue',
         padding: 12,
-        margin: 16,
+        margin: 0,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
+    closeButton: {
+        backgroundColor: 'lightblue',
+        padding: 6,
+        margin: 2,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    buttonContainer: {
+        // flex: 1,
+        // flexDirection: 'column',
+        alignItems: 'flex-end'
+    },
+    buttonX: {
+        color: 'white'
+    },
     modalContent: {
         backgroundColor: 'white',
-        padding: 22,
+        padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
@@ -331,6 +354,15 @@ const modalStyles = StyleSheet.create({
     treats: {
         flex: 1,
         flexDirection: 'row',
+    },
+    quantityCircle: {
+        // width: 5,
+        // height: 5,
+        // borderRadius: 5 / 2,
+        // backgroundColor: 'gray'
+    },
+    quantity: {
+        color: 'black'
     }
 });
 
