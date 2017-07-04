@@ -53,12 +53,8 @@ export default class AddTaskModal extends Component {
                     <View style={{ flex: 1, position: 'absolute', top: 150 }}>
                         <View>
                             <CardSection>
-                            <View style={{position: 'absolute', right: 10}}>
-                             <TouchableHighlight onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible)
-                                }}>
-                                    <Text>x</Text>
-                                </TouchableHighlight>
+                            <View style={{position: 'absolute', height: 25, right: 10}}>
+                             
                             </View>
                                 <Input
                                     label="NewTask"
@@ -66,6 +62,13 @@ export default class AddTaskModal extends Component {
                                     onChangeText={(task) => this.setState({ task })}
                                     value={this.state.task}
                                 />
+                            </CardSection>
+                            <CardSection>
+                            <TouchableHighlight style={{height: 25, zindex: 200, paddingTop: 10, paddingBottom:10}} onPress={() => {
+                                    this.setModalVisible(!this.state.modalVisible)
+                                }}>
+                                    <Text>Go back to task list</Text>
+                                </TouchableHighlight>
                             </CardSection>
                             <CardSection>
                                 {/*<Button title={'Add Task'} onPress={()=>{this.onButtonPress()}}>Add Task</Button>*/}
