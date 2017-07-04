@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation';
 import { Icon } from 'react-native-elements';
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 
 import ToDo from './components/ToDo';
 import PetsContainer from './components/Pets';
@@ -47,25 +47,49 @@ export const Tabs = TabNavigator({
   Main: {
     screen: ToDo,
     navigationOptions: {
-      tabBarLabel: 'ToDo'
+      tabBarLabel: 'ToDo',
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 0 ? require('./images/task_icon.png') : require('./images/task_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
     },
   },
   Pets: {
     screen: PetNavigator,
     navigationOptions: {
-      tabBarLabel: 'Pets'
-    }
+      tabBarLabel: 'Pets',
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 1 ? require('./images/pet_icon.png') : require('./images/pet_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
+    },
   },
   Map: {
     screen: MapNavigator,
     navigationOptions: {
       tabBarLabel: 'Map',
-    }
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 2 ? require('./images/map_icon.png') : require('./images/map_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
+    },
   },
   Treats: {
     screen: Treats,
     navigationOptions: {
-      tabBarLabel: 'Treats'
+      tabBarLabel: 'Treats',
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 3 ? require('./images/treat_icon.png') : require('./images/treat_icon_inactive.png')}
+        style={[{marginBottom: -7, height: 17, width: 46},{tintColor: tintColor}]}
+      />
+    ),
     },
   }
 },
@@ -80,6 +104,10 @@ export const Tabs = TabNavigator({
           inactiveTintColor = {"#737373"}
           activeBackgroundColor= {"#FFF"}
           inactiveBackgroundColor= {"#FFF"}
+          style = {{
+            backgroundColor: '#FFF',
+            height: 60
+          }}
         />
       );
     },
