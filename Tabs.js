@@ -10,14 +10,36 @@ import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 
-import { TaskNavigator } from './components/ToDo';
+
+
+
+const TaskNavigator = StackNavigator({
+  Todos: { 
+    screen: ToDo,
+    navigationOptions: {
+      title: 'ToDo List',
+      headerStyle: {
+          backgroundColor: '#8061A9', 
+          borderBottomWidth: 1, 
+          borderBottomColor: '#6D45AD'
+        },
+        headerTitleStyle: {color: 'white'},
+    } 
+  }
+})
 
 
 const PetNavigator = StackNavigator({
     Pets: {
       screen: PetsContainer,
       navigationOptions: {
-        title: 'My Monsters'
+        title: 'My Monsters',
+        headerStyle: {
+          backgroundColor: '#F0B52D', 
+          borderBottomWidth: 1, 
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
       }
     },
     Pet: {
@@ -30,7 +52,11 @@ const MapNavigator = StackNavigator({
       screen: PetMap,
       navigationOptions: {
         title: 'Map',
-        headerStyle: {backgroundColor: '#EA7C8B', borderBottomWidth: 1, borderBottomColor: '#E16177'},
+        headerStyle: {
+          backgroundColor: '#EA7C8B', 
+          borderBottomWidth: 1, 
+          borderBottomColor: '#E16177'
+        },
         headerTitleStyle: {color: 'white'},
       },
     },
@@ -42,10 +68,25 @@ const MapNavigator = StackNavigator({
   }
 })
 
+const TreatNavigator = StackNavigator({
+  Treats: {
+    screen: Treats,
+    navigationOptions: {
+      title: 'Treats',
+      headerStyle: {
+          backgroundColor: '#4A8CAD', 
+          borderBottomWidth: 1, 
+          borderBottomColor: '#057BAA'
+        },
+        headerTitleStyle: {color: 'white'},
+      },
+    }
+})
+
 
 export const Tabs = TabNavigator({
   Main: {
-    screen: ToDo,
+    screen: TaskNavigator,
     navigationOptions: {
       tabBarLabel: 'ToDo'
     },
@@ -63,9 +104,15 @@ export const Tabs = TabNavigator({
     }
   },
   Treats: {
-    screen: Treats,
+    screen: TreatNavigator,
     navigationOptions: {
-      tabBarLabel: 'Treats'
+      tabBarLabel: 'Treats',
+      headerStyle: {
+          backgroundColor: '#EA7C8B', 
+          borderBottomWidth: 1, 
+          borderBottomColor: '#E16177'
+        },
+        headerTitleStyle: {color: 'white'}
     },
   }
 },
