@@ -41,6 +41,7 @@ const MapNavigator = StackNavigator({
   }
 })
 
+let index = 0
 
 export const Tabs = TabNavigator({
   Main: {
@@ -70,14 +71,15 @@ export const Tabs = TabNavigator({
 },
    {
     tabBarComponent: props => {
-      console.log('props', props.navigation.state.index)
-      const activeColor = props.position.interpolate({
-        inputRange: [0,1,2],
-        outputRange: ['#e74c3c','#9b59b6','#3498db'],
-      })
+      index = props.navigation.state.index
+      const activeColor = ["#8061A9", "#F0B52D", "#EA7C8B", "#4A8CAD"]
       return (
         <TabBarBottom
           {...props}
+          activeTintColor = {activeColor[index]}
+          inactiveTintColor = {"#737373"}
+          activeBackgroundColor= {"#FFF"}
+          inactiveBackgroundColor= {"#FFF"}
         />
       );
     },
