@@ -6,6 +6,9 @@ import database from '../firebase';
 import { fetchPets } from '../reducers/pets';
 import { Pet } from './Pet'
 import { monsterImg } from './helpers/monsterPicker';
+// import Icon from 'react-native-vector-icons/Ionicons';
+// const myIcon = (<Icon name="ios-person" size={30} color="#900" />)
+import { Entypo } from '@expo/vector-icons';
 
 class Pets extends Component {
   constructor(props) {
@@ -50,15 +53,18 @@ class Pets extends Component {
                   activeOpacity={0.7}
                 >
                   <View style={styles.listItem}>
-                    <Image
-                      source={monsterImg[item.type].idle}
-                      style={styles.itemImage}
-                    />
-                    <View style={styles.name}>
-                      <Text style={styles.itemText}>{item.name}</Text>
+                    <View style={styles.listContent}>
+                      <Image
+                        source={monsterImg[item.type].notClicked}
+                        style={styles.image}
+                      />
+                      <View style={styles.textContainer}>
+                        <Text style={styles.name}>{item.name.toUpperCase()}</Text>
+                        <Text style={styles.location}>{item.location}</Text>
+                      </View>
                     </View>
-                    <View style={styles.place}>
-                      <Text style={styles.itemText}>{item.location}</Text>
+                    <View style={styles.icon}>
+                      <Entypo name="chevron-right" size={32} color="#808080" />
                     </View>
 
                   </View>
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: '#E9E9E9',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -84,32 +90,56 @@ const styles = StyleSheet.create({
     marginTop: 14,
     alignSelf: "stretch",
   },
+  // listItem: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   justifyContent: 'flex-start',
+  //   alignItems: 'center', // cross axis
+  //   paddingTop: 10,
+  //   paddingBottom: 10,
+  //   paddingLeft: 18,
+  //   paddingRight: 16,
+  //   marginLeft: 14,
+  //   marginRight: 14,
+  //   marginTop: 0,
+  //   marginBottom: 6,
+  // },
   listItem: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center', // cross axis
+    paddingLeft: 15,
     paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 18,
-    paddingRight: 16,
-    marginLeft: 14,
-    marginRight: 14,
-    marginTop: 0,
-    marginBottom: 6,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderBottomWidth: 15,
+    borderBottomColor: "#E9E9E9",
   },
-  itemText: {
-    fontSize: 15,
+  listContent: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  itemImage: {
-    width: 50,
-    height: 50
+  image: {
+    width: 80,
+    height: 80,
+    marginRight: 0
   },
   name: {
-    marginLeft: 30,
-    width: 70
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 0,
+    paddingLeft: 0
   },
-  place: {
+  location: {
+    fontSize: 16,
+    color: '#808080',
+    fontStyle: 'italic'
+  },
+  textContainer: {
+    marginLeft: 30,
+  },
+  icon: {
+    paddingRight: 25
   }
 })
 

@@ -14,17 +14,17 @@ import PetContainer from './components/Pet';
 
 
 const TaskNavigator = StackNavigator({
-  Todos: { 
+  Todos: {
     screen: ToDo,
     navigationOptions: {
       title: 'ToDo List',
       headerStyle: {
-          backgroundColor: '#8061A9', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#8061A9',
+          borderBottomWidth: 1,
           borderBottomColor: '#6D45AD'
         },
         headerTitleStyle: {color: 'white'},
-    } 
+    }
   }
 })
 
@@ -33,10 +33,10 @@ const PetNavigator = StackNavigator({
     Pets: {
       screen: PetsContainer,
       navigationOptions: {
-        title: 'My Monsters',
+        title: 'Pets',
         headerStyle: {
-          backgroundColor: '#F0B52D', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
           borderBottomColor: '#EAA00C'
         },
         headerTitleStyle: {color: 'white'},
@@ -53,8 +53,8 @@ const MapNavigator = StackNavigator({
       navigationOptions: {
         title: 'Map',
         headerStyle: {
-          backgroundColor: '#EA7C8B', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
           borderBottomColor: '#E16177'
         },
         headerTitleStyle: {color: 'white'},
@@ -74,8 +74,8 @@ const TreatNavigator = StackNavigator({
     navigationOptions: {
       title: 'Treats',
       headerStyle: {
-          backgroundColor: '#4A8CAD', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#4A8CAD',
+          borderBottomWidth: 1,
           borderBottomColor: '#057BAA'
         },
         headerTitleStyle: {color: 'white'},
@@ -108,8 +108,8 @@ export const Tabs = TabNavigator({
     navigationOptions: {
       tabBarLabel: 'Treats',
       headerStyle: {
-          backgroundColor: '#EA7C8B', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
           borderBottomColor: '#E16177'
         },
         headerTitleStyle: {color: 'white'}
@@ -129,6 +129,6 @@ export const Tabs = TabNavigator({
         />
       );
     },
-  
+
 })
 
