@@ -4,13 +4,7 @@ import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
 import { connect } from 'react-redux';
-
-const imgs = {
-  grayMonster: {
-    notClicked: require('../sprites/monster/monster_celebrate01.png'),
-    clicked: require('../sprites/monster/monster_celebrate_selected01.png')
-  }
-}
+import { monsterImg } from './helpers/monsterPicker';
 
 
 class FormView extends Component {
@@ -36,10 +30,10 @@ return (
             >
                   <View style={styles.row}>
       {this.props.pets.map(pet => (
-        
+
         <View key={pet.key} style={{alignContent: 'center'}}>
           <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
-        <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? imgs[pet.type].clicked : imgs[pet.type].notClicked}/>
+        <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked}/>
         </TouchableHighlight>
         <Text  style={styles.row}>{pet.name}</Text>
         <Text style={styles.row}>{pet.location}</Text>
