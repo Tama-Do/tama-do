@@ -1,28 +1,45 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Switch, Slider, DatePickerIOS, Picker, PickerIOS } from 'react-native'
+import { StyleSheet, View, TouchableHighlight, Image, Text } from 'react-native'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
-
+import { connect } from 'react-redux';
+import { monsterImg } from './helpers/monsterPicker';
 
 
 class FormView extends Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            userId : 1,
-            currPetId : 1
-        }
+        state = {
+      selected: false,
+      petKey: null,
     }
 
+  goToLocationForm = () => {
+    this.setState({component: 'form', selected: false})
+  }
+
+  pickAMonster = (petKey) => {
+    this.setState({petKey, selected: true})
+  }
 
 
     render() {
-        return (
+return (
+    <View>
             <GiftedForm style={styles.form}
                 formName='locationSearch'
             >
+                  <View style={styles.row}>
+      {this.props.pets.map(pet => (
+
+        <View key={pet.key} style={{alignContent: 'center'}}>
+          <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
+        <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked}/>
+        </TouchableHighlight>
+        <Text  style={styles.row}>{pet.name}</Text>
+        <Text style={styles.row}>{pet.location}</Text>
+        </View>
+        ))}
+        </View>
                 <GooglePlacesWidget style={styles.googlePlaces}
                     name='locationSearch'
                     placeholder='Search for location'
@@ -40,25 +57,52 @@ class FormView extends Component {
                                 latitude: values.locationSearch.details.geometry.location.lat,
                                 longitude: values.locationSearch.details.geometry.location.lng
                             }
-                            database.ref(`/users/${this.state.userId}/pets/${this.state.currPetId}`).update(updates)
+                            database.ref(`/users/${this.props.auth.user}/pets/${this.state.petKey}`).update(updates)
                                 .then(response => console.log("success response", response))
                                 .catch(error => console.log("error is", error))
 
-                            console.log('coords', values.locationSearch.details.geometry.location, 'place', values.locationSearch.details.address_components)
                             postSubmit()
+                            this.props.navigation.goBack()
                         }
                     }
                     } />
             </GiftedForm>
+            </View>
         )
-    }
 }
+  }
+
 
 const styles = StyleSheet.create({
-    form: {
-    },
-    button: {
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  map: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  petImage: {
+    height: 100,
+    width: 100,
+    paddingBottom: 10
+  }
 
-export default FormView
+});
+
+
+const mapState = ({ pets, auth }) => ({ pets, auth });
+
+const mapDispatch = {}
+
+
+export default connect(mapState, mapDispatch)(FormView)

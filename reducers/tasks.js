@@ -12,10 +12,12 @@ export const getTasks = tasks => ({ type: GET_TASKS, tasks });
 
 // /* ------------       REDUCER     ------------------ */
 
-const reducer = (tasks = [], action) => {
+const reducer = (tasks = {}, action) => {
     switch (action.type) {
         case GET_TASKS:
-            return action.tasks;
+            return {all: action.tasks.tasks, 
+                completed:action.tasks.completed, 
+                uncompleted: action.tasks.uncompleted};
         default:
             return tasks;
     }
@@ -26,14 +28,20 @@ export default reducer
 // /* ------------       DISPATCHERS     ------------------ */
 
 export const fetchTasks = (userId) => dispatch => {
-
-    let userId = 1 //need to do something other than hard code this in the future.
-    var path = `/users/${userId}/tasks`
-    database.ref(path).on('value',  (data => {
-        dispatch(getTasks(data.val()))
-   
-    }))
-
-    
+    database.ref(`/users/${userId}/tasks`).on('value', snapshot => {
+        const obj = snapshot.val();
+        const tasks = [];
+        for(let key in obj) {
+          obj[key].key = key
+          tasks.push(obj[key]);
+        }
+        var completed = tasks.filter(task => task.completed)
+        var uncompleted = tasks.filter(task => !task.completed)
+        console.log("tasks are ", tasks)
+        dispatch(getTasks({tasks, completed, uncompleted}));
+    });
 
 }
+    
+
+

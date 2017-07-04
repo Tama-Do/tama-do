@@ -23,7 +23,7 @@ const styles = {
   },
   buttonStyle: {
     flex: 0,
-    alignSelf: 'stretch',
+    // alignSelf: 'stretch',
     borderRadius: 5,
     borderWidth: 1,
     backgroundColor: '#3B5998',

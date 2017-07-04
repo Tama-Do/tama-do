@@ -6,12 +6,17 @@ import database from '../firebase';
 const LOGIN_USER_START = 'LOGIN_USER_START';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
+const SET_USER = 'SET_USER'
 
 
 // /* ------------   ACTION CREATORS     ------------------ */
 
 const loginSuccess = user => ({type: LOGIN_SUCCESS, user});
+
+export const setUser = user => ({type: SET_USER, user})
+
 //const loginFail = user => ({type: LOGIN_USER_FAIL, user});
+
 
 
 // /* ------------       REDUCER     ------------------ */
@@ -31,6 +36,8 @@ const reducer = (state = initalState, action) => {
       return Object.assign({}, state, action.user);
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Login failed.', password: '', loading: false };
+    case SET_USER:
+      return Object.assign({}, state, action.user)
     default:
       return state;
   }
@@ -69,13 +76,19 @@ export const signInUser = ( email, password ) => {
           //dispatch login user fail at some point
     };
 };
+// let monsters = {0: {name:"",type:"grayMonster",size:1,location:""},1:{name:"",type:"grayMonster",size:1,location:""}}
 
 export const createUser = (email, uid, dispatch) => {
+  //let monsters = {name:"",type:"grayMonster",size:1,location:""}
+  let monsters = {0: {name:"I need name",type:"grayMonster",size:1,location:""},1:{name:"name me",type:"grayMonster",size:1,location:""},2:{name:"no name yet",type:"grayMonster",size:1,location:""}}
+
   database.ref('users/' + uid).set({
-    //username: name,
-    email: email
-    //profile_picture : imageUrl
+    email: email,
+    pets: monsters
   })
+  // let petsRef = database.ref(`users/${uid}`).child('pets')
+  // let newPetsRef = petsRef.push();
+  // newPetsRef.set(monsters)
   .then(() => {
     dispatch(loginSuccess({email, uid}))
   })

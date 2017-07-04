@@ -49,7 +49,6 @@ module.exports = React.createClass({
         }}
 
         currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-        currentLocationLabel="Current location"
         currentLocationAPI='GoogleReverseGeocoding' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
         GoogleReverseGeocodingQuery={{
           // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro

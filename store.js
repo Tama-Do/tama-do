@@ -18,13 +18,14 @@ const store = createStore(
 
 export default store;
 
-// fetch Pet information immediately
-import { fetchPets } from './reducers/pets';
+
+
 
 // doing it this way allows us to listen for changes
-database.ref('/users/1/tasks').on('value', (snapshot) => {
-      store.dispatch(getTasks(snapshot.val()))
-    })
+// database.ref('/users/1/tasks').on('value', (snapshot) => {
+//       console.log("here is the listener for tasks")
+//       store.dispatch(getTasks(snapshot.val()))
+//     })
 
-store.dispatch(fetchPets());
+
 

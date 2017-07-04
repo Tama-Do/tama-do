@@ -4,62 +4,34 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
-import { Button } from './common/Button'
+import { Button } from './common/MapButton'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
+import { monsterImg } from './helpers/monsterPicker';
 
 
 
-
-export class PetMap extends Component {
-  constructor(props) {
-    super(props)
-    //markers will eventually come from firebase, not state
-
-    this.state = {
+class PetMap extends Component {
+  state = {
       component: 'map',
       selected: false,
-      userId: 1,
-      currMonster: '',
-      markers: [(<MapView.Marker
-        coordinate={{
-          latitude: 40.712784,
-          longitude: -74.005941
-        }}
-        title={"Pretty Kitty"}
-        key={Date}
-      >
-        <Image source={require("../images/cat.png")}
-          style={styles.marker}
-        />
-      </MapView.Marker>)]
+      petKey: null,
     }
 
-    this.goToLocationForm = this.goToLocationForm.bind(this)
-    this.pickAMonster = this.pickAMonster.bind(this)
-  }
-
   goToLocationForm = () => {
-    this.setState({component: 'form', selected: false})
+    this.props.navigation.navigate('Form')
   }
 
-  pickAMonster = (petName) => {
-    this.setState({currMonster: petName, selected: true})
+  pickAMonster = (petKey) => {
+    this.setState({petKey, selected: true})
   }
 
 
   render() {
 
-const imgs = {
-  grayMonster: {
-    notClicked: require('../sprites/monster/monster_celebrate01.png'),
-    clicked: require('../sprites/monster/monster_celebrate_selected01.png')
-  }
-}
-
-if (this.state.component === 'map') {
-    
+// if (this.state.component === 'map') {
+    console.log('props', this.props)
     return (
       <View style={styles.container}>
         <MapView style={styles.map}
@@ -68,14 +40,15 @@ if (this.state.component === 'map') {
             longitude: -74.005941,
             latitudeDelta: 0.0222,
             longitudeDelta: 0.0201
-          }}
+          }} //reset initial region to user's location
 
           mapType="hybrid"
           showsUserLocation={true}
           userLocationAnnotationTitle="you are here!"
           showsCompass={true}>
-          {this.props.pets.map(pet => (
-            <MapView.Marker
+          {this.props.pets.map(pet => {
+            if (pet.latitude && pet.longitude) {
+           return (<MapView.Marker
         coordinate={{
           latitude: pet.latitude,
           longitude: pet.longitude
@@ -83,73 +56,21 @@ if (this.state.component === 'map') {
         title={pet.name}
         key={pet.name}
       >
-        <Image source={imgs[pet.type].notClicked}
-        style={styles.marker}
+        <Image source={monsterImg[pet.type].notClicked}
+        style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
         />
-      </MapView.Marker>
-          ))}
+      </MapView.Marker>)
+          }})}
         </MapView>
         <Button onPress={() => this.goToLocationForm()}>
           Add or Change a Pet's Location
           </Button>
       </View>
-    ) 
-} else {
-  return (
-    <View>
-            <GiftedForm style={styles.form}
-                formName='locationSearch'
-            >
-                  <View style={styles.row}>
-      {this.props.pets.map(pet => (
-        
-        <View style={{alignContent: 'center'}}>
-          <TouchableHighlight key={pet.name} onPress={() => this.pickAMonster(pet.name)}>
-        <Image style={styles.petImage} source={this.state.selected && this.state.currMonster === pet.name ? imgs[pet.type].clicked : imgs[pet.type].notClicked}/>
-        </TouchableHighlight>
-        <Text style={styles.row}>{pet.name}</Text>
-        <Text style={styles.row}>{pet.location}</Text>
-        </View>
-        ))}
-        </View>
-                <GooglePlacesWidget style={styles.googlePlaces}
-                    name='locationSearch'
-                    placeholder='Search for location'
-                />
-                <GiftedForm.SubmitWidget
-                    title='Submit'
-                    widgetStyles={{
-                        submitButton: {
-                            backgroundColor: '#2185D0',
-                        }
-                    }}
-                    onSubmit={(isValid, values, validationResults, postSubmit = null) => {
-                        if (isValid) {
-                            let updates = {
-                                latitude: values.locationSearch.details.geometry.location.lat,
-                                longitude: values.locationSearch.details.geometry.location.lng
-                            }
-                            database.ref(`/users/${this.state.userId}/pets/1`).update(updates)
-                                .then(response => console.log("success response", response))
-                                .catch(error => console.log("error is", error))
+    )
 
-                                {/*database.ref(`users/${this.state.userId}/pets/`)
-                                .orderByChild("name").equalTo(this.state.currMonster).update(updates)
-                                .then(response => console.log("success response", response))
-                                .catch(error => console.log("error is", error))*/}
-
-                            console.log('coords', values.locationSearch.details.geometry.location, 'place', values.locationSearch.details.address_components)
-                            postSubmit()
-                            this.setState({component: "map"})
-                        }
-                    }
-                    } />
-            </GiftedForm>
-            </View>
-        )
 }
   }
-}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -162,10 +83,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0
-  },
-  marker: {
-    width: 60,
-    height: 40
   },
   row: {
     flex: 1,
@@ -182,7 +99,7 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({ pets }) => ({ pets });
+const mapState = ({ pets, auth }) => ({ pets, auth });
 
 const mapDispatch = {}
 
