@@ -12,7 +12,6 @@ import PetContainer from './components/Pet';
 
 import { TaskNavigator } from './components/ToDo';
 
-
 const PetNavigator = StackNavigator({
     Pets: {
       screen: PetsContainer,
@@ -71,14 +70,14 @@ export const Tabs = TabNavigator({
 },
    {
     tabBarComponent: props => {
-      const backgroundColor = props.position.interpolate({
+      console.log('props', props.navigation.state.index)
+      const activeColor = props.position.interpolate({
         inputRange: [0,1,2],
         outputRange: ['#e74c3c','#9b59b6','#3498db'],
       })
       return (
         <TabBarBottom
           {...props}
-          style={{backgroundColor}}
         />
       );
     },
