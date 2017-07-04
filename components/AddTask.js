@@ -6,10 +6,10 @@ import {
     Modal,
     TouchableHighlight,
     TouchableOpacity,
-    Button,
     Image,
     StyleSheet
 } from 'react-native'
+import { Button } from './common/Button'
 import database from '../firebase'
 import store from '../store'
 
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
         bottom: 15,
         justifyContent: 'center',
         alignItems: 'stretch',
-        backgroundColor: '#8061A9'
     },
     buttonStyle: {
         flex: 1,

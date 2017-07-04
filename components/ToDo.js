@@ -8,9 +8,6 @@ import Checkbox from './common/checkbox'
 import database from '../firebase'
 import Swipeout from './common/Swipeout'
 
-
-
-
 class ToDo extends Component {
   constructor(props) {
     super(props)
@@ -20,7 +17,6 @@ class ToDo extends Component {
     this.onChange = this.onChange.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
   }
-
 
   componentDidMount() {
     let unsubscribe = store.subscribe(() => {
