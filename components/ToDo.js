@@ -238,11 +238,4 @@ const mapState = ({ tasks, auth }) => ({ tasks, auth })
 
 const mapDispatch = {}
 
-<<<<<<< HEAD
-
-
-
 export default connect(mapState, mapDispatch)(ToDo)
-=======
-export default connect(mapState, mapDispatch)(ToDo)
->>>>>>> trying-to-merge-buggy-branch
