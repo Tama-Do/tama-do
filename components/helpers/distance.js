@@ -23,9 +23,6 @@ export function distance (lat2, lon2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var d = (R * c * 3.2808).toFixed();
     var bool = d <= 200;
-    console.log('d', d)
-    console.log('lat1 ', lat1, 'lon1 ', lon1)
-    console.log('lat2', lat2, 'lon2 ', lon2)
     this.setState({checkedIn: bool});
     if (!bool) {
       this.setState({animationType: 'DISGUST'})
@@ -36,6 +33,13 @@ export function distance (lat2, lon2) {
 
 // async request to get the user's location
 export const _getLocationAsync = async () => {
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status !== 'granted') {
+    console.log('Permission to access location was denied')
+    // this.setState({
+    //   errorMessage: 'Permission to access location was denied',
+    // });
+  }
   let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
   return { latitude: location.coords.latitude, longitude: location.coords.longitude };
 };

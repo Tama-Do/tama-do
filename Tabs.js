@@ -10,8 +10,9 @@ import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 
-
-
+// Get permission to use the user's location
+import { _getLocationAsync } from './components/helpers/distance';
+_getLocationAsync();
 
 const TaskNavigator = StackNavigator({
   Todos: {

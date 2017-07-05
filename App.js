@@ -25,7 +25,6 @@ export default class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         // User is signed in.
-        console.log("auth state changed, user is", user)
         store.dispatch(fetchTasks(user.uid))
         store.dispatch(fetchPets(user.uid))
         store.dispatch(setUser({user: user.uid}))
@@ -34,7 +33,6 @@ export default class App extends Component {
         this.setState({ user });
       } else {
         // No user is signed in.
-        console.log("user logged out", this);
         this.setState({ user: null })
       }
     });
@@ -43,7 +41,7 @@ export default class App extends Component {
   render() {
 
 
-  
+
 
     if (this.state.user) {
       return (

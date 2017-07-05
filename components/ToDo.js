@@ -63,7 +63,7 @@ class ToDo extends Component {
     }];
   }
 
-  getTreatType() { // figure out whether this is working 
+  getTreatType() { // figure out whether this is working
     min = 0;
     max = 3;
     randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -181,7 +181,7 @@ class ToDo extends Component {
           <View>
             {this.makeFlatlist('completed')}
           </View>
-          
+
         </View>
       </ScrollView>
       <AddTask />
