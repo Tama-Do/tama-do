@@ -177,6 +177,6 @@ export const Tabs = TabNavigator({
         />
       );
     },
-
   })
+
 
