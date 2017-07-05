@@ -162,8 +162,6 @@ class Pet extends Component {
 
     _renderButton = (text, onPress) => {
         if (!this.state.showDraggable && this.state.checkedIn) {
-        //     return <Button onPress={() => this.goToLocationForm()}>
-        //   Add or Change a Pet's Location</Button>
             return (
             <View style={modalStyles.buttonContainer}>
                 <TouchableOpacity onPress={onPress}>
@@ -183,9 +181,9 @@ class Pet extends Component {
                 <View key={treat.key} style={modalStyles.treats}>
                     <TouchableOpacity
                         onPress={() => this.setTreat(treat)}>
-                        <Image source={treatPaths[treat.type]} />
+                        <Image style={modalStyles.treatIcon} source={treatPaths[treat.type]} />
                     </TouchableOpacity>
-                    <View style={modalStyles.quantityCircle}>
+                    <View style={modalStyles.quantityContainer}>
                         <Text style={modalStyles.quantity}>{treat.quantity}</Text>
                     </View>
                 </View>
@@ -273,6 +271,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 50
     },
     header: {
         paddingTop: 10,
@@ -320,13 +319,10 @@ const modalStyles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonContainer: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 15,
         justifyContent: 'center',
         flexDirection: 'row',
         alignSelf: 'stretch',
+        alignItems: 'flex-start'
     },
     button: {
         padding: 12,
@@ -339,7 +335,7 @@ const modalStyles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         backgroundColor: '#F0B52D',
-        borderColor: '#F0B52D',
+        borderColor: '#EAA00C',
         marginLeft: 10,
         marginRight: 10
     },
@@ -351,19 +347,17 @@ const modalStyles = StyleSheet.create({
         backgroundColor: '#F0B52D',
         padding: 6,
         margin: 2,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        width: 25,
+        height: 25,
         borderColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    buttonContainer: {
-        // flex: 1,
-        // flexDirection: 'column',
-        alignItems: 'flex-end'
     },
     buttonX: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 10
     },
     modalContent: {
         backgroundColor: 'white',
@@ -382,14 +376,23 @@ const modalStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
     },
-    quantityCircle: {
-        // width: 5,
-        // height: 5,
-        // borderRadius: 5 / 2,
-        // backgroundColor: 'gray'
+    treatIcon: {
+        width: 80,
+        height: 80
+    },
+    quantityContainer: {
+        // flex: 1,
+        marginRight: 10,
+        marginLeft: -8
+        // width: 2,
+        // height: 2,
+        // borderRadius: 1,
+        // backgroundColor: 'blue'
     },
     quantity: {
-        color: 'black'
+        color: '#808080',
+        textAlign: 'center',
+        fontWeight: 'bold'
     }
 });
 

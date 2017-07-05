@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
     paddingTop: 10,
     paddingBottom: 10
   },
@@ -69,7 +71,8 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flex: 5,
-    marginTop: 1,
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
     alignSelf: "stretch",
   },
   row: {
@@ -82,14 +85,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: "#E9E9E9",
+    borderColor: "#d9d9d9",
   },
   name: {
     fontWeight: 'bold',
     color: '#808080'
   },
   quantity: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#808080'
   }
 });

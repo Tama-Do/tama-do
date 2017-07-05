@@ -1,7 +1,7 @@
 // INSTRUCTIONS:: https://gist.github.com/alliefauer/f367d0f1de8b5e7c73aa6da6d89d3c76
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
 import { Button } from './common/MapButton'
@@ -22,7 +22,7 @@ class PetMap extends Component {
 
 componentDidUpdate() {
   this.map.fitToCoordinates(this.state.coords, { edgePadding: { top: 70, right: 50, bottom: 100, left: 50, animated: true }})
-  
+
 }
 
   goToLocationForm = () => {
@@ -41,6 +41,9 @@ componentWillReceiveProps(nextProps) {
 }
 
 
+  viewPet(pet) {
+    this.props.navigation.navigate('Pet', pet)
+  }
 
   render() {
 
@@ -50,7 +53,7 @@ componentWillReceiveProps(nextProps) {
       <View style={styles.container}>
         <MapView style={styles.map}
           ref={(ref) => { this.map = ref }}
-          showsUserLocation={true}
+
           userLocationAnnotationTitle={false}
           mapType="hybrid"
           showsCompass={true}>
@@ -65,7 +68,7 @@ componentWillReceiveProps(nextProps) {
                 key={pet.name}
               >
                 <Image source={monsterImg[pet.type].notClicked}
-                  style={{ width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20 }}
+                  style={{ width: 30 + pet.size / 2, height: 30 + pet.size / 2 }}
                 />
               </MapView.Marker>)
             }
@@ -80,7 +83,7 @@ componentWillReceiveProps(nextProps) {
   }else {
     return (<View></View>)
   }
-  } 
+  }
 }
 
 
