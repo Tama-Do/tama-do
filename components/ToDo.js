@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation'
 import AddTask from './AddTask'
 import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
-import Swipeout from 'react-native-swipeout'
+import Swipeout from './common/Swipeout'
 
 
 
@@ -63,7 +63,7 @@ class ToDo extends Component {
       text: 'Delete',
       backgroundColor: 'red',
       underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-      onPress: () => {taskRef.remove() }
+      onPress: () => { taskRef.remove() }
     }];
   }
 
@@ -169,9 +169,26 @@ class ToDo extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        {this.makeFlatlist('uncompleted')}
-        {this.makeFlatlist('completed')}
-        <AddTask />
+      <ScrollView style={styles.container}>
+        <View style={styles.flatList}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>In Progress</Text>
+          </View>
+          {this.makeFlatlist('uncompleted')}
+        </View>
+
+
+        <View style={styles.flatList}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Completed</Text>
+          </View>
+          <View>
+            {this.makeFlatlist('completed')}
+          </View>
+          
+        </View>
+      </ScrollView>
+      <AddTask />
       </View>
     )
   }
@@ -180,15 +197,33 @@ class ToDo extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'E9E9E9',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
   listItem: {
-
+    paddingLeft: 15,
+    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between'
-  }
+  },
+  flatList: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    marginTop: 10,
+    borderColor: '#D9D9D9',
+    paddingBottom: 10
+  },
+  title: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+  },
+  textContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#d9d9d9",
+    marginBottom: 10
+  },
 });
 
 
@@ -198,9 +233,5 @@ const mapDispatch = {}
 
 
 
-export const TaskNavigator = StackNavigator({
-  ToDo: { screen: ToDo },
-  AddTask: { screen: AddTask }
-})
 
 export default connect(mapState, mapDispatch)(ToDo)
