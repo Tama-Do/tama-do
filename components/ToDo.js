@@ -7,12 +7,15 @@ import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
 import Swipeout from './common/Swipeout'
+import NewTreat from './NewTreat'
 
 class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tasks: {}
+      tasks: {},
+      showNewTreat: false,
+      currTreat: ''
     }
     this.onChange = this.onChange.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
@@ -47,9 +50,7 @@ class ToDo extends Component {
 
           )
         }}
-
       />
-
     )
   }
 
@@ -155,6 +156,16 @@ class ToDo extends Component {
     } else {
       taskUpdates = { completed: true }
       this.addTreat(treatsRef, taskRef)
+      this.setState({ showNewTreat: true })
+      taskRef.once('value').then((snapshot) => {
+        return snapshot.val().treat
+      })
+      .then(treat => {
+        this.setState({ currTreat: treat})
+        this.setState({ showNewTreat: true })
+        setTimeout(() => { this.setState({ showNewTreat: false }) }, 2000)
+      })
+
     }
     database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
@@ -165,26 +176,27 @@ class ToDo extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-      <ScrollView style={styles.container}>
-        <View style={styles.flatList}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>In Progress</Text>
-          </View>
-          {this.makeFlatlist('uncompleted')}
-        </View>
-
-
-        <View style={styles.flatList}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Completed</Text>
-          </View>
-          <View>
-            {this.makeFlatlist('completed')}
+        <ScrollView style={styles.container}>
+          <View style={styles.flatList}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>In Progress</Text>
+            </View>
+            {this.makeFlatlist('uncompleted')}
           </View>
 
-        </View>
-      </ScrollView>
-      <AddTask />
+          <View style={styles.flatList}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>Completed</Text>
+            </View>
+            <View>
+              {this.makeFlatlist('completed')}
+            </View>
+
+          </View>
+        </ScrollView>
+        <AddTask  />
+        {this.state.showNewTreat ? <NewTreat treat={this.state.currTreat} /> : <View />}
+
       </View>
     )
   }
@@ -222,12 +234,15 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const mapState = ({ tasks, auth }) => ({ tasks, auth })
 
 const mapDispatch = {}
 
+<<<<<<< HEAD
 
 
 
 export default connect(mapState, mapDispatch)(ToDo)
+=======
+export default connect(mapState, mapDispatch)(ToDo)
+>>>>>>> trying-to-merge-buggy-branch
