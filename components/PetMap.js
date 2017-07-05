@@ -47,7 +47,7 @@ class PetMap extends Component {
 
           mapType="hybrid"
           showsUserLocation={true}
-          userLocationAnnotationTitle="you are here!"
+          // userLocationAnnotationTitle="you are here!"
           showsCompass={true}>
           {this.props.pets.map(pet => {
             if (pet.latitude && pet.longitude) {
