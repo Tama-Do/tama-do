@@ -13,7 +13,7 @@ const CardEditPet = (props) => {
 const styles = {
   containerStyle: {
     flex: 3,
-    backgroundColor: '#66ccff',
+    //backgroundColor: '#66ccff',
     borderWidth: 1,
     borderRadius: 2,
     borderColor: '#ddd',

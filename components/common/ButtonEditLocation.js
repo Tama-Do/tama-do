@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text, TouchableOpacity } from 'react-native';
 
-const Button1 = ({ onPress, children }) => {
+const Button2 = ({ onPress, children }) => {
   const { buttonStyle, textStyle, buttonContainer } = styles;
   return (
     <View style={buttonContainer}>
@@ -28,7 +28,7 @@ buttonContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -50,
+    bottom: -100,
     justifyContent: 'center',
     alignItems: 'stretch'
   },
@@ -36,11 +36,11 @@ buttonContainer: {
     //flex: 1,
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#F0B52D',
+    backgroundColor: '#EA7C8B',
     borderColor: '#FFF',
     marginLeft: 5,
     marginRight: 5
   }
 };
 
-export { Button1 };
+export { Button2 };

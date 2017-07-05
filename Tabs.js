@@ -10,6 +10,7 @@ import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 import EditPet from './components/EditPet';
+import RenamePet from './components/RenamePet';
 
 
 const TaskNavigator = StackNavigator({
@@ -53,12 +54,36 @@ const PetNavigator = StackNavigator({
     },
     EditPet: {
       screen: EditPet,
-      navigationOptions:{
+      navigationOptions: {
         title: 'Update Pet',
         headerStyle: {
           backgroundColor: '#F0B52D',
           borderBottomWidth: 1,
           borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    RenamePet: {
+      screen: RenamePet,
+      navigationOptions: {
+        title: 'Rename Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    Form: {
+      screen: FormView,
+      navigationOptions: {
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
         },
         headerTitleStyle: {color: 'white'},
       }

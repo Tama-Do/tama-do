@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image, Text, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Image, Text} from 'react-native'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
 import { connect } from 'react-redux';
 import { monsterImg } from './helpers/monsterPicker';
 import { CardEditPet, CardSectionEditPet, InputEditPet } from './common';
-import { Button } from './common/ButtonEditPet';
+import { Button1 } from './common/ButtonEditPet';
+import { Button2 } from './common/ButtonEditLocation';
 
 
 class EditPet extends Component {
@@ -18,28 +19,38 @@ class EditPet extends Component {
 
   goToLocationForm = () => {
     this.setState({ component: 'form', selected: false })
+    this.props.navigation.navigate('Form')
   }
 
+  goToRenamePet = () => {
+    this.props.navigation.navigate('RenamePet', this.state)
+  }
 
   pickAMonster = (petKey) => {
-    console.log("PROPPPPS", this.props.pets[petKey].name)
     let monName = this.props.pets[petKey].name
     this.setState({ petKey, selected: true, monsterName: monName})
   }
 
   nameMonster = () => {
-    return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT MONSTER</Text> : <Text style={styles.selectedText}>RENAME {this.state.monsterName}</Text>
+    return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT PET</Text> : null
 
+  }
+
+  renameButton = () => {
+    return this.state.monsterName !== null ?  <Button1 onPress={() => this.goToRenamePet()}>RENAME {this.state.monsterName}</Button1> : null
+  }
+
+  locationButton = () => {
+    return this.state.monsterName !== null ?  <Button2 onPress={() => this.goToLocationForm()}>ADD/CHANGE {this.state.monsterName}S LOCATION</Button2> : null
   }
 
   componentDidUpdate() {
     this.nameMonster()
-    console.log("MONSTER NAME &&&", this.state.monsterName)
   }
 
 
   render() {
-    console.log("PETKEY ****", this.state.petKey)
+    const { navigate } = this.props.navigation
     return (
       <View>
         <GiftedForm style={styles.form} formName='locationSearch'>
@@ -60,39 +71,10 @@ class EditPet extends Component {
 
         <View style={styles.selectedTextView}>
           {this.nameMonster()}
+          {this.renameButton()}
+          {this.locationButton()}
         </View>
-        <KeyboardAvoidingView behavior={'padding'}>
-        <GiftedForm style={styles.form} formName='locationSearch'>
-          <GiftedForm.SeparatorWidget />
 
-          <GooglePlacesWidget style={styles.googlePlaces}
-            name='locationSearch'
-            placeholder='Search for location'
-          />
-            <GiftedForm.SubmitWidget
-              title='Submit'
-              widgetStyles={{
-                submitButton: {
-                  backgroundColor: '#2185D0',
-                }
-              }}
-              onSubmit={(isValid, values, validationResults, postSubmit = null) => {
-                if (isValid) {
-                  let updates = {
-                    latitude: values.locationSearch.details.geometry.location.lat,
-                    longitude: values.locationSearch.details.geometry.location.lng
-                  }
-                  database.ref(`/users/${this.props.auth.user}/pets/${this.state.petKey}`).update(updates)
-                    .then(response => console.log("success response", response))
-                    .catch(error => console.log("error is", error))
-
-                  postSubmit()
-                  this.props.navigation.goBack()
-                }
-              }
-              } />
-        </GiftedForm>
-        </KeyboardAvoidingView>
       </View>
     )
   }
@@ -159,17 +141,17 @@ const styles = StyleSheet.create({
   },
   selectedText: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 24,
     fontStyle: 'italic',
     color: 'black'
   },
   selectedTextView: {
-    top: 10
+    top: 20
   }
 });
 
 
-const mapState = ({ pets, auth }) => ({ pets, auth });
+const mapState = ({ pets, auth, monsterName, petKey }) => ({ pets, auth, monsterName, petKey });
 
 const mapDispatch = {}
 
