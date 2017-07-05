@@ -54,39 +54,37 @@ export default class AddTaskModal extends Component {
                     visible={this.state.modalVisible}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
-                <View style={styles.background}>
-                  
-                    <View style={styles.modalContainer}>
-                        <View style={styles.bodyContainer}>
-                            <View style={styles.headerContainer}>
-                                <Text style={styles.headerTextStyle}> NEW TASK </Text>
-                                <TouchableHighlight
-                                    style={{ height: 25, paddingTop: 4, paddingBottom: 10 }}
-                                    onPress={() => {
-                                        this.setModalVisible(!this.state.modalVisible)
-                                    }}>
-                                    <Text style={{ fontSize: 16, color: 'white', fontWeight: 'bold' }}>   x   </Text>
-                                </TouchableHighlight>
-                            </View>
-                            <View>
-                                <TextInput style={{ height: 25, textAlign: 'center', backgroundColor: 'white', justifyContent: 'center' }}
-                                    placeholder="task description"
-                                    onChangeText={(task) => this.setState({ task })}
-                                    value={this.state.task}
-                                />
-                            </View>
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={()=> this.onButtonPress()} 
-                                style={styles.buttonStyle}>
-                                    <Text style={styles.textStyle}>
-                                        ADD NEW TASK
+                    <View style={styles.background}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.bodyContainer}>
+                                <View style={styles.headerContainer}>
+                                    <Text style={styles.headerTextStyle}> NEW TASK </Text>
+                                    <TouchableHighlight style={styles.x}
+                                        onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible)
+                                        }}>
+                                        <Text style={styles.xtext}>   x   </Text>
+                                    </TouchableHighlight>
+                                </View>
+                                <View>
+                                    <TextInput style={styles.textInput}
+                                        placeholder="task description"
+                                        onChangeText={(task) => this.setState({ task })}
+                                        value={this.state.task}
+                                    />
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity onPress={() => this.onButtonPress()}
+                                        style={styles.buttonStyle}>
+                                        <Text style={styles.buttonTextStyle}>
+                                            ADD NEW TASK
                                     </Text>
-                                </TouchableOpacity>
-                            </View>
+                                    </TouchableOpacity>
+                                </View>
 
+                            </View>
                         </View>
                     </View>
-              </View>
                 </Modal>
                 <View style={styles.pawPrintContainer}>
                     <TouchableHighlight onPress={() => {
@@ -96,12 +94,47 @@ export default class AddTaskModal extends Component {
                     </TouchableHighlight>
                 </View>
             </View>
-            
+
         );
     }
 }
 
 const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        alignSelf:
+        'stretch',
+        top: 160
+    },
+    bodyContainer: {
+        backgroundColor: 'white',
+        height: 175,
+        flexDirection: 'column',
+        justifyItems: 'center',
+        borderBottomRadius: .1,
+        borderBottomWidth: 1,
+        borderBottomColor: '#D9D9D9',
+        borderTopRadius: .1,
+        borderTopWidth: 1,
+        borderTopColor: '#6D45AD'
+    },
+
+    headerContainer: {
+        flexDirection: 'row',
+        paddingLeft: 10,
+        paddingRight: 10,
+        height: 50,
+        justifyContent: 'space-between',
+        backgroundColor: '#8061A9',
+        marginBottom: 20,
+    },
+    headerTextStyle: {
+        paddingTop: 6,
+        paddingBottom: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white'
+    },
     pawprintContainer: {
         flex: 1,
 
@@ -119,10 +152,21 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(52, 52, 52, 0.8)'
     },
     x: {
-        position: 'absolute',
-        right: 10
+        height: 25,
+        paddingTop: 4,
+        paddingBottom: 10
     },
-
+    xtext: {
+        fontSize: 16,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    textInput: {
+        height: 25,
+        textAlign: 'center',
+        backgroundColor: 'white',
+        justifyContent: 'center'
+    },
     buttonContainer: {
         position: 'absolute',
         left: 10,
@@ -131,42 +175,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
     },
-   
-    modalContainer: {
-        flex: 1,
-        alignSelf:
-        'stretch',
-        top: 160
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        paddingLeft: 10,
-        paddingRight: 10,
-        height: 50,
-        justifyContent: 'space-between',
-        backgroundColor: '#8061A9',
-        marginBottom: 20,
-    },
-    bodyContainer: {
-        backgroundColor: 'white',
-        height: 175,
-        flexDirection: 'column',
-        justifyItems: 'center',
-        borderBottomRadius: .1,
-        borderBottomWidth: 1,
-        borderBottomColor: '#D9D9D9',
-        borderTopRadius: .1,
-        borderTopWidth: 1,
-        borderTopColor: '#6D45AD'
-    },
-    headerTextStyle: {
-        paddingTop: 6,
-        paddingBottom: 10,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white'
-    },
-      buttonStyle: {
+    buttonStyle: {
         flex: 0,
         // alignSelf: 'stretch',
         borderRadius: 5,
@@ -176,7 +185,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5
     },
-    textStyle: {
+    buttonTextStyle: {
         alignSelf: 'center',
         color: '#fff',
         fontSize: 14,
@@ -190,22 +199,3 @@ const styles = StyleSheet.create({
 
 
 
-const buttonStyles = {
-    textStyle: {
-        alignSelf: 'center',
-        color: '#fff',
-        fontSize: 14,
-        fontWeight: '600',
-        paddingTop: 10,
-        paddingBottom: 10
-    },
-    buttonStyle: {
-        flex: 0,
-        // alignSelf: 'stretch',
-        borderRadius: 5,
-        borderWidth: 1,
-        backgroundColor: '#8061A9',
-        marginLeft: 5,
-        marginRight: 5
-    }
-};
