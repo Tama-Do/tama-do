@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
@@ -9,6 +9,7 @@ import { monsterImg } from './helpers/monsterPicker';
 // import Icon from 'react-native-vector-icons/Ionicons';
 // const myIcon = (<Icon name="ios-person" size={30} color="#900" />)
 import { Entypo } from '@expo/vector-icons';
+import { EditPet } from './EditPet';
 
 class Pets extends Component {
   constructor(props) {
@@ -36,6 +37,9 @@ class Pets extends Component {
 
   viewPet(pet) {
     this.props.navigation.navigate('Pet', pet)
+  }
+  editPets() {
+    this.props.navigation.navigate('EditPet')
   }
 
   render() {
@@ -71,6 +75,13 @@ class Pets extends Component {
                 </TouchableHighlight>
               }
           />
+          <View style={styles.text1Container}>
+            <TouchableOpacity onPress={() => {this.editPets()}}>
+              <Text style={styles.text1}>
+                Edit Pet Names and Locations
+              </Text>
+            </TouchableOpacity>
+          </View>
       </View>
     );
   }
@@ -126,6 +137,16 @@ const styles = StyleSheet.create({
   },
   icon: {
     paddingRight: 25
+  },
+  text1: {
+    fontSize: 18,
+    alignSelf: 'center',
+    color: 'black',
+    //fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  text1Container:{
+    height: 40
   }
 })
 
@@ -136,4 +157,3 @@ const mapDispatch = { }
 const PetsContainer = connect(mapState, mapDispatch)(Pets);
 
 export default PetsContainer
-

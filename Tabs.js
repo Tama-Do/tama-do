@@ -9,8 +9,7 @@ import PetMap  from './components/PetMap';
 import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
-
-
+import EditPet from './components/EditPet';
 
 
 const TaskNavigator = StackNavigator({
@@ -50,6 +49,12 @@ const PetNavigator = StackNavigator({
           borderBottomColor: '#EAA00C'
         },
         headerTitleStyle: {color: 'white'},
+      }
+    },
+    EditPet: {
+      screen: EditPet,
+      navigationOptions:{
+        title: 'Pets'
       }
     }
 })
@@ -162,4 +167,3 @@ export const Tabs = TabNavigator({
     },
 
 })
-
