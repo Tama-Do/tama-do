@@ -6,7 +6,7 @@ import LoginForm from './LoginForm'
 import { signInUser } from '../reducers/login';
 import AnimatedSprite from 'react-native-animated-sprite';
 import monsterSprite from '../sprites/monster/monsterSprite';
-import { Card, CardSection, Input} from './common';
+import { CardLogin, CardSectionLogin, InputLogin} from './common';
 import { Button } from './common/LoginButton';
 
 
@@ -40,7 +40,7 @@ class LoginOldUser extends Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <Card>
+      <CardLogin>
 
         <View style={styles.hello}>
           <Text style={styles.helloText}>Tama-Do</Text>
@@ -61,8 +61,8 @@ class LoginOldUser extends Component {
           />
         </View>
 
-        <CardSection>
-          <Input
+        <CardSectionLogin>
+          <InputLogin
             label="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
@@ -70,26 +70,26 @@ class LoginOldUser extends Component {
             autoCapitalize="none"
             autoCorrect={false}
           />
-        </CardSection>
+        </CardSectionLogin>
 
-        <CardSection>
-        <Input
-          secureTextEntry
-          label="PASSWORD"
-          onChangeText={(password) => this.setState({password})}
-          value={this.state.password}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        </CardSection>
+        <CardSectionLogin>
+          <InputLogin
+            secureTextEntry
+            label="PASSWORD"
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </CardSectionLogin>
 
         <Text style={styles.errorTextStyle}>
           {this.props.error}
         </Text>
 
-        <CardSection>
+        <CardSectionLogin>
           {this.renderButton()}
-        </CardSection>
+        </CardSectionLogin>
 
         <View style={styles.text2Container}>
           <Text style={styles.text2}>
@@ -105,7 +105,7 @@ class LoginOldUser extends Component {
           </TouchableOpacity>
         </View>
 
-      </Card>
+      </CardLogin>
     );
   }
 }

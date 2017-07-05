@@ -12,19 +12,16 @@ const Card = (props) => {
 
 const styles = {
   containerStyle: {
-    paddingTop: 40,
-    paddingLeft: 10,
-    paddingRight: 10,
     flex: 3,
     backgroundColor: '#66ccff',
-    // borderWidth: 1,
-    // borderRadius: 2,
-    // borderColor: '#ddd',
-    // borderBottomWidth: 0,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 2,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
     elevation: 1
   }
 };
