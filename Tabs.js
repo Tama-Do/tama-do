@@ -54,7 +54,13 @@ const PetNavigator = StackNavigator({
     EditPet: {
       screen: EditPet,
       navigationOptions:{
-        title: 'Pets'
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
       }
     }
 })
@@ -75,7 +81,7 @@ const MapNavigator = StackNavigator({
     Form: {
       screen: FormView,
       navigationOptions: {
-        title: 'Location Form',
+        title: 'Update Pet',
         headerStyle: {
           backgroundColor: '#EA7C8B',
           borderBottomWidth: 1,
