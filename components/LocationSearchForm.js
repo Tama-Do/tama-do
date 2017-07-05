@@ -40,7 +40,6 @@ class FormView extends Component {
               </View>
             ))}
           </View>
-          <Text>New Location</Text>
           <GiftedForm.TextInputWidget
             location='location'
             title='Name'
@@ -101,7 +100,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    borderColor: '#D9D9D9',
+    borderBottomWidth: 1,
   },
   petIcon: {
     flex: 1,
