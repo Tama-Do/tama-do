@@ -63,18 +63,23 @@ class LoginOldUser extends Component {
 
         <CardSection>
           <Input
-            label="Email"
+            label="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
+            keyboardType='email-address'
+            autoCapitalize="none"
+            autoCorrect={false}
           />
         </CardSection>
 
         <CardSection>
         <Input
           secureTextEntry
-          label="Password"
+          label="PASSWORD"
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
+          autoCapitalize="none"
+          autoCorrect={false}
         />
         </CardSection>
 
