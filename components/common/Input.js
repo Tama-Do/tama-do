@@ -10,7 +10,6 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
       <TextInput
         autoCapitalize={'none'}
         secureTextEntry={secureTextEntry}
-        placeholder={placeholder}
         autoCorrect={false}
         style={inputStyle}
         value={value}
@@ -22,8 +21,8 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
 
 const styles = {
   inputStyle: {
-    color: '#000',
-    paddingRight: 5,
+    color: '#FFF',
+    paddingRight: 20,
     paddingLeft: 5,
     fontSize: 18,
     lineHeight: 23,
@@ -31,14 +30,19 @@ const styles = {
   },
   labelStyle: {
     fontSize: 18,
+    color: '#FFF',
     paddingLeft: 20,
     flex: 2
   },
   containerStyle: {
     height: 40,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderRadius: 10
+    //marginBottom: 5
   }
 };
 
