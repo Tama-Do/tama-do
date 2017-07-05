@@ -25,12 +25,12 @@ export const monsterImg = {
   },
   redMonster: {
     notClicked: require('../../sprites/redMonster/red_monster_celebrate01.png'),
-    clicked: require('../../sprites/monster/monster_celebrate_selected01.png'),
+    clicked: require('../../sprites/redMonster/red_monster_celebrate_selected.png'),
     idle: require('../../sprites/redMonster/red_monster_idle.png')
   },
   greenMonster: {
     notClicked: require('../../sprites/greenMonster/green_monster_celebrate01.png'),
-    clicked: require('../../sprites/monster/monster_celebrate_selected01.png'),
+    clicked: require('../../sprites/greenMonster/green_monster_celebrate_selected.png'),
     idle: require('../../sprites/greenMonster/green_monster_idle.png')
   }
 };

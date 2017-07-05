@@ -193,9 +193,13 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10
     }
+<<<<<<< HEAD
 
 })
 
 
 
 
+=======
+})
+>>>>>>> afd755eee0d6d453d9aad13defbaa5b4783c3367

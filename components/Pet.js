@@ -361,7 +361,10 @@ const modalStyles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: 'white',
-        padding: 5,
+        paddingBottom: 20,
+        paddingTop: 20,
+        paddingLeft: 15,
+        paddingRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
@@ -377,8 +380,8 @@ const modalStyles = StyleSheet.create({
         flexDirection: 'row',
     },
     treatIcon: {
-        width: 80,
-        height: 80
+        width: 70,
+        height: 70
     },
     quantityContainer: {
         // flex: 1,
