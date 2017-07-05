@@ -27,6 +27,7 @@ class FormView extends Component {
       <View>
         <GiftedForm style={styles.form}
           formName='locationSearch'
+          clearOnClose={true}
         >
           <View style={styles.row}>
             {this.props.pets.map(pet => (
@@ -41,8 +42,10 @@ class FormView extends Component {
             ))}
           </View>
           <GiftedForm.TextInputWidget
-            location='location'
-            title='Name'
+            name='location'
+            title='Location'
+            placeholder='e.g. Grocery Store ...'
+            clearButtonMode='while-editing'
           />
           <GiftedForm.SeparatorWidget />
 
@@ -59,15 +62,19 @@ class FormView extends Component {
               }}
               onSubmit={(isValid, values, validationResults, postSubmit = null) => {
                 if (isValid) {
+                  console.log('values', values)
                   let updates = {
                     latitude: values.locationSearch.details.geometry.location.lat,
-                    longitude: values.locationSearch.details.geometry.location.lng
+                    longitude: values.locationSearch.details.geometry.location.lng,
+                    location:
+                    values.location
                   }
                   database.ref(`/users/${this.props.auth.user}/pets/${this.state.petKey}`).update(updates)
                     .then(response => console.log("success response", response))
                     .catch(error => console.log("error is", error))
 
                   postSubmit()
+
                   this.props.navigation.goBack()
                 }
               }

@@ -64,12 +64,14 @@ componentWillReceiveProps(nextProps) {
                   latitude: pet.latitude,
                   longitude: pet.longitude
                 }}
-                title={pet.name}
+
                 key={pet.name}
               >
+              <TouchableOpacity activeOpacity={0.5} onPress={() => this.viewPet(pet)}>
                 <Image source={monsterImg[pet.type].notClicked}
                   style={{ width: 30 + pet.size / 2, height: 30 + pet.size / 2 }}
                 />
+              </TouchableOpacity>
               </MapView.Marker>)
             }
           })}
