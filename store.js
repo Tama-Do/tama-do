@@ -23,7 +23,6 @@ export default store;
 
 // doing it this way allows us to listen for changes
 // database.ref('/users/1/tasks').on('value', (snapshot) => {
-//       console.log("here is the listener for tasks")
 //       store.dispatch(getTasks(snapshot.val()))
 //     })
 

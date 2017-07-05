@@ -1,7 +1,7 @@
 // INSTRUCTIONS:: https://gist.github.com/alliefauer/f367d0f1de8b5e7c73aa6da6d89d3c76
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
 import { Button } from './common/MapButton'
@@ -14,23 +14,23 @@ import { monsterImg } from './helpers/monsterPicker';
 
 class PetMap extends Component {
   state = {
-      component: 'map',
-      selected: false,
-      petKey: null,
-    }
+    component: 'map',
+    selected: false,
+    petKey: null,
+  }
 
   goToLocationForm = () => {
     this.props.navigation.navigate('Form')
   }
 
   pickAMonster = (petKey) => {
-    this.setState({petKey, selected: true})
+    this.setState({ petKey, selected: true })
   }
 
 
   render() {
 
-// if (this.state.component === 'map') {
+    // if (this.state.component === 'map') {
     console.log('props', this.props)
     return (
       <View style={styles.container}>
@@ -48,19 +48,22 @@ class PetMap extends Component {
           showsCompass={true}>
           {this.props.pets.map(pet => {
             if (pet.latitude && pet.longitude) {
-           return (<MapView.Marker
-        coordinate={{
-          latitude: pet.latitude,
-          longitude: pet.longitude
-        }}
-        title={pet.name}
-        key={pet.name}
-      >
-        <Image source={monsterImg[pet.type].notClicked}
-        style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
-        />
-      </MapView.Marker>)
-          }})}
+              return (<MapView.Marker
+                coordinate={{
+                  latitude: pet.latitude,
+                  longitude: pet.longitude
+                }}
+                // title={pet.name}
+                key={pet.name}
+              >
+              <TouchableOpacity onPress={() => console.log('i was clicked!')}>
+                <Image source={monsterImg[pet.type].notClicked}
+                  style={{ width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20 }}
+                />
+              </TouchableOpacity>
+              </MapView.Marker>)
+            }
+          })}
         </MapView>
         <Button onPress={() => this.goToLocationForm()}>
           Add or Change a Pet's Location
@@ -68,8 +71,8 @@ class PetMap extends Component {
       </View>
     )
 
-}
   }
+}
 
 
 const styles = StyleSheet.create({
