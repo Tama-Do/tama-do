@@ -53,7 +53,7 @@ componentWillReceiveProps(nextProps) {
       <View style={styles.container}>
         <MapView style={styles.map}
           ref={(ref) => { this.map = ref }}
-          showsUserLocation={true}
+
           userLocationAnnotationTitle={false}
           mapType="hybrid"
           showsCompass={true}>
@@ -68,7 +68,7 @@ componentWillReceiveProps(nextProps) {
                 key={pet.name}
               >
                 <Image source={monsterImg[pet.type].notClicked}
-                  style={{ width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20 }}
+                  style={{ width: 30 + pet.size / 2, height: 30 + pet.size / 2 }}
                 />
               </MapView.Marker>)
             }
