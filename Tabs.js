@@ -75,8 +75,14 @@ const MapNavigator = StackNavigator({
     Form: {
       screen: FormView,
       navigationOptions: {
-        title: 'Location Form'
-    }
+        title: 'Location Form',
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
+        },
+        headerTitleStyle: {color: 'white'},
+      },
   }
 })
 
