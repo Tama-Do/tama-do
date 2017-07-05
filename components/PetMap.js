@@ -13,19 +13,33 @@ import { monsterImg } from './helpers/monsterPicker';
 
 
 class PetMap extends Component {
-  state = {
-    component: 'map',
-    selected: false,
-    petKey: null,
+  constructor(props) {
+    super(props)
+    this.state = {
+      coords : []
+    }
   }
 
+componentDidUpdate() {
+  this.map.fitToCoordinates(this.state.coords, { edgePadding: { top: 70, right: 50, bottom: 100, left: 50, animated: true }})
+
+}
+
   goToLocationForm = () => {
+    this.setState({ load : false })
     this.props.navigation.navigate('Form')
   }
 
-  pickAMonster = (petKey) => {
-    this.setState({ petKey, selected: true })
-  }
+componentWillReceiveProps(nextProps) {
+  let coords = nextProps.pets.map(pet => {
+      return {
+        latitude: pet.latitude,
+        longitude: pet.longitude
+      }
+    })
+     this.setState({ coords })
+}
+
 
   viewPet(pet) {
     this.props.navigation.navigate('Pet', pet)
@@ -33,21 +47,15 @@ class PetMap extends Component {
 
   render() {
 
-    // if (this.state.component === 'map') {
 
-    return (
+    if (this.state.coords.length > 0) {
+  return (
       <View style={styles.container}>
         <MapView style={styles.map}
-          initialRegion={{
-            latitude: 40.712784,
-            longitude: -74.005941,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0201
-          }} //reset initial region to user's location
-
-          mapType="hybrid"
+          ref={(ref) => { this.map = ref }}
           showsUserLocation={true}
-          // userLocationAnnotationTitle="you are here!"
+          userLocationAnnotationTitle={false}
+          mapType="hybrid"
           showsCompass={true}>
           {this.props.pets.map(pet => {
             if (pet.latitude && pet.longitude) {
@@ -56,14 +64,12 @@ class PetMap extends Component {
                   latitude: pet.latitude,
                   longitude: pet.longitude
                 }}
-                // title={pet.name}
+                title={pet.name}
                 key={pet.name}
               >
-              <TouchableOpacity onPress={() => this.viewPet(pet)}>
                 <Image source={monsterImg[pet.type].notClicked}
                   style={{ width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20 }}
                 />
-              </TouchableOpacity>
               </MapView.Marker>)
             }
           })}
@@ -74,6 +80,9 @@ class PetMap extends Component {
       </View>
     )
 
+  }else {
+    return (<View></View>)
+  }
   }
 }
 
