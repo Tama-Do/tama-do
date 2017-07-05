@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   row: {
-    paddingLeft: 15,
-    paddingRight: 30,
+    paddingLeft: 30,
+    paddingRight: 50,
     paddingTop: 10,
     paddingBottom: 14,
     flexDirection: 'row',
