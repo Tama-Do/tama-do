@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation';
 import { Icon } from 'react-native-elements';
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 
 import ToDo from './components/ToDo';
 import PetsContainer from './components/Pets';
@@ -27,7 +27,6 @@ const TaskNavigator = StackNavigator({
     }
   }
 })
-
 
 const PetNavigator = StackNavigator({
     Pets: {
@@ -91,49 +90,73 @@ const TreatNavigator = StackNavigator({
     }
 })
 
+let index = 0
 
 export const Tabs = TabNavigator({
   Main: {
     screen: TaskNavigator,
     navigationOptions: {
-      tabBarLabel: 'ToDo'
+      tabBarLabel: 'ToDo',
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 0 ? require('./images/task_icon.png') : require('./images/task_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
     },
   },
   Pets: {
     screen: PetNavigator,
     navigationOptions: {
-      tabBarLabel: 'Pets'
-    }
+      tabBarLabel: 'Pets',
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 1 ? require('./images/pet_icon.png') : require('./images/pet_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
+    },
   },
   Map: {
     screen: MapNavigator,
     navigationOptions: {
       tabBarLabel: 'Map',
-    }
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 2 ? require('./images/map_icon.png') : require('./images/map_icon_inactive.png')}
+        style={[{marginBottom: -3}, {tintColor: tintColor}]}
+      />
+    ),
+    },
   },
   Treats: {
     screen: TreatNavigator,
     navigationOptions: {
       tabBarLabel: 'Treats',
-      headerStyle: {
-          backgroundColor: '#EA7C8B',
-          borderBottomWidth: 1,
-          borderBottomColor: '#E16177'
-        },
-        headerTitleStyle: {color: 'white'}
+      tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={index === 3 ? require('./images/treat_icon.png') : require('./images/treat_icon_inactive.png')}
+        style={[{marginBottom: -7, height: 17, width: 46},{tintColor: tintColor}]}
+      />
+    ),
     },
   }
 },
    {
     tabBarComponent: props => {
-      const backgroundColor = props.position.interpolate({
-        inputRange: [0,1,2],
-        outputRange: ['#e74c3c','#9b59b6','#3498db'],
-      })
+      index = props.navigation.state.index
+      const activeColor = ["#8061A9", "#F0B52D", "#EA7C8B", "#4A8CAD"]
       return (
         <TabBarBottom
           {...props}
-          style={{backgroundColor}}
+          activeTintColor = {activeColor[index]}
+          inactiveTintColor = {"#737373"}
+          activeBackgroundColor= {"#FFF"}
+          inactiveBackgroundColor= {"#FFF"}
+          style = {{
+            backgroundColor: '#FFF',
+            height: 60
+          }}
         />
       );
     },
