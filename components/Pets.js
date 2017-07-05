@@ -90,20 +90,6 @@ const styles = StyleSheet.create({
     marginTop: 14,
     alignSelf: "stretch",
   },
-  // listItem: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   justifyContent: 'flex-start',
-  //   alignItems: 'center', // cross axis
-  //   paddingTop: 10,
-  //   paddingBottom: 10,
-  //   paddingLeft: 18,
-  //   paddingRight: 16,
-  //   marginLeft: 14,
-  //   marginRight: 14,
-  //   marginTop: 0,
-  //   marginBottom: 6,
-  // },
   listItem: {
     paddingLeft: 15,
     paddingTop: 10,
