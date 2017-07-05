@@ -54,7 +54,7 @@ export default class AddTaskModal extends Component {
                         <View>
                             <CardSection>
                             <View style={{position: 'absolute', height: 25, right: 10}}>
-                             
+
                             </View>
                                 <Input
                                     label="NewTask"
@@ -77,9 +77,9 @@ export default class AddTaskModal extends Component {
 
                                 </TouchableOpacity>
                             </CardSection>
-                        
-                               
-                            
+
+
+
 
                         </View>
                     </View>
@@ -99,7 +99,7 @@ export default class AddTaskModal extends Component {
 const styles = StyleSheet.create({
     pawprintContainer: {
         flex: 1,
-        
+
     },
     pawprint: {
         position: 'absolute',
