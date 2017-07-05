@@ -9,7 +9,6 @@ import {
     Image,
     StyleSheet
 } from 'react-native'
-//import { Button } from './common/ModalButton'
 import database from '../firebase'
 import store from '../store'
 
@@ -55,6 +54,8 @@ export default class AddTaskModal extends Component {
                     visible={this.state.modalVisible}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
+                <View style={styles.background}>
+                  
                     <View style={styles.modalContainer}>
                         <View style={styles.bodyContainer}>
                             <View style={styles.headerContainer}>
@@ -85,6 +86,7 @@ export default class AddTaskModal extends Component {
 
                         </View>
                     </View>
+              </View>
                 </Modal>
                 <View style={styles.pawPrintContainer}>
                     <TouchableHighlight onPress={() => {
@@ -94,6 +96,7 @@ export default class AddTaskModal extends Component {
                     </TouchableHighlight>
                 </View>
             </View>
+            
         );
     }
 }
@@ -110,6 +113,10 @@ const styles = StyleSheet.create({
         opacity: .8,
         alignSelf: 'flex-end',
 
+    },
+    background: {
+        flex: 1,
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
     },
     x: {
         position: 'absolute',
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'space-between',
         backgroundColor: '#8061A9',
-        marginBottom: 20
+        marginBottom: 20,
     },
     bodyContainer: {
         backgroundColor: 'white',
@@ -150,7 +157,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#D9D9D9',
         borderTopRadius: .1,
         borderTopWidth: 1,
-        borderTopColor: '#D9D9D9'
+        borderTopColor: '#6D45AD'
     },
     headerTextStyle: {
         paddingTop: 6,
@@ -164,6 +171,7 @@ const styles = StyleSheet.create({
         // alignSelf: 'stretch',
         borderRadius: 5,
         borderWidth: 1,
+        borderColor: '#6D45AD',
         backgroundColor: '#8061A9',
         marginLeft: 5,
         marginRight: 5
