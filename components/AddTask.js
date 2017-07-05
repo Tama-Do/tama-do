@@ -9,7 +9,7 @@ import {
     Image,
     StyleSheet
 } from 'react-native'
-import { Button } from './common/Button'
+//import { Button } from './common/ModalButton'
 import database from '../firebase'
 import store from '../store'
 
@@ -24,6 +24,7 @@ export default class AddTaskModal extends Component {
             auth: null,
             modalVisible: false
         }
+        this.onButtonPress = this.onButtonPress.bind(this)
     }
 
     componentDidMount() {
@@ -40,11 +41,6 @@ export default class AddTaskModal extends Component {
             completed: false
         });
     }
-
-
-    // state = {
-    //     modalVisible: false,
-    // }
 
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
@@ -72,14 +68,19 @@ export default class AddTaskModal extends Component {
                                 </TouchableHighlight>
                             </View>
                             <View>
-                            <TextInput style={{height:25, textAlign: 'center', backgroundColor: 'white', justifyContent: 'center' }}
-                                placeholder="task description"
-                                onChangeText={(task) => this.setState({ task })}
-                                value={this.state.task}
-                            />
+                                <TextInput style={{ height: 25, textAlign: 'center', backgroundColor: 'white', justifyContent: 'center' }}
+                                    placeholder="task description"
+                                    onChangeText={(task) => this.setState({ task })}
+                                    value={this.state.task}
+                                />
                             </View>
                             <View style={styles.buttonContainer}>
-                                {<Button style={styles.buttonStyle} title={'ADD NEW TASK'} onPress={() => { this.onButtonPress() }} />}
+                                <TouchableOpacity onPress={()=> this.onButtonPress()} 
+                                style={styles.buttonStyle}>
+                                    <Text style={styles.textStyle}>
+                                        ADD NEW TASK
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
 
                         </View>
@@ -107,8 +108,6 @@ const styles = StyleSheet.create({
         right: 20,
         bottom: 20,
         opacity: .8,
-        // left: 30,
-
         alignSelf: 'flex-end',
 
     },
@@ -125,17 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
     },
-    buttonStyle: {
-        flex: 1,
-        borderWidth: 1,
-        borderRadius: 20,
-        backgroundColor: '#8061A9',
-        borderColor: '#6D45AD',
-        color: 'white',
-        marginLeft: 10,
-        marginRight: 10
-
-    },
+   
     modalContainer: {
         flex: 1,
         alignSelf:
@@ -169,6 +158,46 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: 'white'
+    },
+      buttonStyle: {
+        flex: 0,
+        // alignSelf: 'stretch',
+        borderRadius: 5,
+        borderWidth: 1,
+        backgroundColor: '#8061A9',
+        marginLeft: 5,
+        marginRight: 5
+    },
+    textStyle: {
+        alignSelf: 'center',
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '600',
+        paddingTop: 10,
+        paddingBottom: 10
     }
 
 })
+
+
+
+
+const buttonStyles = {
+    textStyle: {
+        alignSelf: 'center',
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '600',
+        paddingTop: 10,
+        paddingBottom: 10
+    },
+    buttonStyle: {
+        flex: 0,
+        // alignSelf: 'stretch',
+        borderRadius: 5,
+        borderWidth: 1,
+        backgroundColor: '#8061A9',
+        marginLeft: 5,
+        marginRight: 5
+    }
+};

@@ -184,7 +184,7 @@ class ToDo extends Component {
           
         </View>
       </ScrollView>
-      <AddTask />
+      <AddTask auth={this.state.auth}/>
       </View>
     )
   }
