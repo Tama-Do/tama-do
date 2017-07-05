@@ -50,7 +50,7 @@ class Pets extends Component {
                 <TouchableHighlight
                   onPress={() => this.viewPet(item)}
                   underlayColor="white"
-                  activeOpacity={0.7}
+                  activeOpacity={0.9}
                 >
                   <View style={styles.listItem}>
                     <View style={styles.listContent}>

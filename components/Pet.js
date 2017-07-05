@@ -162,9 +162,10 @@ class Pet extends Component {
 
     _renderButton = (text, onPress) => {
         if (!this.state.showDraggable && this.state.checkedIn) {
+
             return (<TouchableOpacity onPress={onPress}>
                 <View style={modalStyles.button}>
-                    <Text>{text}</Text>
+                    <Text style={modalStyles.buttonText}>{text}</Text>
                 </View>
             </TouchableOpacity>
             )
@@ -313,21 +314,34 @@ const modalStyles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        backgroundColor: 'lightblue',
+        // backgroundColor: 'lightblue',
         padding: 12,
-        margin: 0,
+        // margin: 0,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        // alignItems: 'center',
+        // borderRadius: 4,
+        // borderColor: 'rgba(0, 0, 0, 0.1)',
+
+        // flex: 1,
+        alignItems: 'stretch',
+        borderWidth: 1,
+        borderRadius: 20,
+        backgroundColor: '#F0B52D',
+        borderColor: '#F0B52D',
+        marginLeft: 10,
+        marginRight: 10
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     closeButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#F0B52D',
         padding: 6,
         margin: 2,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        borderRadius: 4,
+        borderRadius: 10,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     buttonContainer: {
@@ -336,7 +350,8 @@ const modalStyles = StyleSheet.create({
         alignItems: 'flex-end'
     },
     buttonX: {
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold'
     },
     modalContent: {
         backgroundColor: 'white',

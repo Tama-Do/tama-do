@@ -43,7 +43,15 @@ const PetNavigator = StackNavigator({
       }
     },
     Pet: {
-      screen: PetContainer
+      screen: PetContainer,
+      navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
     }
 })
 

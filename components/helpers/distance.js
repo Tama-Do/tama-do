@@ -27,6 +27,9 @@ export function distance (lat2, lon2) {
     console.log('lat1 ', lat1, 'lon1 ', lon1)
     console.log('lat2', lat2, 'lon2 ', lon2)
     this.setState({checkedIn: bool});
+    if (!bool) {
+      this.setState({animationType: 'DISGUST'})
+    }
   })
   .catch(console.error);
 };
