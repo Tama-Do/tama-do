@@ -3,7 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
     Dimensions,
     Image,
     PanResponder,
@@ -20,6 +19,7 @@ import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
+import { Button } from './common/MapButton';
 
 class Pet extends Component {
     constructor(props) {
@@ -162,11 +162,17 @@ class Pet extends Component {
 
     _renderButton = (text, onPress) => {
         if (!this.state.showDraggable && this.state.checkedIn) {
-            return (<TouchableOpacity onPress={onPress}>
-                <View style={modalStyles.button}>
-                    <Text>{text}</Text>
-                </View>
-            </TouchableOpacity>
+        //     return <Button onPress={() => this.goToLocationForm()}>
+        //   Add or Change a Pet's Location</Button>
+            return (
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity onPress={onPress}>
+                    <View style={modalStyles.button}>
+                        <Text style={modalStyles.buttonText}>{text}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
             )
         }
     };
@@ -202,7 +208,6 @@ class Pet extends Component {
         const xlocation = petLength / 2;
         return !this.state.spriteVertical ? null :
             <AnimatedSprite
-                style={styles.sprite}
                 ref={'monsterRef'}
                 sprite={spriteFile}
                 animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
@@ -230,7 +235,7 @@ class Pet extends Component {
 
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>Location: {this.state.pet.location}</Text>
+
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
                     { this.renderSprite() }
                 </View>
@@ -264,7 +269,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#fff',
+        // backgroundColor: '#E9E9E9',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -274,9 +280,10 @@ const styles = StyleSheet.create({
     },
     spriteContainer: {
         flex: 4,
+        backgroundColor: 'white'
     },
     feedContainer: {
-        flex: 2
+        flex: 1,
     },
     button: {
         paddingBottom: 10,
@@ -312,22 +319,41 @@ const modalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: 'lightblue',
-        padding: 12,
-        margin: 0,
+    buttonContainer: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 15,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+    },
+    button: {
+        padding: 12,
+        paddingRight: 130,
+        paddingLeft: 130,
+        justifyContent: 'center',
+        // flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        borderWidth: 1,
+        borderRadius: 20,
+        backgroundColor: '#F0B52D',
+        borderColor: '#F0B52D',
+        marginLeft: 10,
+        marginRight: 10
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     closeButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#F0B52D',
         padding: 6,
         margin: 2,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        borderRadius: 4,
+        borderRadius: 10,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     buttonContainer: {
@@ -336,7 +362,8 @@ const modalStyles = StyleSheet.create({
         alignItems: 'flex-end'
     },
     buttonX: {
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold'
     },
     modalContent: {
         backgroundColor: 'white',

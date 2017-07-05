@@ -10,17 +10,47 @@ import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
 
-import { TaskNavigator } from './components/ToDo';
+
+
+
+const TaskNavigator = StackNavigator({
+  Todos: {
+    screen: ToDo,
+    navigationOptions: {
+      title: 'ToDo List',
+      headerStyle: {
+          backgroundColor: '#8061A9',
+          borderBottomWidth: 1,
+          borderBottomColor: '#6D45AD'
+        },
+        headerTitleStyle: {color: 'white'},
+    }
+  }
+})
 
 const PetNavigator = StackNavigator({
     Pets: {
       screen: PetsContainer,
       navigationOptions: {
-        title: 'My Monsters'
+        title: 'Pets',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
       }
     },
     Pet: {
-      screen: PetContainer
+      screen: PetContainer,
+      navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
     }
 })
 
@@ -29,23 +59,48 @@ const MapNavigator = StackNavigator({
       screen: PetMap,
       navigationOptions: {
         title: 'Map',
-        headerStyle: {backgroundColor: '#EA7C8B', borderBottomWidth: 1, borderBottomColor: '#E16177'},
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
+        },
         headerTitleStyle: {color: 'white'},
       },
     },
     Form: {
       screen: FormView,
       navigationOptions: {
-        title: 'Location Form'
-    }
+        title: 'Location Form',
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
+        },
+        headerTitleStyle: {color: 'white'},
+      },
   }
+})
+
+const TreatNavigator = StackNavigator({
+  Treats: {
+    screen: Treats,
+    navigationOptions: {
+      title: 'Treats',
+      headerStyle: {
+          backgroundColor: '#4A8CAD',
+          borderBottomWidth: 1,
+          borderBottomColor: '#057BAA'
+        },
+        headerTitleStyle: {color: 'white'},
+      },
+    }
 })
 
 let index = 0
 
 export const Tabs = TabNavigator({
   Main: {
-    screen: ToDo,
+    screen: TaskNavigator,
     navigationOptions: {
       tabBarLabel: 'ToDo',
       tabBarIcon: ({ tintColor }) => (
@@ -81,7 +136,7 @@ export const Tabs = TabNavigator({
     },
   },
   Treats: {
-    screen: Treats,
+    screen: TreatNavigator,
     navigationOptions: {
       tabBarLabel: 'Treats',
       tabBarIcon: ({ tintColor }) => (
@@ -111,6 +166,6 @@ export const Tabs = TabNavigator({
         />
       );
     },
-  
+
 })
 
