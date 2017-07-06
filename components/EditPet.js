@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image, Text} from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Image, Text,FlatList, ScrollView} from 'react-native'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
@@ -31,9 +31,9 @@ class EditPet extends Component {
     this.setState({ petKey, selected: true, monsterName: monName})
   }
 
-  nameMonster = () => {
-    return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT PET</Text> : null
-  }
+  // nameMonster = () => {
+  //   return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT PET</Text> : null
+  // }
 
   renameButton = () => {
     return this.state.monsterName !== null ?  <Button1 onPress={() => this.goToRenamePet()}>RENAME {this.state.monsterName}</Button1> : null
@@ -43,15 +43,25 @@ class EditPet extends Component {
     return this.state.monsterName !== null ?  <Button2 onPress={() => this.goToLocationForm()}>ADD/CHANGE {this.state.monsterName}S LOCATION</Button2> : null
   }
 
-  componentDidUpdate() {
-    this.nameMonster()
-  }
+  // componentDidUpdate() {
+  //   this.nameMonster()
+  // }
 
 
   render() {
     const { navigate } = this.props.navigation
     return (
       <View>
+
+
+
+              <View style={styles.textContainer}>
+                <Text style={styles.selectedText}>SELECT PET</Text>
+              </View>
+
+
+
+
         <GiftedForm style={styles.form} formName='locationSearch'>
           <View style={styles.row}>
             {this.props.pets.map(pet => (
@@ -69,7 +79,7 @@ class EditPet extends Component {
         </GiftedForm>
 
         <View style={styles.selectedTextView}>
-          {this.nameMonster()}
+
           {this.renameButton()}
           {this.locationButton()}
         </View>
@@ -84,6 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    bottom:30
   },
   map: {
     position: 'absolute',
@@ -141,11 +152,35 @@ const styles = StyleSheet.create({
   selectedText: {
     textAlign: 'center',
     fontSize: 24,
-    fontStyle: 'italic',
+    //fontWeight: 'bold',
     color: 'black'
   },
   selectedTextView: {
     top: 20
+  },
+  container1: {
+    flex: 1,
+    top:10,
+    backgroundColor: 'white'
+    //alignItems: 'center',
+    //justifyContent: 'center',
+  },
+  textContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#d9d9d9",
+    marginTop:5,
+    marginBottom: 5,
+    paddingTop:10,
+    paddingBottom:10,
+    top:5,
+    backgroundColor: '#FFF'
+  },
+  flatList: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    marginTop: 10,
+    borderColor: '#D9D9D9',
+    paddingBottom: 10
   }
 });
 

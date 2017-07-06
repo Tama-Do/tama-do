@@ -29,7 +29,7 @@ class RenamePet extends Component {
     const resetAction = NavigationActions.reset({
       index:0,
       actions:[
-        NavigationActions.navigate({routeName: 'EditPet'})
+        NavigationActions.navigate({routeName: 'Pets'})
       ]
     })
     this.props.navigation.dispatch(resetAction)
