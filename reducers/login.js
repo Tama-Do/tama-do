@@ -78,7 +78,13 @@ export const signInUser = ( email, password ) => {
 };
 
 export const createUser = (email, uid, dispatch) => {
-  let monsters = {0: {name:"AZULA",type:"grayMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},1:{name:"TIANA",type:"redMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},2:{name:"HUBERT",type:"greenMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318}}
+  //let monsters = {0: {name:"AZULA",type:"grayMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},1:{name:"TIANA",type:"redMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},2:{name:"HUBERT",type:"greenMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318}}
+  let monsters = {0: {
+    name:"AZULA",type:"grayMonster",size:1,location:"",latitude:40.671114, longitude:-73.9619493
+  },1:{name:"TIANA",type:"redMonster",size:1,location:"",latitude:40.7060855, longitude:-73.9968643
+},2:{name:"HUBERT",type:"greenMonster",size:1,location:"",latitude:40.7750743, longitude:-73.9703521
+}
+  };
   //change this to push eventually!
   database.ref('users/' + uid).set({
     email: email,
