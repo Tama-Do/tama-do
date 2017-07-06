@@ -1,7 +1,7 @@
 // INSTRUCTIONS:: https://gist.github.com/alliefauer/f367d0f1de8b5e7c73aa6da6d89d3c76
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
 import { Button } from './common/MapButton'
@@ -13,54 +13,68 @@ import { monsterImg } from './helpers/monsterPicker';
 
 
 class PetMap extends Component {
-  state = {
-      component: 'map',
-      selected: false,
-      petKey: null,
+  constructor(props) {
+    super(props)
+    this.state = {
+      coords : []
     }
+  }
+
+componentDidUpdate() {
+  this.map.fitToCoordinates(this.state.coords, { edgePadding: { top: 70, right: 50, bottom: 100, left: 50, animated: true }})
+
+}
 
   goToLocationForm = () => {
+    this.setState({ load : false })
     this.props.navigation.navigate('Form')
   }
 
-  pickAMonster = (petKey) => {
-    this.setState({petKey, selected: true})
-  }
+componentWillReceiveProps(nextProps) {
+  let coords = nextProps.pets.map(pet => {
+      return {
+        latitude: pet.latitude,
+        longitude: pet.longitude
+      }
+    })
+     this.setState({ coords })
+}
 
+
+  viewPet(pet) {
+    this.props.navigation.navigate('Pet', pet)
+  }
 
   render() {
 
-// if (this.state.component === 'map') {
-    console.log('props', this.props)
-    return (
+
+    if (this.state.coords.length > 0) {
+  return (
       <View style={styles.container}>
         <MapView style={styles.map}
-          initialRegion={{
-            latitude: 40.712784,
-            longitude: -74.005941,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0201
-          }} //reset initial region to user's location
+          ref={(ref) => { this.map = ref }}
 
+          userLocationAnnotationTitle={false}
           mapType="hybrid"
-          showsUserLocation={true}
-          userLocationAnnotationTitle="you are here!"
           showsCompass={true}>
           {this.props.pets.map(pet => {
             if (pet.latitude && pet.longitude) {
-           return (<MapView.Marker
-        coordinate={{
-          latitude: pet.latitude,
-          longitude: pet.longitude
-        }}
-        title={pet.name}
-        key={pet.name}
-      >
-        <Image source={monsterImg[pet.type].notClicked}
-        style={{width: Math.ceil(pet.size / 15) * 20, height: Math.ceil(pet.size / 15) * 20}}
-        />
-      </MapView.Marker>)
-          }})}
+              return (<MapView.Marker
+                coordinate={{
+                  latitude: pet.latitude,
+                  longitude: pet.longitude
+                }}
+
+                key={pet.name}
+              >
+              <TouchableOpacity activeOpacity={0.5} onPress={() => this.viewPet(pet)}>
+                <Image source={monsterImg[pet.type].notClicked}
+                  style={{ width: 30 + pet.size / 2, height: 30 + pet.size / 2 }}
+                />
+              </TouchableOpacity>
+              </MapView.Marker>)
+            }
+          })}
         </MapView>
         <Button onPress={() => this.goToLocationForm()}>
           Add or Change a Pet's Location
@@ -68,8 +82,11 @@ class PetMap extends Component {
       </View>
     )
 
-}
+  }else {
+    return (<View></View>)
   }
+  }
+}
 
 
 const styles = StyleSheet.create({

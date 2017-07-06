@@ -28,7 +28,7 @@ class Treats extends Component {
           keyExtractor={this._keyExtractor}
           renderItem={({ item }) =>
             <View style={styles.row}>
-              <Image source={treatPaths[item.type]}/>
+              <Image style={styles.treatIcon}source={treatPaths[item.type]}/>
               <Text style={styles.name}>{this.capitalize(item.type)}</Text>
               <Text style={styles.quantity}>{item.quantity}</Text>
             </View>
@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
     paddingTop: 10,
     paddingBottom: 10
   },
@@ -69,27 +71,32 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flex: 5,
-    marginTop: 1,
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
     alignSelf: "stretch",
   },
   row: {
     paddingLeft: 30,
     paddingRight: 50,
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: "#E9E9E9",
+    borderColor: "#d9d9d9",
+  },
+  treatIcon: {
+    width: 70,
+    height: 70
   },
   name: {
     fontWeight: 'bold',
     color: '#808080'
   },
   quantity: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#808080'
   }
 });

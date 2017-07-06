@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
+=======
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+>>>>>>> trying-to-merge-buggy-branch
 import { connect } from 'react-redux'
 import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
@@ -30,7 +34,6 @@ class Pets extends Component {
 
     // database.ref('/pets/0').on('value', (snapshot) => {
     //   this.setState({pets: snapshot.val()})
-    //   console.log('this.state in pets', this.state)
     // })
 
   }
@@ -51,10 +54,10 @@ class Pets extends Component {
               keyExtractor={this._keyExtractor}
               removeClippedSubviews={false}
               renderItem={({ item }) =>
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={() => this.viewPet(item)}
                   underlayColor="white"
-                  activeOpacity={0.9}
+                  activeOpacity={0.8}
                 >
                   <View style={styles.listItem}>
                     <View style={styles.listContent}>
@@ -72,7 +75,7 @@ class Pets extends Component {
                     </View>
 
                   </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
               }
           />
           <View style={styles.text1Container}>
@@ -109,8 +112,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderBottomWidth: 15,
-    borderBottomColor: "#E9E9E9",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
+    marginBottom: 10
   },
   listContent: {
     flexDirection: 'row',
