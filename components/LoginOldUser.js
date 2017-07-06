@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import LoginForm from './LoginForm'
 import { signInUser } from '../reducers/login';
 import AnimatedSprite from 'react-native-animated-sprite';
 import monsterSprite from '../sprites/monster/monsterSprite';
-import { CardLogin, CardSectionLogin, InputLogin} from './common';
+import { CardLogin, CardLoginOldUser, CardSectionLogin, InputLogin} from './common';
 import { Button } from './common/LoginButton';
 
 
@@ -40,17 +40,18 @@ class LoginOldUser extends Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <CardLogin>
-
-        <View style={styles.hello}>
-          <Text style={styles.helloText}>Tama-Do</Text>
+      <KeyboardAvoidingView  style={{height: 30, flex: 1}} behavior="position">
+      <CardLoginOldUser/>
+        <Text style={styles.helloText}>Tama-Do</Text>
+        <View style={styles.hello}/>
+          <View style={styles.circle}/>
             <AnimatedSprite
             ref={'monsterRef'}
             sprite={monsterSprite}
             animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
             loopAnimation={true}
             coordinates={{
-              top:-30,
+             top: 30,
               left: 45,
             }}
             size={{
@@ -59,7 +60,6 @@ class LoginOldUser extends Component {
             }}
             draggable={false}
           />
-        </View>
 
         <CardSectionLogin>
           <InputLogin
@@ -93,11 +93,8 @@ class LoginOldUser extends Component {
 
         <View style={styles.text2Container}>
           <Text style={styles.text2}>
-            don't have an account? {"\n"} {"\n"}               ______
+            don't have an account? {"\n"} {"\n"}               ______{"\n"}
           </Text>
-        </View>
-
-        <View style={styles.text1Container}>
           <TouchableOpacity onPress={() => {navigate('LoginForm')}}>
             <Text style={styles.text1}>
               SIGN UP
@@ -105,19 +102,24 @@ class LoginOldUser extends Component {
           </TouchableOpacity>
         </View>
 
-      </CardLogin>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = {
   hello: {
-    height:250
+        height:250,
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   helloText: {
     fontSize:50,
     color: '#FFF',
     alignSelf: 'center',
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0)',
+    top: 30,
     fontFamily: "Courier"
   },
   errorTextStyle: {
@@ -126,26 +128,51 @@ const styles = {
     color: 'red'
   },
   text1: {
+    backgroundColor: "rgba(0,0,0,0)",
     fontSize: 18,
     alignSelf: 'center',
     color: '#FFF',
     fontWeight: 'bold',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   text1Container:{
     // left: 0,
     // right: 0,
-    bottom: -80
+    justifyContent: 'center',
+    backgroundColor: "rgba(0,0,0,0)",
+    position: 'absolute',
+    bottom: 0,
+    top: -200,
+    left: 0,
+    right: 0,
+    height: 800
   },
   text2:{
     fontSize: 12,
     alignSelf: 'center',
     color: '#FFF',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    backgroundColor: "rgba(0,0,0,0)",
   },
   text2Container:{
-    bottom: -60
-  }
+    position: 'relative',
+    margin: 100,
+    top: 330,
+    paddingTop: 5,
+    padding: 5,
+    // justifyContent: 'flex-start',
+    flexDirection: 'column',
+  },
+  circle: {
+    position: 'absolute',
+    top: 80,
+    width: 285,
+    height: 285,
+    borderRadius: 285/2,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,.15)'
+}
 };
 
 

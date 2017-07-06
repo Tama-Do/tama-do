@@ -6,3 +6,4 @@ export * from './Spinner';
 export * from './CardLogin';
 export * from './CardSectionLogin';
 export * from './InputLogin';
+export * from './CardLoginOldUser'
