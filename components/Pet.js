@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal'
 
 import { removeTreat } from '../reducers/treats';
-import { increasePet } from '../reducers/pets';
+import { increasePet, addPetDate } from '../reducers/pets';
 import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
@@ -35,7 +35,8 @@ class Pet extends Component {
             dropZoneValues: null,
             pan: new Animated.ValueXY(),
             visibleModal: false,
-            selectedTreat: null
+            selectedTreat: null,
+            lastVisit: null
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -91,9 +92,12 @@ class Pet extends Component {
         })
         // Check if user is at pet's location
         const { latitude, longitude } = this.props.navigation.state.params;
-        this.distance(latitude, longitude);
+        this.distance(latitude, longitude, userId, petKey);
     }
 
+    // componentWillReceiveProps() {
+    //     this.dateVisited();
+    // }
     componentWillUnmount() {
         let userId = this.props.auth.user
         const petKey = this.props.navigation.state.params.key;
@@ -230,7 +234,7 @@ class Pet extends Component {
         if (!this.state.pet) {
             return null
         }
-
+        console.log('this.state.lastVisit', this.state.lastVisit)
         return (
             <View style={styles.container}>
 
@@ -244,7 +248,18 @@ class Pet extends Component {
 
                     {this.renderDraggable(this.state.selectedTreat)}
 
-                    {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
+                    {
+                        this.state.checkedIn ? null :
+                        <View>
+                            <Text style={styles.far}>You are too far away!</Text>
+                            {
+                                this.state.lastVisit ?
+                                <Text style={styles.visit}>You haven't visited me since {this.state.lastVisit}</Text>
+                                : null
+                            }
+                        </View>
+
+                    }
 
                     {this._renderButton('Feed Me!', () => this.setState({ visibleModal: true }))}
                     <Modal
@@ -308,6 +323,17 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: -60
+    },
+    far: {
+        fontWeight: 'bold',
+        fontSize: 17,
+        textAlign: 'center',
+    },
+    visit: {
+        marginTop: 5,
+        color: '#808080',
+        fontSize: 16,
+        textAlign: 'center',
     }
 });
 
@@ -401,7 +427,7 @@ const modalStyles = StyleSheet.create({
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
 
-const mapDispatch = { increasePet, removeTreat }
+const mapDispatch = { increasePet, removeTreat, addPetDate }
 
 const PetContainer = connect(mapState, mapDispatch)(Pet);
 

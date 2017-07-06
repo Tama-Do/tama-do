@@ -14,13 +14,14 @@ const monsterSprite = {
     require('./monster_celebrate02.png'),
     require('./monster_disgust01.png'),
     require('./monster1.png'),
-    require('./monster2.png')
+    require('./monster2.png'),
+    require('./monster_idle2.png')
 
   ],
   animationIndex: function getAnimationIndex (animationType) {
     switch (animationType) {
       case 'IDLE':
-        return [0];
+        return [0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 11];
       case 'WALK':
         return [1,2,3,0];
       case 'EAT':
