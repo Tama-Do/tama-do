@@ -3,7 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
     Dimensions,
     Image,
     PanResponder,
@@ -20,6 +19,7 @@ import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
+import { Button } from './common/MapButton';
 
 class Pet extends Component {
     constructor(props) {
@@ -162,11 +162,15 @@ class Pet extends Component {
 
     _renderButton = (text, onPress) => {
         if (!this.state.showDraggable && this.state.checkedIn) {
-            return (<TouchableOpacity onPress={onPress}>
-                <View style={modalStyles.button}>
-                    <Text>{text}</Text>
-                </View>
-            </TouchableOpacity>
+            return (
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity onPress={onPress}>
+                    <View style={modalStyles.button}>
+                        <Text style={modalStyles.buttonText}>{text}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
             )
         }
     };
@@ -177,9 +181,9 @@ class Pet extends Component {
                 <View key={treat.key} style={modalStyles.treats}>
                     <TouchableOpacity
                         onPress={() => this.setTreat(treat)}>
-                        <Image source={treatPaths[treat.type]} />
+                        <Image style={modalStyles.treatIcon} source={treatPaths[treat.type]} />
                     </TouchableOpacity>
-                    <View style={modalStyles.quantityCircle}>
+                    <View style={modalStyles.quantityContainer}>
                         <Text style={modalStyles.quantity}>{treat.quantity}</Text>
                     </View>
                 </View>
@@ -202,7 +206,6 @@ class Pet extends Component {
         const xlocation = petLength / 2;
         return !this.state.spriteVertical ? null :
             <AnimatedSprite
-                style={styles.sprite}
                 ref={'monsterRef'}
                 sprite={spriteFile}
                 animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
@@ -230,7 +233,7 @@ class Pet extends Component {
 
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>Location: {this.state.pet.location}</Text>
+
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
                     { this.renderSprite() }
                 </View>
@@ -264,9 +267,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#fff',
+        // backgroundColor: '#E9E9E9',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 50
     },
     header: {
         paddingTop: 10,
@@ -274,9 +279,10 @@ const styles = StyleSheet.create({
     },
     spriteContainer: {
         flex: 4,
+        backgroundColor: 'white'
     },
     feedContainer: {
-        flex: 2
+        flex: 1,
     },
     button: {
         paddingBottom: 10,
@@ -312,35 +318,53 @@ const modalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: 'lightblue',
-        padding: 12,
-        margin: 0,
+    buttonContainer: {
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        alignItems: 'flex-start'
+    },
+    button: {
+        padding: 12,
+        paddingRight: 130,
+        paddingLeft: 130,
+        justifyContent: 'center',
+        // flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        borderWidth: 1,
+        borderRadius: 20,
+        backgroundColor: '#F0B52D',
+        borderColor: '#EAA00C',
+        marginLeft: 10,
+        marginRight: 10
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     closeButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#F0B52D',
         padding: 6,
         margin: 2,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        borderRadius: 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        width: 25,
+        height: 25,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
-    buttonContainer: {
-        // flex: 1,
-        // flexDirection: 'column',
-        alignItems: 'flex-end'
-    },
     buttonX: {
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 10
     },
     modalContent: {
         backgroundColor: 'white',
-        padding: 5,
+        paddingBottom: 20,
+        paddingTop: 20,
+        paddingLeft: 15,
+        paddingRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
@@ -355,14 +379,23 @@ const modalStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
     },
-    quantityCircle: {
-        // width: 5,
-        // height: 5,
-        // borderRadius: 5 / 2,
-        // backgroundColor: 'gray'
+    treatIcon: {
+        width: 70,
+        height: 70
+    },
+    quantityContainer: {
+        // flex: 1,
+        marginRight: 10,
+        marginLeft: -8
+        // width: 2,
+        // height: 2,
+        // borderRadius: 1,
+        // backgroundColor: 'blue'
     },
     quantity: {
-        color: 'black'
+        color: '#808080',
+        textAlign: 'center',
+        fontWeight: 'bold'
     }
 });
 

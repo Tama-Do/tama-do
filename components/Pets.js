@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
 import { fetchPets } from '../reducers/pets';
 import { Pet } from './Pet'
 import { monsterImg } from './helpers/monsterPicker';
+// import Icon from 'react-native-vector-icons/Ionicons';
+// const myIcon = (<Icon name="ios-person" size={30} color="#900" />)
+import { Entypo } from '@expo/vector-icons';
+import { EditPet } from './EditPet';
 
 class Pets extends Component {
   constructor(props) {
@@ -26,13 +30,15 @@ class Pets extends Component {
 
     // database.ref('/pets/0').on('value', (snapshot) => {
     //   this.setState({pets: snapshot.val()})
-    //   console.log('this.state in pets', this.state)
     // })
 
   }
 
   viewPet(pet) {
     this.props.navigation.navigate('Pet', pet)
+  }
+  editPets() {
+    this.props.navigation.navigate('EditPet')
   }
 
   render() {
@@ -44,27 +50,37 @@ class Pets extends Component {
               keyExtractor={this._keyExtractor}
               removeClippedSubviews={false}
               renderItem={({ item }) =>
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={() => this.viewPet(item)}
                   underlayColor="white"
-                  activeOpacity={0.7}
+                  activeOpacity={0.8}
                 >
                   <View style={styles.listItem}>
-                    <Image
-                      source={monsterImg[item.type].idle}
-                      style={styles.itemImage}
-                    />
-                    <View style={styles.name}>
-                      <Text style={styles.itemText}>{item.name}</Text>
+                    <View style={styles.listContent}>
+                      <Image
+                        source={monsterImg[item.type].notClicked}
+                        style={styles.image}
+                      />
+                      <View style={styles.textContainer}>
+                        <Text style={styles.name}>{item.name.toUpperCase()}</Text>
+                        <Text style={styles.location}>{item.location}</Text>
+                      </View>
                     </View>
-                    <View style={styles.place}>
-                      <Text style={styles.itemText}>{item.location}</Text>
+                    <View style={styles.icon}>
+                      <Entypo name="chevron-right" size={32} color="#808080" />
                     </View>
 
                   </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
               }
           />
+          <View style={styles.text1Container}>
+            <TouchableOpacity onPress={() => {this.editPets()}}>
+              <Text style={styles.text1}>
+                Edit Pet Names and Locations
+              </Text>
+            </TouchableOpacity>
+          </View>
       </View>
     );
   }
@@ -76,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: '#E9E9E9',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -85,31 +101,53 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   listItem: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center', // cross axis
+    paddingLeft: 15,
     paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 18,
-    paddingRight: 16,
-    marginLeft: 14,
-    marginRight: 14,
-    marginTop: 0,
-    marginBottom: 6,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: "#d9d9d9",
+    marginBottom: 10
   },
-  itemText: {
-    fontSize: 15,
+  listContent: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  itemImage: {
-    width: 50,
-    height: 50
+  image: {
+    width: 80,
+    height: 80,
+    marginRight: 0
   },
   name: {
-    marginLeft: 30,
-    width: 70
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 0,
+    paddingLeft: 0
   },
-  place: {
+  location: {
+    fontSize: 16,
+    color: '#808080',
+    fontStyle: 'italic'
+  },
+  textContainer: {
+    marginLeft: 30,
+  },
+  icon: {
+    paddingRight: 25
+  },
+  text1: {
+    fontSize: 18,
+    alignSelf: 'center',
+    color: 'black',
+    //fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  text1Container:{
+    height: 40
   }
 })
 
@@ -120,4 +158,3 @@ const mapDispatch = { }
 const PetsContainer = connect(mapState, mapDispatch)(Pets);
 
 export default PetsContainer
-

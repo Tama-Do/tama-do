@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import LoginOldUser from './LoginOldUser'
 import { loginUser } from '../reducers/login';
-import { Card, CardSection, Input, Button, Spinner } from './common';
 import AnimatedSprite from 'react-native-animated-sprite';
 import monsterSprite from '../sprites/monster/monsterSprite';
-
+import { CardLogin, CardSectionLogin, InputLogin } from './common';
+import { Button } from './common/LoginButton'
 
 
 class LoginForm extends Component {
@@ -18,7 +18,7 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      animationType: 'WALK',
+      animationType: 'WALK'
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
@@ -32,18 +32,18 @@ class LoginForm extends Component {
   renderButton() {
     return (
       <Button onPress={this.onButtonPress}>
-        Sign Up
+        SIGN UP
       </Button>
     );
   }
 
 
   render() {
-    console.log("PROPSSSSSS", this.props)
     const { navigate } = this.props.navigation;
 
     return (
-      <Card>
+      <CardLogin>
+
         <View style={styles.hello}>
           <Text style={styles.helloText}>Tama-Do</Text>
             <AnimatedSprite
@@ -52,50 +52,62 @@ class LoginForm extends Component {
             animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
             loopAnimation={true}
             coordinates={{
-              top: 10,
-              left: 40,
+              top:-30,
+              left: 45,
             }}
             size={{
-              width: monsterSprite.size.width * 1.5,
-              height: monsterSprite.size.height * 1.5,
+              width: monsterSprite.size.width * 1.25,
+              height: monsterSprite.size.height * 1.25,
             }}
             draggable={false}
           />
         </View>
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="email@gmail.com"
+
+        <CardSectionLogin>
+          <InputLogin
+            label="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
+            keyboardType='email-address'
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-        </CardSection>
+        </CardSectionLogin>
 
-        <CardSection>
-        <Input
-          secureTextEntry
-          label="Password"
-          placeholder="password"
-          onChangeText={(password) => this.setState({password})}
-          value={this.state.password}
-        />
-        </CardSection>
+        <CardSectionLogin>
+          <InputLogin
+            secureTextEntry
+            label="PASSWORD"
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </CardSectionLogin>
 
         <Text style={styles.errorTextStyle}>
           {this.props.error}
         </Text>
 
-        <CardSection>
+        <CardSectionLogin>
           {this.renderButton()}
-        </CardSection>
+        </CardSectionLogin>
 
-        <TouchableOpacity onPress={() => {navigate('LoginOldUser')}}>
-          <Text style={styles.loginTest}>
-            Already Have An Account?
+        <View style={styles.text2Container}>
+          <Text style={styles.text2}>
+            already a member? {"\n"} {"\n"}            ______
           </Text>
-        </TouchableOpacity>
+        </View>
 
-      </Card>
+        <View style={styles.text1Container}>
+          <TouchableOpacity onPress={() => {navigate('LoginOldUser')}}>
+            <Text style={styles.text1}>
+              LOG IN
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+      </CardLogin>
     );
   }
 }
@@ -103,10 +115,11 @@ class LoginForm extends Component {
 
 const styles = {
   hello: {
-    height:425
+    height:250
   },
   helloText: {
     fontSize:50,
+    color: '#FFF',
     alignSelf: 'center',
     fontFamily: "Courier"
   },
@@ -115,10 +128,26 @@ const styles = {
     alignSelf: 'center',
     color: 'red'
   },
-  loginTest: {
-    fontSize: 16,
+  text1: {
+    fontSize: 18,
     alignSelf: 'center',
-    color: '#3B5998'
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  text1Container:{
+    // left: 0,
+    // right: 0,
+    bottom: -80
+  },
+  text2:{
+    fontSize: 12,
+    alignSelf: 'center',
+    color: '#FFF',
+    fontStyle: 'italic'
+  },
+  text2Container:{
+    bottom:-60
   }
 };
 
@@ -139,17 +168,12 @@ const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginFor
 export default LoginNavigator = StackNavigator({
     LoginForm: { screen: LoginFormContainer,
       navigationOptions:{
-        headerStyle:{
-            backgroundColor: '#66ccff'
-        }
+        header: null
       }
     },
     LoginOldUser: { screen: LoginOldUser,
       navigationOptions:{
-        title: "Back To Sign Up",
-        headerStyle:{
-            backgroundColor: '#66ccff'
-        }
+        header: null
       }
     }
 })

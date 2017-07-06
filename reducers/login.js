@@ -76,12 +76,10 @@ export const signInUser = ( email, password ) => {
           //dispatch login user fail at some point
     };
 };
-// let monsters = {0: {name:"",type:"grayMonster",size:1,location:""},1:{name:"",type:"grayMonster",size:1,location:""}}
 
 export const createUser = (email, uid, dispatch) => {
-  //let monsters = {name:"",type:"grayMonster",size:1,location:""}
-  let monsters = {0: {name:"I need name",type:"grayMonster",size:1,location:""},1:{name:"name me",type:"grayMonster",size:1,location:""},2:{name:"no name yet",type:"grayMonster",size:1,location:""}}
-
+  let monsters = {0: {name:"AZULA",type:"grayMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},1:{name:"TIANA",type:"redMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},2:{name:"HUBERT",type:"greenMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318}}
+  //change this to push eventually!
   database.ref('users/' + uid).set({
     email: email,
     pets: monsters

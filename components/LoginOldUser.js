@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import LoginForm from './LoginForm'
 import { signInUser } from '../reducers/login';
-import { Card, CardSection, Input, Button, Spinner } from './common';
+import AnimatedSprite from 'react-native-animated-sprite';
+import monsterSprite from '../sprites/monster/monsterSprite';
+import { CardLogin, CardSectionLogin, InputLogin} from './common';
+import { Button } from './common/LoginButton';
+
 
 class LoginOldUser extends Component {
 
@@ -13,7 +17,8 @@ class LoginOldUser extends Component {
 
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      animationType: 'WALK'
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
@@ -26,7 +31,7 @@ class LoginOldUser extends Component {
   renderButton() {
     return (
       <Button onPress={this.onButtonPress}>
-        Login
+        LOGIN
       </Button>
     );
   }
@@ -35,49 +40,111 @@ class LoginOldUser extends Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <Card>
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="email@gmail.com"
+      <CardLogin>
+
+        <View style={styles.hello}>
+          <Text style={styles.helloText}>Tama-Do</Text>
+            <AnimatedSprite
+            ref={'monsterRef'}
+            sprite={monsterSprite}
+            animationFrameIndex={monsterSprite.animationIndex(this.state.animationType)}
+            loopAnimation={true}
+            coordinates={{
+              top:-30,
+              left: 45,
+            }}
+            size={{
+              width: monsterSprite.size.width * 1.25,
+              height: monsterSprite.size.height * 1.25,
+            }}
+            draggable={false}
+          />
+        </View>
+
+        <CardSectionLogin>
+          <InputLogin
+            label="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
+            keyboardType='email-address'
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-        </CardSection>
+        </CardSectionLogin>
 
-        <CardSection>
-        <Input
-          secureTextEntry
-          label="Password"
-          placeholder="password"
-          onChangeText={(password) => this.setState({password})}
-          value={this.state.password}
-        />
-        </CardSection>
+        <CardSectionLogin>
+          <InputLogin
+            secureTextEntry
+            label="PASSWORD"
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </CardSectionLogin>
 
         <Text style={styles.errorTextStyle}>
           {this.props.error}
         </Text>
 
-        <CardSection>
+        <CardSectionLogin>
           {this.renderButton()}
-        </CardSection>
+        </CardSectionLogin>
 
-      </Card>
+        <View style={styles.text2Container}>
+          <Text style={styles.text2}>
+            don't have an account? {"\n"} {"\n"}               ______
+          </Text>
+        </View>
+
+        <View style={styles.text1Container}>
+          <TouchableOpacity onPress={() => {navigate('LoginForm')}}>
+            <Text style={styles.text1}>
+              SIGN UP
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+      </CardLogin>
     );
   }
 }
 
 const styles = {
+  hello: {
+    height:250
+  },
+  helloText: {
+    fontSize:50,
+    color: '#FFF',
+    alignSelf: 'center',
+    fontFamily: "Courier"
+  },
   errorTextStyle: {
     fontSize: 18,
     alignSelf: 'center',
     color: 'red'
   },
-  loginTest: {
-    fontSize: 16,
+  text1: {
+    fontSize: 18,
     alignSelf: 'center',
-    color: '#3B5998'
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  text1Container:{
+    // left: 0,
+    // right: 0,
+    bottom: -80
+  },
+  text2:{
+    fontSize: 12,
+    alignSelf: 'center',
+    color: '#FFF',
+    fontStyle: 'italic'
+  },
+  text2Container:{
+    bottom: -60
   }
 };
 
