@@ -29,7 +29,6 @@ const TaskNavigator = StackNavigator({
 })
 
 const PetNavigator = StackNavigator({
-<<<<<<< HEAD
     Pets: {
       screen: PetsContainer,
       navigationOptions: {
@@ -88,31 +87,7 @@ const PetNavigator = StackNavigator({
         },
         headerTitleStyle: {color: 'white'},
       }
-=======
-  Pets: {
-    screen: PetsContainer,
-    navigationOptions: {
-      title: 'Pets',
-      headerStyle: {
-        backgroundColor: '#F0B52D',
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAA00C'
-      },
-      headerTitleStyle: { color: 'white' },
     }
-  },
-  Pet: {
-    screen: PetContainer,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#F0B52D',
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAA00C'
-      },
-      headerTitleStyle: { color: 'white' },
->>>>>>> trying-to-merge-buggy-branch
-    }
-  }
 })
 
 const MapNavigator = StackNavigator({
@@ -139,18 +114,6 @@ const MapNavigator = StackNavigator({
       },
       headerTitleStyle: { color: 'white' },
     },
-<<<<<<< HEAD
-    Form: {
-      screen: FormView,
-      navigationOptions: {
-        title: 'Update Pet',
-        headerStyle: {
-          backgroundColor: '#EA7C8B',
-          borderBottomWidth: 1,
-          borderBottomColor: '#E16177'
-        },
-        headerTitleStyle: {color: 'white'},
-=======
   },
   Pet: {
     screen: PetContainer,
@@ -159,7 +122,6 @@ const MapNavigator = StackNavigator({
         backgroundColor: '#F0B52D',
         borderBottomWidth: 1,
         borderBottomColor: '#EAA00C'
->>>>>>> trying-to-merge-buggy-branch
       },
       headerTitleStyle: { color: 'white' },
     }
@@ -252,9 +214,3 @@ export const Tabs = TabNavigator({
       );
     },
   })
-
-<<<<<<< HEAD
-})
-=======
-
->>>>>>> trying-to-merge-buggy-branch

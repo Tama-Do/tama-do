@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
 import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
-=======
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
->>>>>>> trying-to-merge-buggy-branch
 import { connect } from 'react-redux'
 import { StackNavigator } from 'react-navigation'
 import database from '../firebase';
