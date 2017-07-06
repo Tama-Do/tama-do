@@ -7,20 +7,21 @@ import store from '../store'
 import Checkbox from './common/checkbox'
 import database from '../firebase'
 import Swipeout from './common/Swipeout'
+import NewTreat from './NewTreat'
 
-
-
+const pointDict = { 'cherry': 1, 'candy': 2, 'donut': 3 }
 
 class ToDo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tasks: {}
+      tasks: {},
+      showNewTreat: false,
+      currTreat: ''
     }
     this.onChange = this.onChange.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
   }
-
 
   componentDidMount() {
     let unsubscribe = store.subscribe(() => {
@@ -51,9 +52,7 @@ class ToDo extends Component {
 
           )
         }}
-
       />
-
     )
   }
 
@@ -67,7 +66,7 @@ class ToDo extends Component {
     }];
   }
 
-  getTreatType() { // figure out whether this is working 
+  getTreatType() { // figure out whether this is working
     min = 0;
     max = 3;
     randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -103,11 +102,16 @@ class ToDo extends Component {
             var newTreatRef = treatsRef.push()
             newTreatRef.set({
               type: treatType,
+              points: pointDict[treatType],
               quantity: 0
             })
-              .then(() => { this.updateQuantity(query) })
+              .then(() => { 
+                this.updateQuantity(query)
+                this.renderNewTreatPopup(taskRef)
+             })
           } else {
             this.updateQuantity(query)
+            this.renderNewTreatPopup(taskRef)
           }
         })
       })
@@ -163,32 +167,45 @@ class ToDo extends Component {
     database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
 
+  renderNewTreatPopup(taskRef) {
+    taskRef.once('value')
+      .then((snapshot) => {
+        return snapshot.val().treat
+      })
+      .then(treat => {
+        this.setState({ currTreat: treat })
+        this.setState({ showNewTreat: true })
+        setTimeout(() => { this.setState({ showNewTreat: false }) }, 2000)
+      })
+  }
+
   _keyExtractor = (item) => item.key
 
   render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-      <ScrollView style={styles.container}>
-        <View style={styles.flatList}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>In Progress</Text>
+        <ScrollView style={styles.container}>
+          <View style={styles.flatList}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>In Progress</Text>
+            </View>
+            {this.makeFlatlist('uncompleted')}
           </View>
-          {this.makeFlatlist('uncompleted')}
-        </View>
 
+          <View style={styles.flatList}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>Completed</Text>
+            </View>
+            <View>
+              {this.makeFlatlist('completed')}
+            </View>
 
-        <View style={styles.flatList}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Completed</Text>
           </View>
-          <View>
-            {this.makeFlatlist('completed')}
-          </View>
-          
-        </View>
-      </ScrollView>
-      <AddTask />
+        </ScrollView>
+        <AddTask />
+        {this.state.showNewTreat ? <NewTreat treat={this.state.currTreat} /> : <View />}
+
       </View>
     )
   }
@@ -226,12 +243,8 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const mapState = ({ tasks, auth }) => ({ tasks, auth })
 
 const mapDispatch = {}
-
-
-
 
 export default connect(mapState, mapDispatch)(ToDo)

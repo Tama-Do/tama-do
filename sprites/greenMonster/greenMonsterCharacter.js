@@ -13,11 +13,12 @@ const greenMonsterCharacter = {
     require('./green_monster_celebrate01.png'),
     require('./green_monster_celebrate02.png'),
     require('./green_monster_disgust01.png'),
+    require('./green_monster_idle2.png')
   ],
   animationIndex: function getAnimationIndex (animationType) {
     switch (animationType) {
       case 'IDLE':
-        return [0];
+        return [0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 9];
       case 'WALK':
         return [1,2,3,0];
       case 'EAT':
