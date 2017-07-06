@@ -9,8 +9,8 @@ import PetMap from './components/PetMap';
 import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
-
-
+import EditPet from './components/EditPet';
+import RenamePet from './components/RenamePet';
 
 
 const TaskNavigator = StackNavigator({
@@ -29,29 +29,65 @@ const TaskNavigator = StackNavigator({
 })
 
 const PetNavigator = StackNavigator({
-  Pets: {
-    screen: PetsContainer,
-    navigationOptions: {
-      title: 'Pets',
-      headerStyle: {
-        backgroundColor: '#F0B52D',
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAA00C'
-      },
-      headerTitleStyle: { color: 'white' },
+    Pets: {
+      screen: PetsContainer,
+      navigationOptions: {
+        title: 'Pets',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    Pet: {
+      screen: PetContainer,
+      navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    EditPet: {
+      screen: EditPet,
+      navigationOptions: {
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    RenamePet: {
+      screen: RenamePet,
+      navigationOptions: {
+        title: 'Rename Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    Form: {
+      screen: FormView,
+      navigationOptions: {
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
     }
-  },
-  Pet: {
-    screen: PetContainer,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#F0B52D',
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAA00C'
-      },
-      headerTitleStyle: { color: 'white' },
-    }
-  }
 })
 
 const MapNavigator = StackNavigator({
@@ -178,5 +214,3 @@ export const Tabs = TabNavigator({
       );
     },
   })
-
-
