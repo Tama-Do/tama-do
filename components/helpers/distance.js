@@ -46,28 +46,36 @@ export const _getLocationAsync = async () => {
 };
 
 function dateVisited(userId, petKey, checkedIn) {
+  // if pet has never been visited, and user is not checked in
   if (!this.state.pet.dates && !checkedIn) {
     return null;
   }
 
-  let lastDate = Object.keys(this.state.pet.dates).map(dateMS => Number(dateMS))
-  lastDate = this.state.pet.dates[Math.max(...lastDate)]
+  // if user is checkedIn
   if (checkedIn) {
     let today = new Date();
     let date = today.getMonth() + '-' + today.getDate() + '-' + today.getFullYear()
     let dateMS = Date.now()
+    // if user is checkedIn and pet has never been visited
     if (!this.state.pet.dates) {
       this.props.addPetDate(userId, petKey, dateMS, date)
       this.setState({ lastVisit: date })
     } else {
+      // if user is checkedIn and pet has been visited before today
+      let lastDate = Object.keys(this.state.pet.dates).map(dateMS => Number(dateMS))
+      lastDate = this.state.pet.dates[Math.max(...lastDate)]
       if (lastDate !== date) {
         this.props.addPetDate(userId, petKey, dateMS, date)
         this.setState({ lastVisit: date })
       } else {
+        // if user is checkedIn but pet has been visited the same day
         this.setState({ lastVisit: lastDate })
       }
     }
   } else {
+    // if user is not checkedIn
+    let lastDate = Object.keys(this.state.pet.dates).map(dateMS => Number(dateMS))
+    lastDate = this.state.pet.dates[Math.max(...lastDate)]
     this.setState({ lastVisit: lastDate });
   }
 }
