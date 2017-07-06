@@ -48,7 +48,7 @@ componentWillReceiveProps(nextProps) {
   render() {
 
 
-    if (this.state.coords.length > 0) {
+    if (this.props.pets) {
   return (
       <View style={styles.container}>
         <MapView style={styles.map}

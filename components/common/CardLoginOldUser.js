@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 
-const CardLogin = (props) => {
+const CardLoginOldUser = (props) => {
   const { containerStyle } = styles;
   return (
     <View style={styles.background}>
-      <Image source={require('../../images/pink_gradient_background-02.png')}  />
+      <Image source={require('../../images/blue_gradient_background-02-03.png')}  />
       {props.children}
     </View>
   );
@@ -30,4 +30,4 @@ const styles = {
   }
 };
 
-export { CardLogin };
+export { CardLoginOldUser };

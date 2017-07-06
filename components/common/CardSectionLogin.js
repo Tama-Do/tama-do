@@ -10,13 +10,12 @@ const CardSectionLogin = (props) =>
 
 const styles = {
   containerStyle: {
-    //borderBottomWidth: 1,
+    position: 'relative',
+    top: 385,
+    paddingTop: 5,
     padding: 5,
-    backgroundColor: '#66ccff',
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
     flexDirection: 'row',
-    //borderColor: '#ddd',
-    position: 'relative'
   }
 };
 

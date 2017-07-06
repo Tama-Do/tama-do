@@ -1,8 +1,5 @@
 {
   "expoServerPort": null,
   "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://nk-48s.stella-yc.tama-do.exp.direct",
-  "packagerNgrokUrl": "https://packager.nk-48s.stella-yc.tama-do.exp.direct",
-  "ngrokPid": 12724
+  "packagerPid": null
 }
