@@ -9,6 +9,8 @@ import database from '../firebase'
 import Swipeout from './common/Swipeout'
 import NewTreat from './NewTreat'
 
+const pointDict = { 'cherry': 1, 'candy': 2, 'donut': 3 }
+
 class ToDo extends Component {
   constructor(props) {
     super(props)
@@ -100,11 +102,16 @@ class ToDo extends Component {
             var newTreatRef = treatsRef.push()
             newTreatRef.set({
               type: treatType,
+              points: pointDict[treatType],
               quantity: 0
             })
-              .then(() => { this.updateQuantity(query) })
+              .then(() => { 
+                this.updateQuantity(query)
+                this.renderNewTreatPopup(taskRef)
+             })
           } else {
             this.updateQuantity(query)
+            this.renderNewTreatPopup(taskRef)
           }
         })
       })
@@ -156,18 +163,20 @@ class ToDo extends Component {
     } else {
       taskUpdates = { completed: true }
       this.addTreat(treatsRef, taskRef)
-      this.setState({ showNewTreat: true })
-      taskRef.once('value').then((snapshot) => {
+    }
+    database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
+  }
+
+  renderNewTreatPopup(taskRef) {
+    taskRef.once('value')
+      .then((snapshot) => {
         return snapshot.val().treat
       })
       .then(treat => {
-        this.setState({ currTreat: treat})
+        this.setState({ currTreat: treat })
         this.setState({ showNewTreat: true })
         setTimeout(() => { this.setState({ showNewTreat: false }) }, 2000)
       })
-      
-    }
-    database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
 
   _keyExtractor = (item) => item.key
@@ -194,7 +203,7 @@ class ToDo extends Component {
 
           </View>
         </ScrollView>
-        <AddTask  />
+        <AddTask />
         {this.state.showNewTreat ? <NewTreat treat={this.state.currTreat} /> : <View />}
 
       </View>

@@ -39,6 +39,7 @@ export default class AddTaskModal extends Component {
             name: this.state.task,
             completed: false
         });
+        this.setState({task: ''})
         this.setModalVisible(!this.state.modalVisible)
     }
 
