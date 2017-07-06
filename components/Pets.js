@@ -58,8 +58,8 @@ class Pets extends Component {
                         style={styles.image}
                       />
                       <View style={styles.textContainer}>
-                        {/*<Text style={styles.name}>{item.name.toUpperCase()}</Text>
-                        <Text style={styles.location}>{item.location}</Text>*/}
+                        <Text style={styles.name}>{item.name.toUpperCase()}</Text>
+                        <Text style={styles.location}>{item.location}</Text>
                       </View>
                     </View>
                     <View style={styles.icon}>
