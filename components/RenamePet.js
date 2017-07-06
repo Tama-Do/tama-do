@@ -6,20 +6,33 @@ import database from '../firebase';
 import { connect } from 'react-redux';
 import { monsterImg } from './helpers/monsterPicker';
 import { CardEditPet, CardSectionEditPet, InputEditPet } from './common';
-import { Button } from './common/ButtonEditPet';
+import { Button1 } from './common/ButtonEditPet';
+import AnimatedSprite from 'react-native-animated-sprite';
+import { monsterPicker } from './helpers/monsterPicker';
+
 
 
 class RenamePet extends Component {
   state = {
     selected: false,
     petKey: null,
-    monsterName: null
+    monsterName: null,
+    animationType: 'IDLE'
   }
 
+  onSubmit() {
+    let petKey = this.props.navigation.state.params.petKey
+    console.log("PETKEY", petKey)
+    let petName = database.ref(`/users/${this.props.auth.user}/pets`).child(petKey)
+      .update({ name: this.state.monsterName})
+    this.props.navigation.goBack()
+  }
 
 
   render() {
     let props = this.props.navigation.state.params
+    console.log("STAAATE ", this.state)
+    console.log("PROPSSS ", this.props)
     console.log("PROPSPROPSPROPS", this.props.navigation.state.params)
     // return (
     //   <CardEditPet>
@@ -48,9 +61,18 @@ class RenamePet extends Component {
 
             </View>
             <InputEditPet
-              label="CHANGE NAME"
+              label="NEW NAME"
               autoFocus={true}
+              autoCapitalize="characters"
+              onChangeText={(monsterName) => this.setState({monsterName})}
+              value={this.state.monsterName}
             />
+          </View>
+
+          <View>
+            <Button1 onPress={() => { this.onSubmit() }}>
+              SUBMIT NAME
+            </Button1>
           </View>
 
         </ScrollView>
@@ -90,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     paddingTop: 10,
     paddingBottom: 10,
-    paddingLeft: 15,
+    paddingLeft: 18,
   },
 });
 

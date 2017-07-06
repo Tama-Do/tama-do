@@ -34,8 +34,8 @@ const styles = {
   },
   labelStyle: {
     fontSize: 12,
-    color: 'black',
-    paddingLeft: 20,
+    color: '#b3b3b3',
+    paddingLeft: 0,
     flex: 2
   },
   containerStyle: {
@@ -46,7 +46,8 @@ const styles = {
     alignItems: 'center',
     paddingHorizontal: 10,
     borderRadius: 10,
-    //marginBottom: 5
+    marginLeft: 10,
+    marginRight: 10
   }
 };
 
