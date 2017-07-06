@@ -12,6 +12,9 @@ import PetContainer from './components/Pet';
 import EditPet from './components/EditPet';
 import RenamePet from './components/RenamePet';
 
+// Get permission to use the user's location
+import { _getLocationAsync } from './components/helpers/distance';
+_getLocationAsync();
 
 const TaskNavigator = StackNavigator({
   Todos: {

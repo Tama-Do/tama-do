@@ -53,8 +53,6 @@ componentWillReceiveProps(nextProps) {
       <View style={styles.container}>
         <MapView style={styles.map}
           ref={(ref) => { this.map = ref }}
-
-          userLocationAnnotationTitle={false}
           mapType="hybrid"
           showsCompass={true}>
           {this.props.pets.map(pet => {

@@ -64,7 +64,7 @@ class ToDo extends Component {
     }];
   }
 
-  getTreatType() { // figure out whether this is working 
+  getTreatType() { // figure out whether this is working
     min = 0;
     max = 3;
     randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -165,7 +165,7 @@ class ToDo extends Component {
         this.setState({ showNewTreat: true })
         setTimeout(() => { this.setState({ showNewTreat: false }) }, 2000)
       })
-      
+
     }
     database.ref(`/users/${userId}/tasks/${taskId}`).update(taskUpdates)
   }
