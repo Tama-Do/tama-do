@@ -39,6 +39,7 @@ export default class AddTaskModal extends Component {
             name: this.state.task,
             completed: false
         });
+        this.setModalVisible(!this.state.modalVisible)
     }
 
     setModalVisible(visible) {
@@ -49,7 +50,7 @@ export default class AddTaskModal extends Component {
         return (
             <View>
                 <Modal
-                    animationType={"slide"}
+                    animationType={"none"}
                     transparent={true}
                     visible={this.state.modalVisible}
                     onRequestClose={() => { alert("Modal has been closed.") }}

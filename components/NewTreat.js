@@ -62,12 +62,6 @@ export default class NewTreatModal extends Component {
                     <View style={styles.treatContainer}>
                         <Text style={styles.text}>{this.generateText(this.props.treat)}</Text>
                         <Image source={TreatPaths[this.props.treat]}/>
-                        {/*<TouchableHighlight
-                            onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible)
-                            }}>
-                            <Text>   x   </Text>
-                        </TouchableHighlight>*/}
                     </View>
                 </View>
                 </Modal>
