@@ -1,69 +1,132 @@
 import React from 'react';
 import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation';
 import { Icon } from 'react-native-elements';
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 
 import ToDo from './components/ToDo';
 import PetsContainer from './components/Pets';
-import PetMap  from './components/PetMap';
+import PetMap from './components/PetMap';
 import Treats from './components/Treats';
 import FormView from './components/LocationSearchForm';
 import PetContainer from './components/Pet';
+import EditPet from './components/EditPet';
+import RenamePet from './components/RenamePet';
 
-
-
+// Get permission to use the user's location
+import { _getLocationAsync } from './components/helpers/distance';
+_getLocationAsync();
 
 const TaskNavigator = StackNavigator({
-  Todos: { 
+  Todos: {
     screen: ToDo,
     navigationOptions: {
       title: 'ToDo List',
       headerStyle: {
-          backgroundColor: '#8061A9', 
-          borderBottomWidth: 1, 
-          borderBottomColor: '#6D45AD'
-        },
-        headerTitleStyle: {color: 'white'},
-    } 
+        backgroundColor: '#8061A9',
+        borderBottomWidth: 1,
+        borderBottomColor: '#6D45AD'
+      },
+      headerTitleStyle: { color: 'white' },
+    }
   }
 })
-
 
 const PetNavigator = StackNavigator({
     Pets: {
       screen: PetsContainer,
       navigationOptions: {
-        title: 'My Monsters',
+        title: 'Pets',
         headerStyle: {
-          backgroundColor: '#F0B52D', 
-          borderBottomWidth: 1, 
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
           borderBottomColor: '#EAA00C'
         },
         headerTitleStyle: {color: 'white'},
       }
     },
     Pet: {
-      screen: PetContainer
-    }
-})
-
-const MapNavigator = StackNavigator({
-    Map: {
-      screen: PetMap,
+      screen: PetContainer,
       navigationOptions: {
-        title: 'Map',
         headerStyle: {
-          backgroundColor: '#EA7C8B', 
-          borderBottomWidth: 1, 
-          borderBottomColor: '#E16177'
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
         },
         headerTitleStyle: {color: 'white'},
-      },
+      }
+    },
+    EditPet: {
+      screen: EditPet,
+      navigationOptions: {
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    },
+    RenamePet: {
+      screen: RenamePet,
+      navigationOptions: {
+        title: 'Rename Pet',
+        headerStyle: {
+          backgroundColor: '#F0B52D',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAA00C'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
     },
     Form: {
       screen: FormView,
       navigationOptions: {
-        title: 'Location Form'
+        title: 'Update Pet',
+        headerStyle: {
+          backgroundColor: '#EA7C8B',
+          borderBottomWidth: 1,
+          borderBottomColor: '#E16177'
+        },
+        headerTitleStyle: {color: 'white'},
+      }
+    }
+})
+
+const MapNavigator = StackNavigator({
+  Map: {
+    screen: PetMap,
+    navigationOptions: {
+      title: 'Map',
+      headerStyle: {
+        backgroundColor: '#EA7C8B',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E16177'
+      },
+      headerTitleStyle: { color: 'white' },
+    },
+  },
+  Form: {
+    screen: FormView,
+    navigationOptions: {
+      title: 'Location Form',
+      headerStyle: {
+        backgroundColor: '#EA7C8B',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E16177'
+      },
+      headerTitleStyle: { color: 'white' },
+    },
+  },
+  Pet: {
+    screen: PetContainer,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#F0B52D',
+        borderBottomWidth: 1,
+        borderBottomColor: '#EAA00C'
+      },
+      headerTitleStyle: { color: 'white' },
     }
   }
 })
@@ -74,61 +137,83 @@ const TreatNavigator = StackNavigator({
     navigationOptions: {
       title: 'Treats',
       headerStyle: {
-          backgroundColor: '#4A8CAD', 
-          borderBottomWidth: 1, 
-          borderBottomColor: '#057BAA'
-        },
-        headerTitleStyle: {color: 'white'},
+        backgroundColor: '#4A8CAD',
+        borderBottomWidth: 1,
+        borderBottomColor: '#057BAA'
       },
-    }
+      headerTitleStyle: { color: 'white' },
+    },
+  }
 })
 
+let index = 0
 
 export const Tabs = TabNavigator({
   Main: {
     screen: TaskNavigator,
     navigationOptions: {
-      tabBarLabel: 'ToDo'
+      tabBarLabel: 'ToDo',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={index === 0 ? require('./images/task_icon.png') : require('./images/task_icon_inactive.png')}
+          style={[{ marginBottom: -3 }, { tintColor: tintColor }]}
+        />
+      ),
     },
   },
   Pets: {
     screen: PetNavigator,
     navigationOptions: {
-      tabBarLabel: 'Pets'
-    }
+      tabBarLabel: 'Pets',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={index === 1 ? require('./images/pet_icon.png') : require('./images/pet_icon_inactive.png')}
+          style={[{ marginBottom: -3 }, { tintColor: tintColor }]}
+        />
+      ),
+    },
   },
   Map: {
     screen: MapNavigator,
     navigationOptions: {
       tabBarLabel: 'Map',
-    }
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={index === 2 ? require('./images/map_icon.png') : require('./images/map_icon_inactive.png')}
+          style={[{ marginBottom: -3 }, { tintColor: tintColor }]}
+        />
+      ),
+    },
   },
   Treats: {
     screen: TreatNavigator,
     navigationOptions: {
       tabBarLabel: 'Treats',
-      headerStyle: {
-          backgroundColor: '#EA7C8B', 
-          borderBottomWidth: 1, 
-          borderBottomColor: '#E16177'
-        },
-        headerTitleStyle: {color: 'white'}
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={index === 3 ? require('./images/treat_icon.png') : require('./images/treat_icon_inactive.png')}
+          style={[{ marginBottom: -7, height: 17, width: 46 }, { tintColor: tintColor }]}
+        />
+      ),
     },
   }
 },
-   {
+  {
     tabBarComponent: props => {
-      const backgroundColor = props.position.interpolate({
-        inputRange: [0,1,2],
-        outputRange: ['#e74c3c','#9b59b6','#3498db'],
-      })
+      index = props.navigation.state.index
+      const activeColor = ["#8061A9", "#F0B52D", "#EA7C8B", "#4A8CAD"]
       return (
         <TabBarBottom
           {...props}
-          style={{backgroundColor}}
+          activeTintColor={activeColor[index]}
+          inactiveTintColor={"#737373"}
+          activeBackgroundColor={"#FFF"}
+          inactiveBackgroundColor={"#FFF"}
+          style={{
+            backgroundColor: '#FFF',
+            height: 60
+          }}
         />
       );
     },
-  
-})
-
+  })

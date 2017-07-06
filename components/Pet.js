@@ -3,7 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
     Dimensions,
     Image,
     PanResponder,
@@ -15,11 +14,12 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal'
 
 import { removeTreat } from '../reducers/treats';
-import { increasePet } from '../reducers/pets';
+import { increasePet, addPetDate } from '../reducers/pets';
 import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
+import { Button } from './common/MapButton';
 
 class Pet extends Component {
     constructor(props) {
@@ -35,7 +35,8 @@ class Pet extends Component {
             dropZoneValues: null,
             pan: new Animated.ValueXY(),
             visibleModal: false,
-            selectedTreat: null
+            selectedTreat: null,
+            lastVisit: null
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
@@ -91,9 +92,12 @@ class Pet extends Component {
         })
         // Check if user is at pet's location
         const { latitude, longitude } = this.props.navigation.state.params;
-        this.distance(latitude, longitude);
+        this.distance(latitude, longitude, userId, petKey);
     }
 
+    // componentWillReceiveProps() {
+    //     this.dateVisited();
+    // }
     componentWillUnmount() {
         let userId = this.props.auth.user
         const petKey = this.props.navigation.state.params.key;
@@ -162,11 +166,15 @@ class Pet extends Component {
 
     _renderButton = (text, onPress) => {
         if (!this.state.showDraggable && this.state.checkedIn) {
-            return (<TouchableOpacity onPress={onPress}>
-                <View style={modalStyles.button}>
-                    <Text>{text}</Text>
-                </View>
-            </TouchableOpacity>
+            return (
+            <View style={modalStyles.buttonContainer}>
+                <TouchableOpacity onPress={onPress}>
+                    <View style={modalStyles.button}>
+                        <Text style={modalStyles.buttonText}>{text}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
             )
         }
     };
@@ -177,9 +185,9 @@ class Pet extends Component {
                 <View key={treat.key} style={modalStyles.treats}>
                     <TouchableOpacity
                         onPress={() => this.setTreat(treat)}>
-                        <Image source={treatPaths[treat.type]} />
+                        <Image style={modalStyles.treatIcon} source={treatPaths[treat.type]} />
                     </TouchableOpacity>
-                    <View style={modalStyles.quantityCircle}>
+                    <View style={modalStyles.quantityContainer}>
                         <Text style={modalStyles.quantity}>{treat.quantity}</Text>
                     </View>
                 </View>
@@ -202,7 +210,6 @@ class Pet extends Component {
         const xlocation = petLength / 2;
         return !this.state.spriteVertical ? null :
             <AnimatedSprite
-                style={styles.sprite}
                 ref={'monsterRef'}
                 sprite={spriteFile}
                 animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
@@ -227,10 +234,10 @@ class Pet extends Component {
         if (!this.state.pet) {
             return null
         }
-
+        console.log('this.state.lastVisit', this.state.lastVisit)
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>Location: {this.state.pet.location}</Text>
+
                 <View style={styles.spriteContainer} onLayout={this.onLayout}>
                     { this.renderSprite() }
                 </View>
@@ -241,7 +248,18 @@ class Pet extends Component {
 
                     {this.renderDraggable(this.state.selectedTreat)}
 
-                    {this.state.checkedIn ? null : <Text>You are too far away!</Text>}
+                    {
+                        this.state.checkedIn ? null :
+                        <View>
+                            <Text style={styles.far}>You are too far away!</Text>
+                            {
+                                this.state.lastVisit ?
+                                <Text style={styles.visit}>You haven't visited me since {this.state.lastVisit}</Text>
+                                : null
+                            }
+                        </View>
+
+                    }
 
                     {this._renderButton('Feed Me!', () => this.setState({ visibleModal: true }))}
                     <Modal
@@ -264,9 +282,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#fff',
+        // backgroundColor: '#E9E9E9',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 50
     },
     header: {
         paddingTop: 10,
@@ -274,9 +294,10 @@ const styles = StyleSheet.create({
     },
     spriteContainer: {
         flex: 4,
+        backgroundColor: 'white'
     },
     feedContainer: {
-        flex: 2
+        flex: 1,
     },
     button: {
         paddingBottom: 10,
@@ -302,6 +323,17 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: -60
+    },
+    far: {
+        fontWeight: 'bold',
+        fontSize: 17,
+        textAlign: 'center',
+    },
+    visit: {
+        marginTop: 5,
+        color: '#808080',
+        fontSize: 16,
+        textAlign: 'center',
     }
 });
 
@@ -312,35 +344,53 @@ const modalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: 'lightblue',
-        padding: 12,
-        margin: 0,
+    buttonContainer: {
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        alignItems: 'flex-start'
+    },
+    button: {
+        padding: 12,
+        paddingRight: 130,
+        paddingLeft: 130,
+        justifyContent: 'center',
+        // flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        borderWidth: 1,
+        borderRadius: 20,
+        backgroundColor: '#F0B52D',
+        borderColor: '#EAA00C',
+        marginLeft: 10,
+        marginRight: 10
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     closeButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#F0B52D',
         padding: 6,
         margin: 2,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        borderRadius: 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        width: 25,
+        height: 25,
         borderColor: 'rgba(0, 0, 0, 0.1)',
     },
-    buttonContainer: {
-        // flex: 1,
-        // flexDirection: 'column',
-        alignItems: 'flex-end'
-    },
     buttonX: {
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 10
     },
     modalContent: {
         backgroundColor: 'white',
-        padding: 5,
+        paddingBottom: 20,
+        paddingTop: 20,
+        paddingLeft: 15,
+        paddingRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
@@ -355,20 +405,29 @@ const modalStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
     },
-    quantityCircle: {
-        // width: 5,
-        // height: 5,
-        // borderRadius: 5 / 2,
-        // backgroundColor: 'gray'
+    treatIcon: {
+        width: 70,
+        height: 70
+    },
+    quantityContainer: {
+        // flex: 1,
+        marginRight: 10,
+        marginLeft: -8
+        // width: 2,
+        // height: 2,
+        // borderRadius: 1,
+        // backgroundColor: 'blue'
     },
     quantity: {
-        color: 'black'
+        color: '#808080',
+        textAlign: 'center',
+        fontWeight: 'bold'
     }
 });
 
 const mapState = ({ pets, treats, auth }) => ({ pets, treats, auth })
 
-const mapDispatch = { increasePet, removeTreat }
+const mapDispatch = { increasePet, removeTreat, addPetDate }
 
 const PetContainer = connect(mapState, mapDispatch)(Pet);
 
