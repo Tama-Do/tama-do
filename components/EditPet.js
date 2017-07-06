@@ -33,7 +33,6 @@ class EditPet extends Component {
 
   nameMonster = () => {
     return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT PET</Text> : null
-
   }
 
   renameButton = () => {

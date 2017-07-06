@@ -9,7 +9,7 @@ import { CardEditPet, CardSectionEditPet, InputEditPet } from './common';
 import { Button1 } from './common/ButtonEditPet';
 import AnimatedSprite from 'react-native-animated-sprite';
 import { monsterPicker } from './helpers/monsterPicker';
-
+import { NavigationActions } from 'react-navigation'
 
 
 class RenamePet extends Component {
@@ -17,39 +17,50 @@ class RenamePet extends Component {
     selected: false,
     petKey: null,
     monsterName: null,
-    animationType: 'IDLE'
+    animationType: 'CELEBRATE',
+    tweenOptions: {}
   }
 
   onSubmit() {
     let petKey = this.props.navigation.state.params.petKey
-    console.log("PETKEY", petKey)
     let petName = database.ref(`/users/${this.props.auth.user}/pets`).child(petKey)
       .update({ name: this.state.monsterName})
-    this.props.navigation.goBack()
+
+    const resetAction = NavigationActions.reset({
+      index:0,
+      actions:[
+        NavigationActions.navigate({routeName: 'EditPet'})
+      ]
+    })
+    this.props.navigation.dispatch(resetAction)
   }
 
+  renderSprite = () => {
+
+    let petKey = this.props.pets[this.props.navigation.state.params.petKey].key
+    const spriteFile = monsterPicker(this.props.pets[petKey])
+      return (
+          <AnimatedSprite
+              ref={'monsterRef'}
+              sprite={spriteFile}
+              animationFrameIndex={spriteFile.animationIndex(this.state.animationType)}
+              loopAnimation={false}
+              coordinates={{
+                  top: -400,
+                  left: 100,
+              }}
+              size={{
+                  width: 175,
+                  height: 175,
+              }}
+              draggable={false}
+          />
+      )
+  }
 
   render() {
     let props = this.props.navigation.state.params
-    console.log("STAAATE ", this.state)
-    console.log("PROPSSS ", this.props)
-    console.log("PROPSPROPSPROPS", this.props.navigation.state.params)
-    // return (
-    //   <CardEditPet>
-    //     <View style={styles.text1Container}>
-    //       <Text style={styles.text1}>RENAME {props.monsterName}</Text>
-    //     </View>
-    //
-    //     <CardSectionEditPet>
-    //       <InputEditPet
-    //         label="RENAME"
-    //         onChangeText={(monsterName) => this.setState({monsterName})}
-    //         value={this.state.monsterName}
-    //         autoCapitalize="characters"
-    //       />
-    //     </CardSectionEditPet>
-    //   </CardEditPet>
-    // )
+
     return (
       <View style={styles.container}>
 
@@ -76,6 +87,10 @@ class RenamePet extends Component {
           </View>
 
         </ScrollView>
+
+        <View>
+          {this.renderSprite()}
+        </View>
 
       </View>
     )
