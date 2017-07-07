@@ -20,14 +20,14 @@ This project was developed as part of the Grace Hopper Program at Fullstack Acad
 
 ## Technologies
 
-This project was built with [React Native] (https://github.com/react-community/create-react-native-app) and Expo.
+This project was built with [React Native](https://github.com/react-community/create-react-native-app)
 
 Geolocation:
-Google Maps API and react-native-maps
+Google Maps API and [react-native-maps](https://github.com/airbnb/react-native-maps)
 
 Animated Sprite:
-react-native-animated-sprite
+[react-native-animated-sprite](https://www.npmjs.com/package/react-native-animated-sprite)
 
 Database and Authentication:
-Firebase
+[Firebase](https://firebase.google.com/)
 
