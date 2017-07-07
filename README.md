@@ -27,6 +27,7 @@ Google Maps API and [react-native-maps](https://github.com/airbnb/react-native-m
 
 *Animated Pet Monster:*
 [react-native-animated-sprite](https://www.npmjs.com/package/react-native-animated-sprite)
+and [Cognitive Playground's sprites](https://github.com/micahrye/CognitivePlayground/tree/master/sprites)
 
 *Database and Authentication:*
 [Firebase](https://firebase.google.com/)
