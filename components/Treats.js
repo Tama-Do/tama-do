@@ -10,6 +10,10 @@ class Treats extends Component {
   }
 
   capitalize (word) {
+    if (!word) {
+      console.error('Word is null or undefined');
+      return null;
+    }
     let first = word.slice(0, 1).toUpperCase();
     return first + word.slice(1);
   }
@@ -49,7 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#E9E9E9',
   },
   header: {
-    // flex: 1,
     alignSelf: "stretch",
     flexDirection: 'row',
     backgroundColor: 'white',
@@ -104,6 +107,4 @@ const styles = StyleSheet.create({
 
 const mapState = ({ treats }) => ({ treats });
 
-const mapDispatch = {}
-
-export default connect(mapState, mapDispatch)(Treats)
+export default connect(mapState)(Treats);
