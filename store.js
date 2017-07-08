@@ -3,8 +3,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './reducers';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import database from './firebase'
-import {getTasks} from './reducers/tasks'
+import database from './firebase';
+import { getTasks } from './reducers/tasks';
 
 const store = createStore(
   rootReducer,
@@ -14,17 +14,6 @@ const store = createStore(
       createLogger({collapsed: true})
     )
   )
-)
+);
 
 export default store;
-
-
-
-
-// doing it this way allows us to listen for changes
-// database.ref('/users/1/tasks').on('value', (snapshot) => {
-//       store.dispatch(getTasks(snapshot.val()))
-//     })
-
-
-

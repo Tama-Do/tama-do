@@ -60,7 +60,7 @@ export default class NewTreatModal extends Component {
                 <View style={styles.background}>
                     <View style={styles.treatContainer}>
                         <Text style={styles.text}>{this.generateText(this.props.treat)}</Text>
-                        <Image source={[this.props.treat]}/>
+                        <Image source={treatPaths[this.props.treat]}/>
                     </View>
                 </View>
                 </Modal>
