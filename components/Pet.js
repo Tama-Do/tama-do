@@ -38,11 +38,7 @@ class Pet extends Component {
             selectedTreat: null,
             lastVisit: null
         };
-        this.feedPet = this.feedPet.bind(this);
-        this.onPress = this.onPress.bind(this);
         this.distance = distance.bind(this);
-        this.setDropZoneValues.bind(this);
-        this.renderDraggable = this.renderDraggable.bind(this);
 
         // panResponder handles dragging animation and drop callbacks
         this.panResponder = PanResponder.create({
@@ -66,13 +62,13 @@ class Pet extends Component {
         });
     }
 
-    setDropZoneValues(event) {
+    setDropZoneValues = event => {
         this.setState({
             dropZoneValues: event.nativeEvent.layout
         });
     }
 
-    isDropZone(gesture) {
+    isDropZone = gesture => {
         var dz = this.state.dropZoneValues;
         return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
     }
@@ -110,14 +106,14 @@ class Pet extends Component {
         this.setDropZoneValues(event);
     }
 
-    onPress() {  //Petting the monster
+    petMonster = () => {  //Petting the monster
         if (this.state.checkedIn) {
             this.setState({ animationType: 'CELEBRATE' });
             setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
         }
     }
 
-    feedPet(treat) {
+    feedPet = (treat) => {
         let userId = this.props.auth.user
         // remove a treat from database
         const quantity = treat.quantity - 1;
@@ -132,7 +128,7 @@ class Pet extends Component {
         }, 1200)
     }
 
-    renderDraggable(treat) {
+    renderDraggable = (treat) => {
         if (this.state.showDraggable) {
             return (
                 <View
@@ -148,7 +144,7 @@ class Pet extends Component {
         }
     }
 
-    setTreat = (treat) => {
+    setTreat = treat => {
         this.setState({
             selectedTreat: treat,
             showDraggable: true,
@@ -156,7 +152,7 @@ class Pet extends Component {
         });
     }
 
-    toggleModal = (bool) => {
+    toggleModal = bool => {
         this.setState({ visibleModal: bool})
     }
 
@@ -183,12 +179,12 @@ class Pet extends Component {
                 draggable={true}
                 tweenOptions={this.state.tweenOptions}
                 tweenStart={'fromMethod'}
-                onPress={() => { this.onPress(); }}
+                onPress={() => { this.petMonster(); }}
             />
 
     }
 
-    render() {
+    render () {
         if (!this.state.pet) {
             return null
         }
