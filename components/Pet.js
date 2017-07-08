@@ -73,61 +73,6 @@ class Pet extends Component {
         return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
     }
 
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.name
-    });
-
-    componentDidMount() {
-        let userId = this.props.auth.user;
-        const petKey = this.props.navigation.state.params.key;
-        database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
-            let pet = snapshot.val();
-            // this.setState({ pet: pet})
-            this.setState({ pet: null }, () => this.setState({ pet: pet }));
-        })
-        // Check if user is at pet's location
-        const { latitude, longitude } = this.props.navigation.state.params;
-        this.distance(latitude, longitude, userId, petKey);
-    }
-
-    componentWillUnmount() {
-        let userId = this.props.auth.user
-        const petKey = this.props.navigation.state.params.key;
-        database.ref(`/users/${userId}/pets/${petKey}`).off
-    }
-
-    onLayout = event => {
-        if (this.state.spriteDimensions) return // layout was already called
-        const size = this.state.pet.size;
-        const length = 70 + size * 5;
-        let { width, height } = event.nativeEvent.layout;
-        let spriteVertical = (height / 2) - (length / 1.5);
-        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
-        this.setDropZoneValues(event);
-    }
-
-    petMonster = () => {  //Petting the monster
-        if (this.state.checkedIn) {
-            this.setState({ animationType: 'CELEBRATE' });
-            setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
-        }
-    }
-
-    feedPet = (treat) => {
-        let userId = this.props.auth.user
-        // remove a treat from database
-        const quantity = treat.quantity - 1;
-        this.props.removeTreat(userId, treat.key, quantity);
-        // pet eating animation
-        this.setState({ animationType: 'EAT' });
-        setTimeout(() => {
-            this.setState({ animationType: 'IDLE' })
-            const petKey = this.props.navigation.state.params.key;
-            const points = treat.points + this.state.pet.size;
-            this.props.increasePet(userId, petKey, points);
-        }, 1200)
-    }
-
     renderDraggable = (treat) => {
         if (this.state.showDraggable) {
             return (
@@ -144,6 +89,70 @@ class Pet extends Component {
         }
     }
 
+    // Stack Navigator - option to have the monster's name appear at top of
+    // navigation when navigating to Pet view
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: navigation.state.params.name
+    });
+
+    componentDidMount() {
+        let userId = this.props.auth.user;
+        const petKey = this.props.navigation.state.params.key;
+        // Listen directly to firebase for user's Pet
+        database.ref(`/users/${userId}/pets/${petKey}`).on('value', (snapshot) => {
+            let pet = snapshot.val();
+            this.setState({ pet: null }, () => this.setState({ pet: pet }));
+        })
+        // Check if user is at pet's location
+        const { latitude, longitude } = this.props.navigation.state.params;
+        this.distance(latitude, longitude, userId, petKey);
+    }
+
+    componentWillUnmount() {
+        // Remove firebase listeners
+        let userId = this.props.auth.user
+        const petKey = this.props.navigation.state.params.key;
+        database.ref(`/users/${userId}/pets/${petKey}`).off
+    }
+
+    // Calculate the display size of the monster based on size property in database
+    // The monster sprite is assumed to be a square
+    monsterDimensions = (petSize) => 70 + this.state.pet.size * 5
+
+    // Center the pet vertically each time the pet grows
+    // Set the dropzone for the treat to trigger pet feeding
+    onLayout = event => {
+        // if (this.state.spriteVertical) return // layout was already called
+        const length = this.monsterDimensions(this.state.pet.size);
+        let { height } = event.nativeEvent.layout;
+        let spriteVertical = (height / 2) - (length / 1.5);
+        this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
+        this.setDropZoneValues(event);
+    }
+
+    petMonster = () => {
+        if (this.state.checkedIn) {
+            this.setState({ animationType: 'CELEBRATE' });
+            setTimeout(() => this.setState({ animationType: 'IDLE' }), 1200)
+        }
+    }
+
+    // 1. Decrease treat quantity by 1
+    // 2. Pet eating animation
+    // 3. increase the size of the pet
+    feedPet = (treat) => {
+        let userId = this.props.auth.user
+        const quantity = treat.quantity - 1;
+        this.props.removeTreat(userId, treat.key, quantity);
+        this.setState({ animationType: 'EAT' });
+        setTimeout(() => {
+            this.setState({ animationType: 'IDLE' })
+            const petKey = this.props.navigation.state.params.key;
+            const points = treat.points + this.state.pet.size;
+            this.props.increasePet(userId, petKey, points);
+        }, 1200)
+    }
+
     setTreat = treat => {
         this.setState({
             selectedTreat: treat,
@@ -152,16 +161,15 @@ class Pet extends Component {
         });
     }
 
+    // Toggle Treat Modal visibility
     toggleModal = bool => {
         this.setState({ visibleModal: bool})
     }
 
     renderSprite = () => {
-        // select appropriate sprite file
         const spriteFile = monsterPicker(this.state.pet)
-        // calculate size of the pet
-        const petLength = 70 + this.state.pet.size * 5;
-        const xlocation = petLength / 2;
+        const petLength = this.monsterDimensions(this.state.pet.size)
+        const xlocation = petLength / 2; // pet is anchored on the top left corner
         return !this.state.spriteVertical ? null :
             <AnimatedSprite
                 ref={'monsterRef'}
@@ -198,9 +206,7 @@ class Pet extends Component {
                 {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
 
                 <View style={styles.feedContainer}>
-
-                    {this.renderDraggable(this.state.selectedTreat)}
-
+                    { this.renderDraggable(this.state.selectedTreat) }
                     {
                         this.state.checkedIn ? null :
                         <View>
@@ -211,9 +217,7 @@ class Pet extends Component {
                                 : null
                             }
                         </View>
-
                     }
-
                     <TreatModal
                         showDraggable={this.state.showDraggable}
                         checkedIn={this.state.checkedIn}
@@ -222,9 +226,7 @@ class Pet extends Component {
                         setTreat={this.setTreat}
                         isModalVisible={this.state.visibleModal}
                     />
-
                 </View>
-
 
             </View>
         );
