@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux'
-import { fetchPets } from '../reducers/pets';
 import { monsterImg } from './helpers/monsterPicker';
 import { Entypo } from '@expo/vector-icons';
 import { EditPet } from './EditPet';
 
 class Pets extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   _keyExtractor = (item) => item.key
 
@@ -132,8 +135,6 @@ const styles = StyleSheet.create({
 
 const mapState = ({pets}) => ({pets})
 
-const mapDispatch = { }
-
-const PetsContainer = connect(mapState, mapDispatch)(Pets);
+const PetsContainer = connect(mapState)(Pets);
 
 export default PetsContainer
