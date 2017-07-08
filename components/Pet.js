@@ -19,7 +19,6 @@ import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
-import { Button } from './common/MapButton';
 
 class Pet extends Component {
     constructor(props) {
@@ -40,7 +39,6 @@ class Pet extends Component {
         };
         this.feedPet = this.feedPet.bind(this);
         this.onPress = this.onPress.bind(this);
-        this.buttonColor = this.buttonColor.bind(this);
         this.distance = distance.bind(this);
         this.setDropZoneValues.bind(this);
         this.renderDraggable = this.renderDraggable.bind(this);
@@ -95,9 +93,6 @@ class Pet extends Component {
         this.distance(latitude, longitude, userId, petKey);
     }
 
-    // componentWillReceiveProps() {
-    //     this.dateVisited();
-    // }
     componentWillUnmount() {
         let userId = this.props.auth.user
         const petKey = this.props.navigation.state.params.key;
@@ -158,10 +153,6 @@ class Pet extends Component {
             showDraggable: true,
             visibleModal: false
         });
-    }
-
-    buttonColor() {
-        return this.state.checkedIn ? "#841584" : 'rgba(0, 0, 0, 0.3)'
     }
 
     _renderButton = (text, onPress) => {
@@ -234,7 +225,6 @@ class Pet extends Component {
         if (!this.state.pet) {
             return null
         }
-        console.log('this.state.lastVisit', this.state.lastVisit)
         return (
             <View style={styles.container}>
 
@@ -277,12 +267,10 @@ class Pet extends Component {
     }
 }
 
-let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        // backgroundColor: '#E9E9E9',
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
@@ -410,13 +398,8 @@ const modalStyles = StyleSheet.create({
         height: 70
     },
     quantityContainer: {
-        // flex: 1,
         marginRight: 10,
         marginLeft: -8
-        // width: 2,
-        // height: 2,
-        // borderRadius: 1,
-        // backgroundColor: 'blue'
     },
     quantity: {
         color: '#808080',
