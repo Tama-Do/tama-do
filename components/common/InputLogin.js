@@ -44,7 +44,7 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
-    borderRadius: 10
+    borderRadius: 10,
     //marginBottom: 5
   }
 };

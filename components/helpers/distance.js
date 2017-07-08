@@ -54,7 +54,7 @@ function dateVisited(userId, petKey, checkedIn) {
   // if user is checkedIn
   if (checkedIn) {
     let today = new Date();
-    let date = today.getMonth() + '-' + today.getDate() + '-' + today.getFullYear()
+    let date = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear()
     let dateMS = Date.now()
     // if user is checkedIn and pet has never been visited
     if (!this.state.pet.dates) {

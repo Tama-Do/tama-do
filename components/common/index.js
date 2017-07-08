@@ -6,6 +6,7 @@ export * from './Spinner';
 export * from './CardLogin';
 export * from './CardSectionLogin';
 export * from './InputLogin';
+export * from './CardLoginOldUser'
 export * from './CardEditPet';
 export * from './CardSectionEditPet';
 export * from './InputEditPet';
