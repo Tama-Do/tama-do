@@ -137,6 +137,19 @@ class Pet extends Component {
         }
     }
 
+    // Toggle Treat Modal visibility
+    toggleModal = bool => {
+        this.setState({ visibleModal: bool })
+    }
+
+    setTreat = treat => {
+        this.setState({
+            selectedTreat: treat,
+            showDraggable: true,
+            visibleModal: false
+        });
+    }
+
     // 1. Decrease treat quantity by 1
     // 2. Pet eating animation
     // 3. increase the size of the pet
@@ -151,19 +164,6 @@ class Pet extends Component {
             const points = treat.points + this.state.pet.size;
             this.props.increasePet(userId, petKey, points);
         }, 1200)
-    }
-
-    setTreat = treat => {
-        this.setState({
-            selectedTreat: treat,
-            showDraggable: true,
-            visibleModal: false
-        });
-    }
-
-    // Toggle Treat Modal visibility
-    toggleModal = bool => {
-        this.setState({ visibleModal: bool})
     }
 
     renderSprite = () => {
@@ -189,10 +189,21 @@ class Pet extends Component {
                 tweenStart={'fromMethod'}
                 onPress={() => { this.petMonster(); }}
             />
-
     }
 
-    render () {
+    unvisitedSpriteMessage = (checkedIn, lastVisit) => {
+        return checkedIn ? null :
+            <View>
+                <Text style={styles.far}>You are too far away!</Text>
+                {
+                    this.state.lastVisit ?
+                        <Text style={styles.visit}>You haven't visited me since {lastVisit}</Text>
+                        : null
+                }
+            </View>
+    }
+
+    render() {
         if (!this.state.pet) {
             return null
         }
@@ -203,21 +214,11 @@ class Pet extends Component {
                     { this.renderSprite() }
                 </View>
 
-                {this.state.checkedIn ? null : <View style={styles.overlay}></View>}
+                { this.state.checkedIn ? null : <View style={styles.overlay}></View> }
 
                 <View style={styles.feedContainer}>
                     { this.renderDraggable(this.state.selectedTreat) }
-                    {
-                        this.state.checkedIn ? null :
-                        <View>
-                            <Text style={styles.far}>You are too far away!</Text>
-                            {
-                                this.state.lastVisit ?
-                                <Text style={styles.visit}>You haven't visited me since {this.state.lastVisit}</Text>
-                                : null
-                            }
-                        </View>
-                    }
+                    { this.unvisitedSpriteMessage(this.state.checkedIn, this.state.lastVisit) }
                     <TreatModal
                         showDraggable={this.state.showDraggable}
                         checkedIn={this.state.checkedIn}
