@@ -8,7 +8,7 @@ Tama-Do is an mobile iOS productivity app that motivates users to complete to-do
 Users receive three virtual pet monsters and place them on a Google Map at locations they need to visit on a regular basis, like the grocery store or the gym. Users can only interact with their pets when they are at the same location as their pet.
 
 ![To-Do List](/screencaptures/todoListTreat.gif?raw=true "To-Do List")
-![Feeding Pet](/screencaptures/feedPet.gif?raw=true "Feeding Pet")
+![Feeding Pet](/screencaptures/feedingPet.gif?raw=true "Feeding Pet")
 
 Users also have a to-do list. When they complete a task, they receive a treat, which they can feed to their monster. The monster grows a little bit each time it eats a treat.
 
