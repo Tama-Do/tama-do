@@ -17,7 +17,7 @@ import { removeTreat } from '../reducers/treats';
 import { increasePet, addPetDate } from '../reducers/pets';
 import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
-import treatPaths from './helpers/TreatPaths';
+import treatPaths from './helpers/treatPaths';
 import { distance } from './helpers/distance';
 import TreatModal from './TreatModal';
 

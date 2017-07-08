@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 
-import treatPaths from './helpers/TreatPaths';
+import treatPaths from './helpers/treatPaths';
 
 class TreatModal extends Component {
   constructor(props) {

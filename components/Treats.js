@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import treatPaths from './helpers/TreatPaths';
+import treatPaths from './helpers/treatPaths';
 
 class Treats extends Component {
 
