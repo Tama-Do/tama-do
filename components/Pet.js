@@ -19,6 +19,7 @@ import database from '../firebase.js';
 import { monsterPicker } from './helpers/monsterPicker';
 import treatPaths from './helpers/TreatPaths';
 import { distance } from './helpers/distance';
+import TreatModal from './TreatModal';
 
 class Pet extends Component {
     constructor(props) {
@@ -147,7 +148,7 @@ class Pet extends Component {
         }
     }
 
-    setTreat(treat) {
+    setTreat = (treat) => {
         this.setState({
             selectedTreat: treat,
             showDraggable: true,
@@ -155,43 +156,47 @@ class Pet extends Component {
         });
     }
 
-    _renderButton = (text, onPress) => {
-        if (!this.state.showDraggable && this.state.checkedIn) {
-            return (
-            <View style={modalStyles.buttonContainer}>
-                <TouchableOpacity onPress={onPress}>
-                    <View style={modalStyles.button}>
-                        <Text style={modalStyles.buttonText}>{text}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+    toggleModal = (bool) => {
+        this.setState({ visibleModal: bool})
+    }
 
-            )
-        }
-    };
+    // _renderButton = (text, onPress) => {
+    //     if (!this.state.showDraggable && this.state.checkedIn) {
+    //         return (
+    //         <View style={modalStyles.buttonContainer}>
+    //             <TouchableOpacity onPress={onPress}>
+    //                 <View style={modalStyles.button}>
+    //                     <Text style={modalStyles.buttonText}>{text}</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         </View>
 
-    _renderModalContent = () => (
-        <View style={modalStyles.modalContent}>
-            {this.props.treats.map(treat =>
-                <View key={treat.key} style={modalStyles.treats}>
-                    <TouchableOpacity
-                        onPress={() => this.setTreat(treat)}>
-                        <Image style={modalStyles.treatIcon} source={treatPaths[treat.type]} />
-                    </TouchableOpacity>
-                    <View style={modalStyles.quantityContainer}>
-                        <Text style={modalStyles.quantity}>{treat.quantity}</Text>
-                    </View>
-                </View>
-            )}
-            <View style={modalStyles.buttonContainer}>
-                <TouchableOpacity onPress={() => this.setState({ visibleModal: false })}>
-                    <View style={modalStyles.closeButton}>
-                        <Text style={modalStyles.buttonX}>X</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+    //         )
+    //     }
+    // };
 
-        </View>);
+    // _renderModalContent = () => (
+    //     <View style={modalStyles.modalContent}>
+    //         {this.props.treats.map(treat =>
+    //             <View key={treat.key} style={modalStyles.treats}>
+    //                 <TouchableOpacity
+    //                     onPress={() => this.setTreat(treat)}>
+    //                     <Image style={modalStyles.treatIcon} source={treatPaths[treat.type]} />
+    //                 </TouchableOpacity>
+    //                 <View style={modalStyles.quantityContainer}>
+    //                     <Text style={modalStyles.quantity}>{treat.quantity}</Text>
+    //                 </View>
+    //             </View>
+    //         )}
+    //         <View style={modalStyles.buttonContainer}>
+    //             <TouchableOpacity onPress={() => this.setState({ visibleModal: false })}>
+    //                 <View style={modalStyles.closeButton}>
+    //                     <Text style={modalStyles.buttonX}>X</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         </View>
+
+    //     </View>);
 
     renderSprite = () => {
         // select appropriate sprite file
@@ -251,14 +256,14 @@ class Pet extends Component {
 
                     }
 
-                    {this._renderButton('Feed Me!', () => this.setState({ visibleModal: true }))}
-                    <Modal
-                        isVisible={this.state.visibleModal}
-                        style={modalStyles.bottomModal}
-                        backdropOpacity={0.2}
-                    >
-                        {this._renderModalContent()}
-                    </Modal>
+                    <TreatModal
+                        showDraggable={this.state.showDraggable}
+                        checkedIn={this.state.checkedIn}
+                        toggleModal={this.toggleModal}
+                        treats={this.props.treats}
+                        setTreat={this.setTreat}
+                        isModalVisible={this.state.visibleModal}
+                    />
                 </View>
 
 
