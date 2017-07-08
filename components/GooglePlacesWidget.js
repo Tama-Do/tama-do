@@ -25,7 +25,6 @@ module.exports = React.createClass({
         autoFocus={false}
         fetchDetails={true}
         onPress={(data, details = {}) => { // details is provided when fetchDetails = true
-          // console.log(details);
           this._onChange({
             name: details.formatted_address,
             placeId: details.place_id,

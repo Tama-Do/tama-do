@@ -47,12 +47,5 @@ export const increasePet = (userId, petId, points) => dispatch => {
 };
 
 export const addPetDate = (userId, petId, dateMS, date) => dispatch => {
-console.log('made it to addPetDate action creator')
-console.log('dateMS', date)
     database.ref(`/users/${userId}/pets/${petId}/dates`).child(`${dateMS}`).set(`${date}`);
-
-    // var newDatesRef = datesRef.push();
-    // newDatesRef.set({
-    //     [dateMS]: date
-    // });
 };

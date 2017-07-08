@@ -32,7 +32,6 @@ export default class NewTreatModal extends Component {
     }
 
     generateText(treatType) {
-        console.log('treatType', treatType)
         switch (treatType) {
             case 'cherry':
                 return 'YOU GOT CHERRIES!'

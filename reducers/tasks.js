@@ -15,8 +15,8 @@ export const getTasks = tasks => ({ type: GET_TASKS, tasks });
 const reducer = (tasks = {}, action) => {
     switch (action.type) {
         case GET_TASKS:
-            return {all: action.tasks.tasks, 
-                completed:action.tasks.completed, 
+            return {all: action.tasks.tasks,
+                completed:action.tasks.completed,
                 uncompleted: action.tasks.uncompleted};
         default:
             return tasks;
@@ -37,11 +37,10 @@ export const fetchTasks = (userId) => dispatch => {
         }
         var completed = tasks.filter(task => task.completed)
         var uncompleted = tasks.filter(task => !task.completed)
-        console.log("tasks are ", tasks)
         dispatch(getTasks({tasks, completed, uncompleted}));
     });
 
 }
-    
+
 
 
