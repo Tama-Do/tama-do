@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { connect, Provider } from 'react-redux';
-import { fetchTasks, getTasks } from './reducers/tasks'
-import { fetchPets, getPets } from './reducers/pets'
+import { fetchTasks, getTasks } from './reducers/tasks';
+import { fetchPets, getPets } from './reducers/pets';
 
 import database from './firebase';
 import { Tabs } from './Tabs';
-import LoginNavigator from './components/LoginForm'
+import LoginNavigator from './components/LoginForm';
 import store from './store';
-import { auth } from './firebase'
-import {setUser} from './reducers/login'
-import { fetchTreats } from './reducers/treats'
+import { auth } from './firebase';
+import {setUser} from './reducers/login';
+import { fetchTreats } from './reducers/treats';
 
 export default class App extends Component {
   constructor(props) {
@@ -39,10 +39,6 @@ export default class App extends Component {
   }
 
   render() {
-
-
-
-
     if (this.state.user) {
       return (
         <Provider store={store}>

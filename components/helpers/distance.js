@@ -36,10 +36,7 @@ export function distance(lat2, lon2, userId, petKey) {
 export const _getLocationAsync = async () => {
   let { status } = await Permissions.askAsync(Permissions.LOCATION);
   if (status !== 'granted') {
-    console.log('Permission to access location was denied')
-    // this.setState({
-    //   errorMessage: 'Permission to access location was denied',
-    // });
+    console.error('Permission to access location was denied')
   }
   let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
   return { latitude: location.coords.latitude, longitude: location.coords.longitude };

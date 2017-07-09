@@ -62,7 +62,6 @@ class FormView extends Component {
               }}
               onSubmit={(isValid, values, validationResults, postSubmit = null) => {
                 if (isValid) {
-                  console.log('values', values)
                   let updates = {
                     latitude: values.locationSearch.details.geometry.location.lat,
                     longitude: values.locationSearch.details.geometry.location.lng,

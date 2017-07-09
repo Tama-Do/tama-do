@@ -1,43 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux'
-import { StackNavigator } from 'react-navigation'
-import database from '../firebase';
-import { fetchPets } from '../reducers/pets';
-import { Pet } from './Pet'
 import { monsterImg } from './helpers/monsterPicker';
-// import Icon from 'react-native-vector-icons/Ionicons';
-// const myIcon = (<Icon name="ios-person" size={30} color="#900" />)
 import { Entypo } from '@expo/vector-icons';
 import { EditPet } from './EditPet';
 
 class Pets extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      // ** if we are using redux, we probably don't need a stateful container
-      pets: this.props.pets
-    }
-    this.viewPet = this.viewPet.bind(this)
-  }
 
   _keyExtractor = (item) => item.key
 
-  componentDidMount() {
-
-    // ** If we don't use redux, we would set state on containers by directly
-    // ** listening to the database
-
-    // database.ref('/pets/0').on('value', (snapshot) => {
-    //   this.setState({pets: snapshot.val()})
-    // })
-
-  }
-
-  viewPet(pet) {
+  viewPet = (pet) => {
     this.props.navigation.navigate('Pet', pet)
   }
-  editPets() {
+
+  editPets = () => {
     this.props.navigation.navigate('EditPet')
   }
 
@@ -143,7 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     alignSelf: 'center',
     color: 'black',
-    //fontWeight: 'bold',
     fontStyle: 'italic'
   },
   text1Container:{
@@ -153,8 +135,6 @@ const styles = StyleSheet.create({
 
 const mapState = ({pets}) => ({pets})
 
-const mapDispatch = { }
-
-const PetsContainer = connect(mapState, mapDispatch)(Pets);
+const PetsContainer = connect(mapState)(Pets);
 
 export default PetsContainer

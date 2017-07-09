@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import database from '../firebase'
 import store from '../store'
-import TreatPaths from './helpers/TreatPaths'
+import treatPaths from './helpers/treatPaths'
 
 
 export default class NewTreatModal extends Component {
@@ -32,7 +32,6 @@ export default class NewTreatModal extends Component {
     }
 
     generateText(treatType) {
-        console.log('treatType', treatType)
         switch (treatType) {
             case 'cherry':
                 return 'YOU GOT CHERRIES!'
@@ -61,7 +60,7 @@ export default class NewTreatModal extends Component {
                 <View style={styles.background}>
                     <View style={styles.treatContainer}>
                         <Text style={styles.text}>{this.generateText(this.props.treat)}</Text>
-                        <Image source={TreatPaths[this.props.treat]}/>
+                        <Image source={treatPaths[this.props.treat]}/>
                     </View>
                 </View>
                 </Modal>
