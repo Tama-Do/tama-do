@@ -5,11 +5,15 @@ import treatPaths from './helpers/treatPaths';
 
 class Treats extends Component {
 
-  _keyExtractor (item) {
+  _keyExtractor(item) {
     return item.key;
   }
 
-  capitalize (word) {
+  hasTreats() {
+    return this.props.treats.length
+  }
+
+  capitalize(word) {
     if (!word) {
       console.error('Word is null or undefined');
       return null;
@@ -21,23 +25,31 @@ class Treats extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>MY TREATS</Text>
-          <Text style={styles.quantityHeader}>QUANTITY</Text>
+      {this.hasTreats()? 
+        <View style={styles.listContainer}>
+          <View style={styles.header}>
+            <Text style={styles.title}>MY TREATS</Text>
+            <Text style={styles.quantityHeader}>QUANTITY</Text>
+          </View>
+          <FlatList
+            style={styles.flatlist}
+            data={this.props.treats}
+            removeClippedSubviews={false}
+            keyExtractor={this._keyExtractor}
+            renderItem={({ item }) =>
+              <View style={styles.row}>
+                <Image style={styles.treatIcon} source={treatPaths[item.type]} />
+                <Text style={styles.name}>{this.capitalize(item.type)}</Text>
+                <Text style={styles.quantity}>{item.quantity}</Text>
+              </View>
+            }
+          />
         </View>
-        <FlatList
-          style={styles.flatlist}
-          data={this.props.treats}
-          removeClippedSubviews={false}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ item }) =>
-            <View style={styles.row}>
-              <Image style={styles.treatIcon}source={treatPaths[item.type]}/>
-              <Text style={styles.name}>{this.capitalize(item.type)}</Text>
-              <Text style={styles.quantity}>{item.quantity}</Text>
-            </View>
-          }
-        />
+        :
+        <View>
+          <Text style={styles.noTreatText}>You have no treats!</Text>
+        </View>
+      }
       </View>
     );
   }
@@ -47,6 +59,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+    flexDirection: 'column',
+    backgroundColor: '#E9E9E9',
+  },
+  listContainer: {
+    flex: 1,
+    alignSelf: 'stretch',
     justifyContent: 'center',
     paddingTop: 10,
     flexDirection: 'column',
@@ -101,6 +121,11 @@ const styles = StyleSheet.create({
   quantity: {
     fontSize: 18,
     color: '#808080'
+  },
+  noTreatText: {
+    fontSize: 30,
+    fontWeight: '600',
+    color: '#4A8CAD'
   }
 });
 

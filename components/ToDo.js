@@ -66,7 +66,7 @@ class ToDo extends Component {
     }];
   }
 
-  getTreatType() { // figure out whether this is working
+  getTreatType() { 
     min = 0;
     max = 3;
     randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -132,6 +132,7 @@ class ToDo extends Component {
     var quant
     query.once('value', function (snapshot) {
       var snapArr = []
+      console.log("SNAPSHOT.VAL()", snapshot.val())
       if (!Array.isArray(snapshot.val())) {
         for (var key in snapshot.val()) {
           snapArr.push(snapshot.val()[key])
