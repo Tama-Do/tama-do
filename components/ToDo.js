@@ -66,7 +66,7 @@ class ToDo extends Component {
     }];
   }
 
-  getTreatType() { // figure out whether this is working
+  getTreatType() { 
     min = 0;
     max = 3;
     randInt = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
