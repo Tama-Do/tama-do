@@ -6,11 +6,19 @@ import database from '../firebase';
 import { connect } from 'react-redux';
 import { monsterImg } from './helpers/monsterPicker';
 
+const warnings = {
+  noLocation: "Please name your pet's location!",
+  noPet: 'Please click a pet to select and edit its location!',
+  noPetnoLocation: 'Please click a pet to select and edit its location.  Remember\
+  to give your location a name!'}
 
 class FormView extends Component {
   state = {
-    selected: false,
-    petKey: null,
+    form: {
+      location: '',
+      locationSearch: ''
+    },
+    warningText: ''
   }
 
   goToLocationForm = () => {
@@ -18,41 +26,50 @@ class FormView extends Component {
   }
 
   pickAMonster = (petKey) => {
-    this.setState({ petKey, selected: true })
+    this.choosePet(petKey)
   }
 
+  handleValueChange = (values) => {
+    this.setState({ form: values, warningText: '' })
+  }
 
   render() {
     return (
       <View>
-        <GiftedForm style={styles.form}
-          formName='locationSearch'
-          clearOnClose={true}
-        >
-          <View style={styles.row}>
-            {this.props.pets.map(pet => (
+        <View>
+          <GiftedForm
+            style={styles.form}
+            formName='locationSearch'
+            clearOnClose={true}
+            onValueChange={this.handleValueChange.bind(this)}
+          >
+            <View style={styles.row}>
+              {this.props.pets.map(pet => (
+                <View key={pet.key} style={styles.petIcon}>
+                  <TouchableOpacity activeOpacity={0.7} key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
+                    <Image
+                      style={styles.petImage}
+                      source={pet.key === this.props.selectedPet ?
+                        monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.name}>{pet.name.toUpperCase()}</Text>
+                  <Text style={styles.location}>{pet.location}</Text>
+                </View>
+              ))}
+            </View>
+            <GiftedForm.TextInputWidget
+              name='location'
+              title='Location'
+              placeholder='e.g. Grocery Store ...'
+              clearButtonMode='while-editing'
+            />
+            <GiftedForm.SeparatorWidget />
 
-              <View key={pet.key} style={styles.petIcon}>
-                <TouchableOpacity activeOpacity={0.7} key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
-                  <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked} />
-                </TouchableOpacity>
-                <Text style={styles.name}>{pet.name.toUpperCase()}</Text>
-                <Text style={styles.location}>{pet.location}</Text>
-              </View>
-            ))}
-          </View>
-          <GiftedForm.TextInputWidget
-            name='location'
-            title='Location'
-            placeholder='e.g. Grocery Store ...'
-            clearButtonMode='while-editing'
-          />
-          <GiftedForm.SeparatorWidget />
-
-          <GooglePlacesWidget style={styles.googlePlaces}
-            name='locationSearch'
-            placeholder='Search for location'
-          />
+            <GooglePlacesWidget style={styles.googlePlaces}
+              name='locationSearch'
+              placeholder='Search for location'
+            />
             <GiftedForm.SubmitWidget
               title='Submit'
               widgetStyles={{
@@ -65,25 +82,40 @@ class FormView extends Component {
                   let updates = {
                     latitude: values.locationSearch.details.geometry.location.lat,
                     longitude: values.locationSearch.details.geometry.location.lng,
-                    location:
-                    values.location
+                    location: values.location
                   }
-                  database.ref(`/users/${this.props.auth.user}/pets/${this.state.petKey}`).update(updates)
-                    .then(response => console.log("success response", response))
-                    .catch(error => console.log("error is", error))
 
-                  postSubmit()
-
-                  this.props.navigation.goBack()
+                  if (values.location && this.props.selectedPet) {
+                    database.ref(`/users/${this.props.auth.user}/pets/${this.props.selectedPet}`).update(updates)
+                      .then(response => console.log("success response", response))
+                      .catch(error => console.log("error is", error))
+                    postSubmit()
+                    this.props.navigation.goBack()
+                  } else if (!values.location && !this.props.selectedPet) {
+                    this.setState({ warningText: warnings['noPetnoLocation'] })
+                    postSubmit()
+                  } else {
+                    if (!values.location) {
+                      this.setState({ warningText: warnings['noLocation'] })
+                    }
+                    if (!this.props.selectedPet) {
+                      this.setState({ warningText: warnings['noPet'] })
+                    }
+                    postSubmit()
+                  }
                 }
               }
               } />
-        </GiftedForm>
+          </GiftedForm>
+        </View>
+        <View style={styles.textContainer}>
+          {this.state.warningText ?
+              <Text style={styles.text}>{this.state.warningText}</Text> : <View />}
+        </View>
       </View>
     )
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -142,13 +174,25 @@ const styles = StyleSheet.create({
   },
   googlePlaces: {
     backgroundColor: 'white'
+  },
+  textContainer: {
+    paddingTop: 10
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: 'black'
   }
 });
 
+const mapState = ({ pets, selectedPet, auth }) => ({ pets, selectedPet, auth });
 
-const mapState = ({ pets, auth }) => ({ pets, auth });
-
-const mapDispatch = {}
-
+const mapDispatch = (dispatch) => {
+  return {
+    choosePet: (pet) => {
+      dispatch(selectPet(pet))
+    }
+  }
+}
 
 export default connect(mapState, mapDispatch)(FormView)

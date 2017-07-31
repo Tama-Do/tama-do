@@ -15,9 +15,11 @@ export const getTasks = tasks => ({ type: GET_TASKS, tasks });
 const reducer = (tasks = {}, action) => {
     switch (action.type) {
         case GET_TASKS:
-            return {all: action.tasks.tasks,
+            return {
+                all: action.tasks.tasks,
                 completed:action.tasks.completed,
-                uncompleted: action.tasks.uncompleted};
+                uncompleted: action.tasks.uncompleted
+            };
         default:
             return tasks;
     }

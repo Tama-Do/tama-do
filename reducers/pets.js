@@ -1,43 +1,50 @@
-import database from '../firebase';
+import database from '../firebase'
 
 // /* -----------------    ACTIONS     ------------------ */
 
-const GET_PETS = 'GET_PETS';
+const GET_PETS = 'GET_PETS'
+const SELECT_PET = 'SELECT_PET'
 
 
-// /* ------------   ACTION CREATORS     ------------------ */
+ /* ------------   ACTION CREATORS     ------------------ */
 
-const getPets = pets => ({ type: GET_PETS, pets });
+const getPets = pets => ({ type: GET_PETS, pets })
+export const selectPet = pet => ({ type: SELECT_PET, pet })
 
 
-// /* ------------       REDUCER     ------------------ */
+/* ------------       REDUCERS     ------------------ */
 
-const reducer = (pets = [], action) => {
+export const petsReducer = (pets = [], action) => {
     switch (action.type) {
         case GET_PETS:
-            return action.pets;
+            return action.pets
         default:
-            return pets;
+            return pets
     }
 }
 
-export default reducer
+export const petReducer = (pet = '', action) => {
+    switch (action.type) {
+        case SELECT_PET:
+            return action.pet
+        default:
+            return pet
+    }
+}
 
-// /* ------------       DISPATCHERS     ------------------ */
+/* ------------       DISPATCHERS     ------------------ */
 
 export const fetchPets = (userId) => dispatch => {
     database.ref(`/users/${userId}/pets`).on('value', snapshot => {
-        const obj = snapshot.val();
-        const array = [];
+        const obj = snapshot.val()
+        const array = []
         for(let key in obj) {
           obj[key].key = key
-          array.push(obj[key]);
-
+          array.push(obj[key])
         }
-        dispatch(getPets(array));
-    });
-
-};
+        dispatch(getPets(array))
+    })
+}
 
 export const increasePet = (userId, petId, points) => dispatch => {
 
