@@ -5,6 +5,7 @@ import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
 import { connect } from 'react-redux';
 import { monsterImg } from './helpers/monsterPicker';
+import { selectPet } from '../reducers/pets'
 
 const warnings = {
   noLocation: "Please name your pet's location!",
@@ -26,7 +27,7 @@ class FormView extends Component {
   }
 
   pickAMonster = (petKey) => {
-    this.choosePet(petKey)
+    this.props.choosePet(petKey)
   }
 
   handleValueChange = (values) => {
