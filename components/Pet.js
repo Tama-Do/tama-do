@@ -197,7 +197,7 @@ class Pet extends Component {
         <Text style={styles.far}>You are too far away!</Text>
         {
           this.state.lastVisit ?
-            <Text style={styles.visit}>You haven't visited me since {lastVisit}</Text>
+            <Text style={styles.visit}>You havent visited me since {lastVisit}</Text>
             : null
         }
       </View>
