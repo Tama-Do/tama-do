@@ -28,7 +28,6 @@ class Pet extends Component {
       animationType: 'IDLE',
       tweenOptions: {},
       pet: null,
-      treats: this.props.treats,
       spriteVertical: null,
       checkedIn: false,
       showDraggable: false,
@@ -48,10 +47,12 @@ class Pet extends Component {
         dy: this.state.pan.y
       }]),
       onPanResponderRelease: (e, gesture) => {
+        // if we drop the treat on the monster
         if (this.isDropZone(gesture)) {
           this.feedPet(this.state.selectedTreat);
           this.state.pan.setValue({ x: 0, y: 0 })
           this.setState({ showDraggable: false, selectedTreat: null })
+        // otherwise, have the treat spring back to its original position
         } else {
           Animated.spring(
             this.state.pan,
@@ -73,6 +74,7 @@ class Pet extends Component {
     return gesture.moveY > dz.y && gesture.moveY < dz.y + dz.height;
   }
 
+  // Show the selected treat, which can be dragged to monster
   renderDraggable = (treat) => {
     if (this.state.showDraggable) {
       return (
@@ -119,17 +121,21 @@ class Pet extends Component {
   // The monster sprite is assumed to be a square
   monsterDimensions = (petSize) => 70 + this.state.pet.size * 5
 
-  // Center the pet vertically each time the pet grows
-  // Set the dropzone for the treat to trigger pet feeding
+
+
   onLayout = event => {
-    // if (this.state.spriteVertical) return // layout was already called
+    // Center the pet vertically each time the pet grows
+    // spriteVertical represents the vertical offset for position the monster sprite
     const length = this.monsterDimensions(this.state.pet.size);
     let { height } = event.nativeEvent.layout;
     let spriteVertical = (height / 2) - (length / 1.5);
     this.setState({ spriteVertical: null }, () => this.setState({ spriteVertical }));
+
+    // Set the dropzone for the treat to trigger pet feeding
     this.setDropZoneValues(event);
   }
 
+  // Interaction - User touches monster on screen, triggers animation
   petMonster = () => {
     if (this.state.checkedIn) {
       this.setState({ animationType: 'CELEBRATE' });
@@ -142,6 +148,9 @@ class Pet extends Component {
     this.setState({ visibleModal: bool })
   }
 
+  // When a user selects a treat from the modal menu,
+  // a picture of the treat appears on screen.
+  // This treat can be dragged to the pet, feeding it
   setTreat = treat => {
     this.setState({
       selectedTreat: treat,
@@ -150,16 +159,16 @@ class Pet extends Component {
     });
   }
 
-  // 1. Decrease treat quantity by 1
-  // 2. Pet eating animation
-  // 3. increase the size of the pet
   feedPet = (treat) => {
+    // 1. Decrease treat quantity by 1 in Firebase
     let userId = this.props.auth.user
     const quantity = treat.quantity - 1;
     this.props.removeTreat(userId, treat.key, quantity);
+    // 2. Pet eating animation
     this.setState({ animationType: 'EAT' });
     setTimeout(() => {
       this.setState({ animationType: 'IDLE' })
+      // 3. increase the size of the pet in Firebase
       const petKey = this.props.navigation.state.params.key;
       const points = treat.points + this.state.pet.size;
       this.props.increasePet(userId, petKey, points);
@@ -210,7 +219,9 @@ class Pet extends Component {
     return (
       <View style={styles.container}>
 
-        <View style={styles.spriteContainer} onLayout={this.onLayout}>
+        <View
+          style={styles.spriteContainer}
+          onLayout={this.onLayout}>
           {this.renderSprite()}
         </View>
 
