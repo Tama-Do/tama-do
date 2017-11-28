@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image, Text,FlatList, ScrollView} from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Image, Text, FlatList, ScrollView } from 'react-native'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
@@ -8,6 +8,7 @@ import { monsterImg } from './helpers/monsterPicker';
 import { CardEditPet, CardSectionEditPet, InputEditPet } from './common';
 import { Button1 } from './common/ButtonEditPet';
 import { Button2 } from './common/ButtonEditLocation';
+import { selectPet } from '../reducers/pets'
 
 
 class EditPet extends Component {
@@ -28,44 +29,29 @@ class EditPet extends Component {
 
   pickAMonster = (petKey) => {
     let monName = this.props.pets[petKey].name
-    this.setState({ petKey, selected: true, monsterName: monName})
+    this.setState({ petKey, selected: true, monsterName: monName })
+    this.props.choosePet(petKey)
+
   }
 
-  // nameMonster = () => {
-  //   return this.state.monsterName === null ? <Text style={styles.selectedText}>SELECT PET</Text> : null
-  // }
-
   renameButton = () => {
-    return this.state.monsterName !== null ?  <Button1 onPress={() => this.goToRenamePet()}>RENAME {this.state.monsterName}</Button1> : null
+    return this.state.monsterName !== null ? <Button1 onPress={() => this.goToRenamePet()}>RENAME {this.state.monsterName}</Button1> : null
   }
 
   locationButton = () => {
-    return this.state.monsterName !== null ?  <Button2 onPress={() => this.goToLocationForm()}>ADD/CHANGE {this.state.monsterName}S LOCATION</Button2> : null
+    return this.state.monsterName !== null ? <Button2 onPress={() => this.goToLocationForm()}>ADD/CHANGE {this.state.monsterName}S LOCATION</Button2> : null
   }
-
-  // componentDidUpdate() {
-  //   this.nameMonster()
-  // }
-
 
   render() {
     const { navigate } = this.props.navigation
     return (
       <View>
-
-
-
-              <View style={styles.textContainer}>
-                <Text style={styles.selectedText}>SELECT PET</Text>
-              </View>
-
-
-
-
+        <View style={styles.textContainer}>
+          <Text style={styles.selectedText}>SELECT PET</Text>
+        </View>
         <GiftedForm style={styles.form} formName='locationSearch'>
           <View style={styles.row}>
             {this.props.pets.map(pet => (
-
               <View key={pet.key} style={styles.petIcon}>
                 <TouchableOpacity activeOpacity={0.7} key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
                   <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked} />
@@ -75,15 +61,12 @@ class EditPet extends Component {
               </View>
             ))}
           </View>
-
         </GiftedForm>
 
         <View style={styles.selectedTextView}>
-
           {this.renameButton()}
           {this.locationButton()}
         </View>
-
       </View>
     )
   }
@@ -94,7 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    bottom:30
+    bottom: 30
   },
   map: {
     position: 'absolute',
@@ -152,7 +135,6 @@ const styles = StyleSheet.create({
   selectedText: {
     textAlign: 'center',
     fontSize: 24,
-    //fontWeight: 'bold',
     color: 'black'
   },
   selectedTextView: {
@@ -160,19 +142,17 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    top:10,
+    top: 10,
     backgroundColor: 'white'
-    //alignItems: 'center',
-    //justifyContent: 'center',
   },
   textContainer: {
     borderBottomWidth: 1,
     borderBottomColor: "#d9d9d9",
-    marginTop:5,
+    marginTop: 5,
     marginBottom: 5,
-    paddingTop:10,
-    paddingBottom:10,
-    top:5,
+    paddingTop: 10,
+    paddingBottom: 10,
+    top: 5,
     backgroundColor: '#FFF'
   },
   flatList: {
@@ -185,9 +165,16 @@ const styles = StyleSheet.create({
 });
 
 
-const mapState = ({ pets, auth, monsterName, petKey }) => ({ pets, auth, monsterName, petKey });
+const mapState = ({ pets, selectedPet, auth, monsterName, petKey }) =>
+  ({ pets, selectedPet, auth, monsterName, petKey })
 
-const mapDispatch = {}
+const mapDispatch = (dispatch) => {
+  return {
+    choosePet: (pet) => {
+      dispatch(selectPet(pet))
+    }
+  }
+}
 
 
 export default connect(mapState, mapDispatch)(EditPet)

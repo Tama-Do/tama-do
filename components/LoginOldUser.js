@@ -136,8 +136,6 @@ const styles = {
     fontStyle: 'italic',
   },
   text1Container:{
-    // left: 0,
-    // right: 0,
     justifyContent: 'center',
     backgroundColor: "rgba(0,0,0,0)",
     position: 'absolute',
@@ -160,7 +158,6 @@ const styles = {
     top: 330,
     paddingTop: 5,
     padding: 5,
-    // justifyContent: 'flex-start',
     flexDirection: 'column',
   },
   circle: {

@@ -13,7 +13,6 @@ import database from '../firebase'
 import store from '../store'
 import treatPaths from './helpers/treatPaths'
 
-
 export default class NewTreatModal extends Component {
 
     constructor(props) {
