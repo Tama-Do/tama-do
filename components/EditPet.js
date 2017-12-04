@@ -68,7 +68,7 @@ class EditPet extends Component {
 
               <View key={pet.key} style={styles.petIcon}>
                 <TouchableOpacity activeOpacity={0.7} key={pet.name} onPress={() => this.pickAMonster(pet.key)}>
-                  <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked} />
+                  {/* <Image style={styles.petImage} source={this.state.selected && pet.key === this.state.petKey ? monsterImg[pet.type].clicked : monsterImg[pet.type].notClicked} /> */}
                 </TouchableOpacity>
                 <Text style={styles.name}>{pet.name.toUpperCase()}</Text>
                 <Text style={styles.location}>{pet.location}</Text>

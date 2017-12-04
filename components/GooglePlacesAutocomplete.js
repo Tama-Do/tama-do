@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import Qs from 'qs';
 import debounce from 'lodash.debounce';
-import { googleApiKey } from '../apikeys'
+import { googleApiKey } from '../secrets'
 
 const WINDOW = Dimensions.get('window');
 

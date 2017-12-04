@@ -8,6 +8,7 @@ import Checkbox from './common/checkbox'
 import database from '../firebase'
 import Swipeout from './common/Swipeout'
 import NewTreat from './NewTreat'
+import { fetchTasks } from '../reducers/tasks'
 
 const pointDict = { 'cherry': 1, 'candy': 2, 'donut': 3 }
 
@@ -27,6 +28,7 @@ class ToDo extends Component {
     let unsubscribe = store.subscribe(() => {
       this.setState(store.getState())
     })
+    this.props.getTasks(this.props.auth.uid)
   }
 
   makeFlatlist = (completed = 'completed') => {
@@ -245,6 +247,8 @@ const styles = StyleSheet.create({
 
 const mapState = ({ tasks, auth }) => ({ tasks, auth })
 
-const mapDispatch = {}
+const mapDispatch = {
+  getTasks: uid => fetchTasks(uid)
+}
 
 export default connect(mapState, mapDispatch)(ToDo)

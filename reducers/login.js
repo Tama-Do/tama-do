@@ -1,5 +1,6 @@
 import {auth} from '../firebase';
 import database from '../firebase';
+import { fetchTasks } from './tasks';
 
 // /* -----------------    ACTIONS     ------------------ */
 
@@ -7,6 +8,7 @@ const LOGIN_USER_START = 'LOGIN_USER_START';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 const SET_USER = 'SET_USER'
+const SIGN_OUT = 'SIGN_OUT'
 
 
 // /* ------------   ACTION CREATORS     ------------------ */
@@ -14,6 +16,8 @@ const SET_USER = 'SET_USER'
 const loginSuccess = user => ({type: LOGIN_SUCCESS, user});
 
 export const setUser = user => ({type: SET_USER, user})
+
+export const signOut = () => ({type: SIGN_OUT})
 
 //const loginFail = user => ({type: LOGIN_USER_FAIL, user});
 
@@ -38,6 +42,8 @@ const reducer = (state = initalState, action) => {
       return { ...state, error: 'Login failed.', password: '', loading: false };
     case SET_USER:
       return Object.assign({}, state, action.user)
+    case SIGN_OUT:
+      return {...state, email: '', loading: false, user: null, error: ''}
     default:
       return state;
   }
@@ -48,7 +54,6 @@ export default reducer
 // /* ------------       DISPATCHERS     ------------------ */
 
 export const loginUser = ( email, password ) => {
-
   return (dispatch) => {
     dispatch({ type: LOGIN_USER_START });
     // should the following eventually be refactored so that instead of automatically
@@ -63,7 +68,6 @@ export const loginUser = ( email, password ) => {
 };
 
 export const signInUser = ( email, password ) => {
-
   return (dispatch) => {
     dispatch({ type: LOGIN_USER_START });
     // should the following eventually be refactored so that instead of automatically
@@ -76,6 +80,14 @@ export const signInUser = ( email, password ) => {
           //dispatch login user fail at some point
     };
 };
+
+export const logoutUser = () => {
+  return (dispatch) => {
+    dispatch({type: SIGN_OUT});
+  }
+  auth.signOut().catch(error => console.log(error))
+}
+
 
 export const createUser = (email, uid, dispatch) => {
   //let monsters = {0: {name:"AZULA",type:"grayMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},1:{name:"TIANA",type:"redMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318},2:{name:"HUBERT",type:"greenMonster",size:1,location:"",latitude:40.8165683, longitude:-73.9472318}}

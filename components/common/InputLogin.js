@@ -1,17 +1,18 @@
 import React from 'react';
 import { TextInput, View, Text } from 'react-native';
 
-const InputLogin = ({ label, value, onChangeText, keyboardType, autoCapitalize, autoCorrect, secureTextEntry }) => {
+const InputLogin = ({ label, value, onChangeText, keyboardType, autoCapitalize, autoCorrect, secureTextEntry, placeholder }) => {
   const { inputStyle, labelStyle, containerStyle } = styles;
 
   return (
     <View style={containerStyle}>
-      <Text style={labelStyle}>{label}</Text>
       <TextInput
         autoCapitalize={'none'}
+        placeholderTextColor="rgba(255, 255, 255, 0.5)"
         secureTextEntry={secureTextEntry}
         autoCorrect={false}
         style={inputStyle}
+        placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
@@ -45,7 +46,6 @@ const styles = {
     alignItems: 'center',
     paddingHorizontal: 10,
     borderRadius: 10,
-    //marginBottom: 5
   }
 };
 

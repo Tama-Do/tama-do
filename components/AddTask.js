@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 20,
         bottom: 20,
+        height: 85,
+        width: 80,
         opacity: .8,
         alignSelf: 'flex-end',
 
@@ -179,13 +181,12 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         flex: 0,
-        // alignSelf: 'stretch',
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#6D45AD',
         backgroundColor: '#8061A9',
         marginLeft: 5,
-        marginRight: 5
+        marginRight: 5,
     },
     buttonTextStyle: {
         alignSelf: 'center',

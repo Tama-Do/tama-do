@@ -9,6 +9,7 @@ import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import GooglePlacesWidget from './GooglePlacesWidget'
 import database from '../firebase';
 import { monsterImg } from './helpers/monsterPicker';
+import { fetchPets } from '../reducers/pets'
 
 
 
@@ -19,6 +20,10 @@ class PetMap extends Component {
       coords : []
     }
   }
+
+componentDidMount() {
+  this.props.getPets(this.props.auth.uid)
+}
 
 componentDidUpdate() {
   this.map.fitToCoordinates(this.state.coords, { edgePadding: { top: 70, right: 50, bottom: 100, left: 50, animated: true }})
@@ -66,9 +71,9 @@ componentWillReceiveProps(nextProps) {
                 key={pet.name}
               >
               <TouchableOpacity activeOpacity={0.5} onPress={() => this.viewPet(pet)}>
-                <Image source={monsterImg[pet.type].notClicked}
+                {/* <Image source={monsterImg[pet.type].notClicked}
                   style={{ width: 30 + pet.size / 2, height: 30 + pet.size / 2 }}
-                />
+                /> */}
               </TouchableOpacity>
               </MapView.Marker>)
             }
@@ -116,7 +121,10 @@ const styles = StyleSheet.create({
 
 const mapState = ({ pets, auth }) => ({ pets, auth });
 
-const mapDispatch = {}
+const mapDispatch = {
+  getPets: uid => fetchPets(uid)
+}
+
 
 
 export default connect(mapState, mapDispatch)(PetMap)

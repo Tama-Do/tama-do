@@ -19,7 +19,9 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      animationType: 'WALK'
+      animationType: 'WALK',
+      renderEmailError: false,
+      renderPasswordError: false
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
@@ -27,6 +29,12 @@ class LoginForm extends Component {
   }
 
   onButtonPress() {
+    if (this.state.password.indexOf('@') < 1) {
+      this.setState({renderEmailError: true})
+    }
+    if (this.state.password.length < 6) {
+      this.setState({renderPasswordError: true})
+    }
     this.props.loginUser(this.state.email, this.state.password);
   }
 
@@ -63,10 +71,9 @@ class LoginForm extends Component {
             }}
             draggable={false}
           />
-
         <CardSectionLogin>
           <InputLogin
-            label="EMAIL"
+            placeholder="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
             keyboardType='email-address'
@@ -74,17 +81,23 @@ class LoginForm extends Component {
             autoCorrect={false}
           />
         </CardSectionLogin>
-
         <CardSectionLogin>
           <InputLogin
             secureTextEntry
-            label="PASSWORD"
+            placeholder="PASSWORD"
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
             autoCapitalize="none"
             autoCorrect={false}
           />
         </CardSectionLogin>
+
+       {(this.state.renderEmailError || this.state.renderPasswordError) &&
+       <View style={styles.errorContainer}>
+          {this.state.renderEmailError && <Text style={styles.error}>Invalid Email</Text>}
+          {this.state.renderPasswordError && <Text style={styles.error}>Pasword must be longer than 6 characters</Text>}
+        </View>
+       }
 
         <Text style={styles.errorTextStyle}>
           {this.props.error}
@@ -96,11 +109,8 @@ class LoginForm extends Component {
 
         <View style={styles.text2Container}>
           <Text style={styles.text2}>
-            already a member? {"\n"} {"\n"}            ______{"\n"}
+            already a member? {"\n"}           ______{"\n"}
           </Text>
-        {/*</View>
-
-        <View style={styles.text1Container}>*/}
           <TouchableOpacity onPress={() => {navigate('LoginOldUser')}}>
             <Text style={styles.text1}>
               LOG IN
@@ -143,8 +153,6 @@ const styles = {
     fontStyle: 'italic',
   },
   text1Container:{
-    // left: 0,
-    // right: 0,
     justifyContent: 'center',
     backgroundColor: "rgba(0,0,0,0)",
     position: 'absolute',
@@ -167,7 +175,6 @@ const styles = {
     top: 330,
     paddingTop: 5,
     padding: 5,
-    // justifyContent: 'flex-start',
     flexDirection: 'column',
   },
   circle: {
@@ -179,6 +186,22 @@ const styles = {
     alignSelf: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,.15)'
+},
+errorContainer: {
+  position: 'relative',
+  top: 390,
+  paddingTop: 5,
+  padding: 5,
+  flexDirection: 'column',
+  backgroundColor: 'rgba(255,0,0,0.7)'
+},
+error: {
+  fontSize: 12,
+  alignSelf: 'center',
+  color: '#FFF',
+  fontStyle: 'italic',
+  fontWeight: 'bold',
+  backgroundColor: "rgba(0,0,0,0)"
 }
 };
 

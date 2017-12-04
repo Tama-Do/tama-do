@@ -18,7 +18,8 @@ class LoginOldUser extends Component {
     this.state = {
       email: '',
       password: '',
-      animationType: 'WALK'
+      animationType: 'WALK',
+      renderError: false
     }
 
     this.onButtonPress = this.onButtonPress.bind(this)
@@ -26,6 +27,7 @@ class LoginOldUser extends Component {
 
   onButtonPress() {
     this.props.signInUser(this.state.email, this.state.password);
+    // this.setState({renderError: true})
   }
 
   renderButton() {
@@ -63,7 +65,7 @@ class LoginOldUser extends Component {
 
         <CardSectionLogin>
           <InputLogin
-            label="EMAIL"
+            placeholder="EMAIL"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
             keyboardType='email-address'
@@ -75,13 +77,17 @@ class LoginOldUser extends Component {
         <CardSectionLogin>
           <InputLogin
             secureTextEntry
-            label="PASSWORD"
+            placeholder="PASSWORD"
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
             autoCapitalize="none"
             autoCorrect={false}
           />
         </CardSectionLogin>
+
+        {this.state.renderError &&
+       <View style={styles.errorContainer}><Text style={styles.error}>Invalid Login Credentials</Text></View>
+        }
 
         <Text style={styles.errorTextStyle}>
           {this.props.error}
@@ -93,7 +99,7 @@ class LoginOldUser extends Component {
 
         <View style={styles.text2Container}>
           <Text style={styles.text2}>
-            don't have an account? {"\n"} {"\n"}               ______{"\n"}
+            don't have an account? {"\n"}               ______{"\n"}
           </Text>
           <TouchableOpacity onPress={() => {navigate('LoginForm')}}>
             <Text style={styles.text1}>
@@ -136,8 +142,6 @@ const styles = {
     fontStyle: 'italic',
   },
   text1Container:{
-    // left: 0,
-    // right: 0,
     justifyContent: 'center',
     backgroundColor: "rgba(0,0,0,0)",
     position: 'absolute',
@@ -172,6 +176,22 @@ const styles = {
     alignSelf: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,.15)'
+},
+errorContainer: {
+  position: 'relative',
+  top: 390,
+  paddingTop: 5,
+  padding: 5,
+  flexDirection: 'column',
+  backgroundColor: 'rgba(255,0,0,0.7)'
+},
+error: {
+  fontSize: 12,
+  alignSelf: 'center',
+  color: '#FFF',
+  fontStyle: 'italic',
+  fontWeight: 'bold',
+  backgroundColor: "rgba(0,0,0,0)"
 }
 };
 
